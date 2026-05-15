@@ -10,6 +10,11 @@
       system:
       let
         pkgs = import nixpkgs { inherit system; };
+        texLive-toolchain = pkgs.texliveSmall.withPackages (
+          ps: with ps; [
+            latexmk
+          ]
+        );
       in
       {
         devShell = pkgs.mkShell {
@@ -20,6 +25,8 @@
               nixfmt
               # yaml
               yaml-language-server
+              # latex
+              texLive-toolchain
             ];
             shellHook = ''
               if [ -f .env ]; then
