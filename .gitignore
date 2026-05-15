@@ -1,3 +1,7 @@
+# direnv
+.envrc
+.direnv/
+
 ## Core latex/pdflatex auxiliary files:
 *.aux
 *.lof
