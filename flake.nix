@@ -20,6 +20,8 @@
               nixd
               nil
               nixfmt
+              # yaml
+              yaml-language-server
             ];
             shellHook = ''
               if [ -f .env ]; then
