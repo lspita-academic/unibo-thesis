@@ -27,6 +27,7 @@
               yaml-language-server
               # latex
               texLive-toolchain
+              texlab
             ];
             shellHook = ''
               if [ -f .env ]; then
