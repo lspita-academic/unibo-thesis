@@ -10,9 +10,24 @@
       system:
       let
         pkgs = import nixpkgs { inherit system; };
-        texLive-toolchain = pkgs.texliveSmall.withPackages (
+        texLive-toolchain = pkgs.texliveMedium.withPackages (
           ps: with ps; [
             latexmk
+            todonotes
+            cleveref
+            xargs
+            listings
+            xcolor
+            babel
+            hyperref
+            amsmath
+            geometry
+            titling
+            enumitem
+            setspace
+            fancyhdr
+            acronym
+            bigfoot
           ]
         );
       in
