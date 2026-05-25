@@ -10,7 +10,7 @@
       system:
       let
         pkgs = import nixpkgs { inherit system; };
-        texLive-toolchain = pkgs.texliveMedium.withPackages (
+        texlive-toolchain = pkgs.texliveMedium.withPackages (
           ps: with ps; [
             latexmk
             todonotes
@@ -42,7 +42,7 @@
               # yaml
               yaml-language-server
               # latex
-              texLive-toolchain
+              texlive-toolchain
               texlab
             ];
             shellHook = ''
