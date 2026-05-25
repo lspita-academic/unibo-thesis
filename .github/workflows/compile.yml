@@ -3,8 +3,6 @@ on:
   push:
     tags:
       - '*'
-    branches:
-      - main
     paths-ignore:
       - 'README.md'
       - 'CHANGELOG.md'
