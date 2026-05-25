@@ -16,6 +16,7 @@
             todonotes
             cleveref
             xargs
+            silence
             listings
             xcolor
             babel
