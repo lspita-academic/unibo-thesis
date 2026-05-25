@@ -15,6 +15,7 @@
             latexmk
             todonotes
             cleveref
+            silence
             xargs
             listings
             xcolor
