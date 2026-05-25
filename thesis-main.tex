@@ -1,12 +1,9 @@
 \documentclass[12pt,a4paper,openright,twoside]{book}
-\usepackage{silence}
-% rubber doesn't give this warning, so it's ignored instead of changing the template
-\WarningFilter{hyperref}{The anchor of a bookmark}
-\usepackage{disi-thesis}
-\usepackage{code-lstlistings}
-\usepackage{notes}
-\usepackage{shortcuts}
 \usepackage{acronym}
+\usepackage{include/disi-thesis}
+\usepackage{include/code-lstlistings}
+\usepackage{include/notes}
+\usepackage{include/shortcuts}
 
 \school{\unibo}
 \programme{Corso di Laurea in Ingegneria e Scienze Informatiche}
@@ -20,8 +17,7 @@
 \session{I}
 \academicyear{2025-2026}
 
-% Definition of acronyms
-% \acrodef{IoT}{Internet of Thing}
+\input{include/acronyms}
 
 \mainlinespacing{1.241} % line spacing in mainmatter, comment to default (1)
 
@@ -29,13 +25,8 @@
 
 \frontmatter\frontispiece
 
-\begin{abstract}
-% Max 2000 characters, strict.
-\end{abstract}
-
-% \begin{dedication} % this is optional
-% Optional. Max a few lines.
-% \end{dedication}
+\input{front/abstract}
+\input{front/dedication}
 
 %----------------------------------------------------------------------------------------
 \tableofcontents
@@ -45,9 +36,9 @@
 
 \mainmatter
 
-\include{chapters/introduction}
-\include{chapters/state-of-the-art}
-\include{chapters/contribution}
+\input{chapters/introduction}
+\input{chapters/state-of-the-art}
+\input{chapters/contribution}
 
 %----------------------------------------------------------------------------------------
 % BIBLIOGRAPHY
@@ -55,13 +46,9 @@
 
 \backmatter
 
-\nocite{*} % Remove this as soon as you have the first citation
-
 \bibliographystyle{alpha}
 \bibliography{bibliography}
 
-% \begin{acknowledgements} % this is optional
-% Optional. Max 1 page.
-% \end{acknowledgements}
+\input{back/acknowledgements}
 
 \end{document}
