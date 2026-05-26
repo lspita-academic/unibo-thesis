@@ -17,6 +17,7 @@
             cleveref
             xargs
             silence
+            csquotes
             listings
             xcolor
             babel
