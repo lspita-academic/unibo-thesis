@@ -1,0 +1,159 @@
+% ─────────────────────────────────────────────
+\chapter{Introduzione}
+% Contestualizza il lavoro: aggregate computing come paradigma per sistemi
+% distribuiti e pervasivi, motivazione per un'implementazione su hardware
+% embedded (ESP32C3), e rilevanza di Zenoh come middleware publisher/subscriber
+% leggero. Chiudi con la sezione "Struttura della tesi".
+
+\section{Contesto e motivazione}
+% Breve panoramica sui sistemi distribuiti embedded e sulla necessità di
+% middleware efficienti in ambienti resource-constrained.
+
+\section{Obiettivi del progetto}
+% Definizione chiara dei deliverable: wrapper safe Rust di zenoh-pico,
+% implementazione del trait Network, prototipo funzionante su ESP32C3.
+
+\section{Struttura della tesi}
+% Descrizione capitolo per capitolo di cosa il lettore troverà.
+
+% ─────────────────────────────────────────────
+\chapter{Background e tecnologie}
+% Fornisce le basi teoriche e tecnologiche necessarie alla comprensione
+% del lavoro svolto.
+
+\section{Aggregate computing}
+% Il paradigma, il modello a field, il concetto di VM condivisa e il
+% trait Network della libreria yaair. Esempio motivante: il gradiente
+% distribuito implementato nel progetto.
+
+\section{Rust per sistemi embedded}
+% Ownership model, safety garantita dal compilatore, ecosistema no-std /
+% esp-idf-svc, Embassy come runtime async per microcontrollori.
+
+\section{Il protocollo Zenoh}
+% Architettura publisher/subscriber/queryable, confronto con MQTT e DDS,
+% key expression e sessioni. Differenze tra zenoh (full) e zenoh-pico.
+
+\section{Zenoh-pico e il suo modello di ownership in C}
+% Come zenoh-pico emula move/loan/drop in C tramite convenzioni sulle
+% funzioni (z_move, z_loan, z_drop). Questo è il problema che il wrapper
+% dovrà risolvere.
+
+\section{L'ecosistema ESP-IDF e la toolchain Rust}
+% esp-idf-svc come fornitore della standard library, bindgen per la
+% generazione automatica dei bindings, integrazione con il build system
+% CMake tramite embuild.
+
+% ─────────────────────────────────────────────
+\chapter{Architettura del sistema}
+% Visione d'insieme prima di scendere nei dettagli implementativi.
+% Un diagramma a strati (yaair → ZenohPicoNetwork → zenoh-pico-sys → C)
+% è il fulcro del capitolo.
+
+\section{Struttura a layer}
+% Dal trait Network di yaair fino al codice C di zenoh-pico, passando
+% per il wrapper safe e il layer sys.
+
+\section{Componenti principali}
+% Panoramica di: zenoh-pico-sys (bindings), wrapper safe (questo lavoro),
+% ZenohPicoNetwork, MessagePublisher/Subscriber, AtomicMessagesStore.
+
+\section{Flusso di un messaggio}
+% Trace end-to-end: prepare\_outbound pubblica, il subscriber riceve,
+% AtomicMessagesStore aggiorna, prepare\_inbound crea lo snapshot.
+
+% ─────────────────────────────────────────────
+\chapter{Integrazione di zenoh-pico come componente ESP-IDF}
+% Spiega come zenoh-pico, nato per PlatformIO, viene integrato nel
+% build system Rust/CMake in modo che bindgen trovi gli header di sistema
+% e i define di compilazione siano propagati correttamente.
+
+\section{Struttura del crate zenoh-pico-sys}
+% Cargo.toml con extra\_components, bindings\_header, bindings\_module.
+% Ruolo di embuild nel bridging tra Cargo e CMake.
+
+\section{CMakeLists.txt e selezione delle sorgenti}
+% Come vengono selezionate solo le sorgenti espidf, escluse le altre
+% piattaforme (arduino, zephyr, ecc.), e come vengono passati i define
+% (FRAG\_MAX\_SIZE, BATCH\_UNICAST\_SIZE, ZENOH\_ESPIDF).
+
+\section{Generazione automatica dei bindings con bindgen}
+% Processo di generazione, criticità (tipi opachi, alignment), verifica
+% dei bindings prodotti.
+
+% ─────────────────────────────────────────────
+\chapter{Wrapper safe Rust di zenoh-pico}
+% Cuore tecnico della tesi: come si porta in Rust safe una libreria C
+% che usa un ownership model informale.
+
+\section{Il problema: ownership informale in C}
+% Analisi delle convenzioni z\_move / z\_loan / z\_drop e dei rischi
+% (double-free, use-after-move) se usate direttamente da unsafe Rust.
+
+\section{Progettazione delle macro di wrapping}
+% Obiettivi delle macro in zvalue.rs: generare automaticamente struct
+% newtype con Drop, implementazioni di Deref/DerefMut per il loan, e
+% un tipo "owned" che consuma il valore al move.
+
+\section{Implementazione delle macro}
+% Analisi del codice: pattern ripetuti, casi edge, come le macro
+% garantiscono che le invarianti di zenoh-pico siano rispettate a
+% compile time.
+
+\section{Strutture esposte dal wrapper}
+% Session, Publisher, Subscriber, KeyExpr, ZId e gli altri tipi pubblici
+% con la loro API safe.
+
+% ─────────────────────────────────────────────
+\chapter{Implementazione della ZenohPicoNetwork}
+% Descrive come il wrapper viene usato per implementare il trait Network
+% di yaair, con le scelte di design per la gestione dei peer.
+
+\section{Il trait Network e i suoi requisiti}
+% Firma di prepare\_outbound e prepare\_inbound, semantica attesa dalla
+% libreria yaair, tipo identificatore del peer (ZId).
+
+\section{Gestione dei messaggi: AtomicMessagesStore}
+% Store lock-free dei messaggi indicizzati per ZId, politica di timeout
+% (clear\_dead), snapshot atomico per prepare\_inbound.
+
+\section{Publisher e Subscriber}
+% MessagePublisher (wrapper di z\_publisher), MessageSubscriber con
+% callback e Arc<NetworkContext> per lo stato condiviso.
+
+\section{Heartbeat e keepalive (sviluppo futuro prossimo)}
+% Design della task di heartbeat: perché è necessaria, interfaccia
+% prevista, integrazione con il timeout dell'AtomicMessagesStore.
+
+\section{Astrazione multi-backend tramite trait}
+% Il trait che permetterà di scegliere a compile time tra zenoh-pico
+% (embedded) e zenoh full (Raspberry Pi, PC), con la ZenohPicoNetwork
+% come prima implementazione concreta.
+
+% ─────────────────────────────────────────────
+\chapter{Validazione e risultati}
+% Dimostra che il sistema funziona e discute le prestazioni.
+
+\section{Setup sperimentale}
+% Hardware utilizzato (ESP32C3), configurazione di rete, broker/router
+% Zenoh, nodi del gradiente (Node1, Node2, Node3).
+
+\section{Caso d'uso: gradiente distribuito}
+% Esecuzione dell'esempio in lib.rs: convergenza del gradiente,
+% log osservati, comportamento al failure di un nodo (timeout).
+
+\section{Analisi delle prestazioni}
+% Latenza publish/subscribe, overhead del wrapper rispetto all'uso
+% diretto dei bindings, utilizzo di memoria su ESP32C3.
+
+% ─────────────────────────────────────────────
+\chapter{Conclusioni}
+% Bilancio del lavoro svolto e prospettive.
+
+\section{Contributi}
+% Riepilogo dei tre contributi principali: integrazione build system,
+% wrapper safe via macro, implementazione ZenohPicoNetwork.
+
+\section{Sviluppi futuri}
+% Heartbeat, trait multi-backend, supporto a ulteriori piattaforme
+% embedded (Raspberry Pi Pico, Zephyr), testing automatizzato su HW.
