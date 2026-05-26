@@ -10,7 +10,7 @@
       system:
       let
         pkgs = import nixpkgs { inherit system; };
-        texlive-toolchain = pkgs.texliveMedium.withPackages (
+        texlive-toolchain = pkgs.texliveSmall.withPackages (
           ps: with ps; [
             latexmk
             todonotes
@@ -26,6 +26,7 @@
             amsmath
             geometry
             titling
+            xstring
             enumitem
             setspace
             fancyhdr
