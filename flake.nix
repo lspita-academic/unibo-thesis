@@ -14,6 +14,7 @@
           ps: with ps; [
             latexmk
             todonotes
+            parskip
             cleveref
             xargs
             silence
