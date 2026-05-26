@@ -1,16 +1,6 @@
 \documentclass[12pt,a4paper,openright,twoside]{book}
 
-\usepackage{silence}
-% rubber doesn't give this warning, so we mimic the ci build
-\WarningFilter{hyperref}{The anchor of a bookmark}
-% this is a file from the template, we leave it as is
-\WarningFilter{latex}{Empty `thebibliography'}
-
-\usepackage{acronym}
-\usepackage{include/disi-thesis}
-\usepackage{include/code-lstlistings}
-\usepackage{include/notes}
-\usepackage{include/shortcuts}
+\input{include/preamble}
 
 \school{\unibo}
 \programme{Corso di Laurea in Ingegneria e Scienze Informatiche}
@@ -44,6 +34,7 @@
 \mainmatter
 
 \input{chapters/introduzione}
+\input{chapters/zenoh}
 
 %----------------------------------------------------------------------------------------
 % BIBLIOGRAPHY
