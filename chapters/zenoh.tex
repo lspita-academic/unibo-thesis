@@ -1,26 +1,29 @@
 \chapter{Zenoh}
 \label{chap:zenoh}
 
-\section{Cos'è Zenoh}
-\label{sec:what-is-zenoh}
+Breve introduzione a Zenoh ed alle varie sezioni.
 
-Descrizione nel dettaglio di cosa è Zenoh
-\begin{itemize}
-	\item Modello di comunicazione peer-to-peer: scouting automatico dei nodi,
-	differenza tra client, peer e router.
-	\item Possibilità di usare sia un modello pub/sub che query/reply, quali sono
-	le differenze e come possono essere usati entrambi in uno stesso programma.
-\end{itemize}
+\section{Struttura della libreria}
+\label{sec:library-structure}
 
-\section{Zenoh Pico}
-\label{sec:zenoh-pico}
+\subsection{Modello di comunicazione}
+\label{sec:communication-model}
+
+Modello di comunicazione peer-to-peer: scouting automatico dei nodi,
+differenza tra client, peer e router.
+
+\subsection{Attori e concetti fondamentali}
+
+Concetti di sessione, publisher/subscribers e querier/queryable.
+
+\section{Zenoh per sistemi embedded}
+\label{sec:zenoh-for-embdedded-systems}
 
 Introduzione al problema dovuto all'impossibilità di utilizzare Zenoh su sistemi
 embedded e come zenoh pico risolva questo problema. Piccola menzione anche di
 zenoh-nostd, e di come però sia ancora in fase di sviluppo.
-\begin{itemize}
-	\item Descrizione di limitazioni e differenze di zenoh pico rispetto a zenoh.
-	\item Descrizione dello \textquote{ownership model} imitato tramite funzioni C per
-	mantenere la libreria il più simile possibile all'originale e per evitare
-	più facilmente problemi dovuti all'uso improprio della memoria.
-\end{itemize}
+
+\subsection{Limitazioni}
+\label{sec:limitations}
+
+Descrizione di limitazioni e differenze di zenoh pico rispetto a zenoh.
