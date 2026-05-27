@@ -1,0 +1,50 @@
+\chapter{La rete}
+\label{chap:the-network}
+
+\note{in questo capitolo non mi sono venuti in mente nomi migliori per le sezioni,
+con magari meno inglesismi e/o meno legati al codice, però i concetti sono questi.}
+
+\section{YAAIR}
+\label{sec:yaair}
+\sidenote{essendo una sigla l'ho messa in maiuscolo, poi nel testo sarà un acronimo}
+
+Descrizione di yaair, come funziona, il modello a strati
+
+\subsection{Il trait Network}
+\label{sec:the-network-trait}
+
+Spiegazione più dettagliata del concetto di network e dei due metodi da cui è composta.
+
+\section{La ZenohNetwork}
+\label{sec:the-zenoh-network}
+\sidenote{La generalizzazione per zenoh e zenoh pico devo ancora implementarla, quindi
+potrebbe cambiare questa sezione}
+
+Spiegazione del funzionamento della rete zenoh, con anche qualche schema.
+\note{riguardo agli schemi, ho pensato di metterli in quanto mi avete detto
+che dovrei seguire una struttura simile alla relazione del progetto di OOP, ma
+essendo il lavoro fino a questo punto solamente un wrapper di una libreria esistente,
+non c'è davvero una parte di analisi. Al massimo, giusto riguardo a come ho gestito
+le closure in zenoh pico (in cui avevo anche messo la possibilità di usarle in maniera
+asincrona invece che come callback, ma che poi non è servito)}
+
+\subsection{Il MessageStore}
+\label{sec:the-message-store}
+
+Spiegazione del concetto di message store, della gestione della concorrenza e della
+lifespan dei nodi in base all'ultimo update.
+
+\subsubsection{La task di hearthbit}
+\label{sec:the-heartbeat-task}
+
+Spiegazione della hearthbit task per mantenere vivo un nodo.
+
+\subsection{Implementazione tramite Zenoh Pico}
+\label{sec:zenoh-pico-implementation}
+
+Approfondimento sull'implementazione zenoh pico
+
+\subsection{Implementazione tramite Zenoh}
+\label{sec:zenoh-implementation}
+
+Approfondimento sull'implementazione zenoh
