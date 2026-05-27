@@ -26,3 +26,15 @@ Introduzione alle macro in Rust ed alla generazione di codice a tempo di compila
 
 Come il wrapper sia stato implementato tramite macro sfruttando la strutturazione
 simil-rust della libreria originale \cref{sec:ownership-model-in-zenoh-pico}
+
+\subsection{Il sistema di closure}
+\label{sec:closure-system}
+
+Descrizione di come è stato gestito il concetto di closure di zenoh pico e di come
+sono stati utilizzati i signal (non del sistema operativo, quelli di embassy) per
+permettere un utilizzo asincrono invece che a callback.
+
+\section{Il test del ping-pong}
+\label{sec:ping-pong-test}
+
+Descrizione del test di ping-pong per verificare il funzionamento del tutto.
