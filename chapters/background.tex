@@ -1,0 +1,61 @@
+\chapter{Background}
+\label{chap:background}
+
+Introduzione alle tecnologie e concetti affrontati in questa tesi.
+
+\section{Aggregate computing}
+\label{sec:aggregate-computing}
+
+Introduzione al concetto di aggregate computing, citando il paper \cite{10.1007/978-3-031-95589-1_12}
+
+\subsection{Aggregate computing su sistemi embedded}
+\label{ssec:ac-on-embedded-devices}
+
+Descrizione dei problemi a limitazioni di questo paradigma su sistemi resource-constrained
+(facendo riferimento soprattutto alla sezione \emph{Robot Programming with Aggregate Computing}
+del paper)
+
+\subsection{Embedded Rust}
+\label{ssec:embedded-rust}
+
+Descrizione di Rust per la programmazione di sistemi embedded, facendo riferimento
+e comparandolo alle soluzioni citate in precedenza \cref{ssec:ac-on-embedded-devices}
+
+\section{YAAIR}
+\label{sec:yaair}
+\sidenote{essendo una sigla l'ho messa in maiuscolo, poi nel testo sarà un acronimo}
+
+Descrizione di yaair, come funziona, il modello a strati
+
+\subsection{Il trait Network}
+\label{ssec:the-network-trait}
+
+Spiegazione più dettagliata del concetto di network e dei due metodi da cui è composta.
+
+\section{Zenoh}
+\label{sec:zenoh}
+
+Breve introduzione a Zenoh ed alle varie sezioni.
+
+\subsection{Modello di comunicazione}
+\label{ssec:communication-model}
+
+Modello di comunicazione peer-to-peer: scouting automatico dei nodi,
+differenza tra client, peer e router.
+
+\subsection{Attori e concetti fondamentali}
+\label{ssec:actors-and-fundamental-concepts}
+
+Concetti di sessione, publisher/subscribers e querier/queryable.
+
+\section{Zenoh per sistemi embedded}
+\label{ssec:zenoh-for-embdedded-systems}
+
+Introduzione al problema dovuto all'impossibilità di utilizzare Zenoh su sistemi
+embedded e come zenoh pico risolva questo problema. Piccola menzione anche di
+zenoh-nostd, e di come però sia ancora in fase di sviluppo.
+
+\subsection{Limitazioni}
+\label{ssec:limitations}
+
+Descrizione di limitazioni e differenze di zenoh pico rispetto a zenoh.
