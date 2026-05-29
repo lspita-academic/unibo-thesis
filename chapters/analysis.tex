@@ -15,19 +15,43 @@ Definizione chiara degli obbiettivi ed il focus di questo progetto:
 	      integrazione con yaair.
 \end{itemize}
 
+\section{Vincoli}
+\label{sec:constraints}
+
+\subsection{Vincoli hardware}
+\label{ssec:hardware-constraints}
+
+Caratteristiche del microcontrollore ESP32C3 target: memoria disponibile,
+assenza di MMU, architettura riscv. Come questi limiti condizionano
+le scelte su allocazione, dimensione dei buffer e footprint del codice.
+Menzione dell'alternativa per Zenoh normale su Raspberry Pi 0.
+
+\subsection{Vincoli imposti da Zenoh Pico}
+\label{ssec:zenoh-pico-constraints}
+
+Assenza di async nativo, callback tramite funzioni C-style, gestione del multithreading.
+
+\subsection{Compatibilità con YAAIR}
+\label{ssec:yaair-constraints}
+
+Il trait Network impone un contratto preciso da rispettare senza
+modificare il codice del framework.
+La soluzione deve essere trasparente: YAAIR non deve sapere se
+sotto c'è Zenoh o Zenoh Pico.
+
 \section{Requisiti funzionali}
 \label{sec:functional-requirements}
 
 \begin{itemize}
-    \item Invio e ricezione di messaggi tra nodi
-    \item Scoperta automatica dei nodi
-    \item Gestione della perdita di un nodo
+    \item Invio e ricezione di messaggi tra nodi.
+    \item Scoperta automatica dei nodi.
+    \item Rilevamento della perdita di un nodo entro un timeout configurabile.
 \end{itemize}
 
 \section{Requisiti non funzionali}
 \label{sec:non-functional-requirements}
 
 \begin{itemize}
-    \item Portabilità tra Zenoh e Zenoh Pico
-    \item Strategie alternative di gestione della perdita di nodi
+    \item Portabilità tra Zenoh e Zenoh Pico.
+    \item Strategie alternative di gestione della perdita di nodi.
 \end{itemize}

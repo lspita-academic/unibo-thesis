@@ -11,12 +11,24 @@ Introduzione di quello di cui si parlerà nella tesi:
 	peer-to-peer, non mi concentrerei troppo sulle performance non avendo effettuato
 	benchmark)
 \end{itemize}
+Contestualizzare il problema: sistemi embedded distribuiti che devono coordinarsi
+in modo autonomo e resiliente, senza un orchestratore centrale, ed in un contesto
+resource-constrained, e Rust come linguaggio memory-safe ed ad alte prestazioni
+per la programmazione embedded.
+Introduzione a YAAIR ed al concetto di Network, e Zenoh come soluzione per la
+comunicazione.
 
-\note{cosa cambia tra l'introduzione e l'abstract?}
+\section{Contributo della tesi}
+\label{sec:contribution}
+
+Presentare in modo sintetico il lavoro svolto:
+implementazione del trait Network di YAAIR tramite Zenoh e Zenoh Pico,
+con supporto per scoperta automatica dei nodi, gestione del ciclo di vita
+tramite heartbeat, e validazione su hardware ESP.
 
 \section{Struttura della tesi}
 \label{sec:thesis-structure}
 
-\note{Qui non so bene cosa mettere, è una sezione richiesta secondo il template
-	mi verrebbe da riscrivere quello che ho già messo negli obbiettivi \cref{sec:objectives}.
-	Devo semplicemente elencare \textquote{nel capitolo x si parla di y}?}
+Descrivere brevemente il contenuto di ciascun capitolo, una riga per
+capitolo. Es.: "Il Capitolo~\ref{chap:background} introduce i concetti
+di background necessari alla comprensione del contributo..."
