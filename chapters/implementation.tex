@@ -1,0 +1,70 @@
+\chapter{Implementazione}
+\label{chap:implementation}
+
+\section{Il wrapper di Zenoh Pico}
+\label{sec:zenoh-pico-wrapper}
+\sidenote{non mi veniva un nome migliore}
+
+Breve introduzione alla creazione di un wrapper safe-rust per zenoh pico ed alle
+varie sezioni.
+
+\subsection{L'ownership model in Zenoh Pico}
+\label{ssec:ownership-model-in-zenoh-pico}
+
+Come zenoh pico simuli l'ownership model di Rust in C per mantenere un API il più
+simile possibile alla libreria originale e per facilitare la gestione della memoria.
+
+\subsection{Le macro in Rust}
+\label{ssec:macros-in-rust}
+
+Introduzione alle macro in Rust ed alla generazione di codice a tempo di compilazione.
+
+\subsection{L'implementazione tramite macro}
+\label{ssec:implementation-via-macros}
+
+Come il wrapper sia stato implementato tramite macro sfruttando la strutturazione
+simil-rust della libreria originale \cref{ssec:ownership-model-in-zenoh-pico}
+
+\subsection{Il sistema di closure}
+\label{sec:closure-system}
+
+Descrizione di come è stato gestito il concetto di closure di zenoh pico e di come
+sono stati utilizzati i signal (non del sistema operativo, quelli di embassy) per
+permettere un utilizzo asincrono invece che a callback.
+
+\section{Implementazione della rete}
+\label{sec:network-implementation}
+
+\subsection{Il trait \texttt{Network}}
+\label{sec:the-network-trait}
+
+Spiegazione più dettagliata del concetto di network e dei due metodi da cui è composta.
+
+\section{La ZenohNetwork}
+\label{sec:the-zenoh-network}
+\sidenote{La generalizzazione per zenoh e zenoh pico devo ancora implementarla, quindi
+potrebbe cambiare questa sezione}
+
+Spiegazione del funzionamento della rete zenoh e della generalizzazione riguardo
+all'implementazione usata.
+
+\subsection{Il \texttt{AtomicMessageStore}}
+\label{sec:the-atomic-message-store}
+
+Spiegazione del concetto di message store, della gestione della concorrenza e della
+lifespan dei nodi in base all'ultimo update.
+
+\subsubsection{La task di hearthbit}
+\label{sec:the-heartbeat-task}
+
+Spiegazione della hearthbit task per mantenere vivo un nodo.
+
+\subsection{Implementazione tramite Zenoh Pico}
+\label{sec:zenoh-pico-implementation}
+
+Approfondimento sull'implementazione zenoh pico
+
+\subsection{Implementazione tramite Zenoh}
+\label{sec:zenoh-implementation}
+
+Approfondimento sull'implementazione zenoh
