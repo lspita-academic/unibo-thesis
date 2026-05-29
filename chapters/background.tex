@@ -1,25 +1,23 @@
 \chapter{Background}
 \label{chap:background}
 
-Introduzione alle tecnologie e concetti affrontati in questa tesi.
+Introduzione alle tecnologie e ai concetti necessari per comprendere
+il contributo della tesi.
 
 \section{Aggregate computing}
 \label{sec:aggregate-computing}
 
-Introduzione al concetto di aggregate computing, citando il paper \cite{10.1007/978-3-031-95589-1_12}
+Introduzione al concetto di aggregate computing, citando il paper
+\cite{10.1007/978-3-031-95589-1_12}: programmare il comportamento collettivo
+di un sistema distribuito come un unico "campo" computazionale, Introdurre i
+costrutti principali (rep, nbr, share) con un esempio semplice (es. il gradiente)
 
 \subsection{Aggregate computing su sistemi embedded}
 \label{ssec:ac-on-embedded-devices}
 
 Descrizione dei problemi a limitazioni di questo paradigma su sistemi resource-constrained
 (facendo riferimento soprattutto alla sezione \emph{Robot Programming with Aggregate Computing}
-del paper)
-
-\subsection{Embedded Rust}
-\label{ssec:embedded-rust}
-
-Descrizione di Rust per la programmazione di sistemi embedded, facendo riferimento
-e comparandolo alle soluzioni citate in precedenza \cref{ssec:ac-on-embedded-devices}
+del paper), e come Rust sia una soluzione.
 
 \section{YAAIR}
 \label{sec:yaair}
@@ -27,10 +25,10 @@ e comparandolo alle soluzioni citate in precedenza \cref{ssec:ac-on-embedded-dev
 
 Descrizione di yaair, come funziona, il modello a strati
 
-\subsection{Il trait Network}
+\subsection{Il trait \texttt{Network}}
 \label{ssec:the-network-trait}
 
-Spiegazione più dettagliata del concetto di network e dei due metodi da cui è composta.
+Spiegazione più dettagliata del concetto di network e dei due metodi da cui è composto.
 
 \section{Zenoh}
 \label{sec:zenoh}
@@ -47,6 +45,7 @@ differenza tra client, peer e router.
 \label{ssec:actors-and-fundamental-concepts}
 
 Concetti di sessione, publisher/subscribers e querier/queryable.
+Come si utilizzano per inviare e ricevere messaggi su key expression.
 
 \section{Zenoh per sistemi embedded}
 \label{ssec:zenoh-for-embdedded-systems}
@@ -58,4 +57,36 @@ zenoh-nostd, e di come però sia ancora in fase di sviluppo.
 \subsection{Limitazioni di Zenoh Pico}
 \label{ssec:zenoh-pico-limitations}
 
-Descrizione di limitazioni e differenze di zenoh pico rispetto a zenoh.
+Differenze e limitazioni di Zenoh Pico rispetto a Zenoh.
+
+\section{Embedded Rust}
+\label{ssec:embedded-rust}
+
+Descrizione di Rust per la programmazione di sistemi embedded, facendo riferimento
+e comparandolo alle soluzioni citate in precedenza \cref{ssec:ac-on-embedded-devices}
+
+\subsection{Cross-compilation}
+\label{ssec:cross-compilation}
+
+Come Rust permetta la compilazione cross-platform anche per target embedded.
+
+\subsection{ESP-IDF}
+\label{ssec:esp-idf}
+
+Il framework ESP-IDF per la programmazione embedded di esp su Rust.
+
+\subsubsection{Interazione con l'hardware}
+\label{sssec:hardware-interaction}
+
+Come esp-idf permetta di interagire con I vari componenti dell'esp.
+
+\subsubsection{Componenti e librerie esterne}
+\label{sssec:components-and-external-libraries}
+
+Come esp-idf permetta l'utilizzo di componenti esterni, e come ciò è stato
+utilizzato per zenoh pico.
+
+\subsection{Embassy}
+\label{sec:embassy}
+
+Descrizione di embassy come runtime asincrono per sistemi embedded.
