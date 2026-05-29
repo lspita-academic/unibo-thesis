@@ -1,2 +1,56 @@
 \chapter{Progettazione}
 \label{chap:design}
+
+Questo capitolo descrive le scelte architetturali della soluzione,
+mostrando come i requisiti si traducono in una struttura software coerente.
+
+\section{Architettura generale}
+\label{sec:general-architecture}
+
+Schema a blocchi dell'intera soluzione: YAAIR in cima che usa il trait
+Network, ZenohNetwork come implementazione concreta, Zenoh / Zenoh Pico
+come layer di trasporto, hardware ESP come target di deployment.
+
+\section{Il \texttt{MessageStore} e la gestione della concorrenza}
+\label{sec:message-store-and-concurrency-handling}
+
+Il MessageStore disaccoppia la ricezione dei messaggi (pilotata da
+callback o task asincrone) dalla loro consultazione da parte di YAAIR, in maniera
+thread-safe rispetto ai callback di Zenoh Pico.
+
+\subsection{Ciclo di vita dei nodi}
+\label{ssec:node-lifecycle}
+
+Come viene tracciato il timestamp dell'ultimo messaggio ricevuto
+da ciascun nodo e come i nodi possano notificare la loro presenza.
+
+% ============================================================
+\section{La \texttt{ZenohNetwork}}
+\label{sec:zenoh-network}
+
+La ZenohNetwork implementa il trait Network astraendo le differenze
+tra Zenoh e Zenoh Pico ed esponendo la stessa interfaccia verso YAAIR.
+
+\subsection{Struttura dei topic}
+\label{ssec:topic-structure}
+
+Schema delle key expression usate per separare messaggi applicativi
+e segnali di heartbeat. Convenzione di naming per identificare i nodi.
+
+\subsection{Flusso di invio}
+\label{ssec:send-flow}
+
+Percorso di un messaggio in uscita:
+layer YAAIR - ZenohNetwork - publisher - rete.
+
+\subsection{Flusso di ricezione}
+\label{ssec:receive-flow}
+
+Percorso di un messaggio in ingresso:
+rete - subscriber (callback o task) - MessageStore - layer YAAIR.
+
+% ============================================================
+\section{La task di heartbeat}
+\label{sec:heartbeat}
+
+Descrizione della task di heartbit, di come notifichi la presenza del nodo periodicamente.
