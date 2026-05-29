@@ -24,11 +24,10 @@ thread-safe rispetto ai callback di Zenoh Pico.
 Come viene tracciato il timestamp dell'ultimo messaggio ricevuto
 da ciascun nodo e come i nodi possano notificare la loro presenza.
 
-% ============================================================
-\section{La \texttt{ZenohNetwork}}
+\section{La rete Zenoh}
 \label{sec:zenoh-network}
 
-La ZenohNetwork implementa il trait Network astraendo le differenze
+La rete Zenoh implementa il trait Network astraendo le differenze
 tra Zenoh e Zenoh Pico ed esponendo la stessa interfaccia verso YAAIR.
 
 \subsection{Struttura dei topic}
@@ -49,7 +48,6 @@ layer YAAIR - ZenohNetwork - publisher - rete.
 Percorso di un messaggio in ingresso:
 rete - subscriber (callback o task) - MessageStore - layer YAAIR.
 
-% ============================================================
 \section{La task di heartbeat}
 \label{sec:heartbeat}
 
