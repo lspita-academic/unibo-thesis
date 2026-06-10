@@ -3,52 +3,42 @@
 
 Questo capitolo introduce le tecnologie, i paradigmi ed i concetti fondamentali
 necessari per la compensione del contributo della tesi.
-
 In apertura si delineano i principi dell'Aggregate Computing, con particolare
 attenzione all'implementazione nel contesto dei dispositivi con risorse limitate.
-
 Successivamente, si presentano il framework \ac{YAAIR}, il protocollo di rete
 Zenoh \footnote{\url{https://zenoh.io/}} ed il relativo ecosistema per sistemi embedded.
-
 In conclusione, viene fatta un'analisi delle tecnologie Rust necessarie per la
 programmazione e compilazione \emph{cross-platform} su architetture hardware
 eterogenee.
 
 \section{Aggregate computing}
 \label{sec:aggregate-computing}
-
-Il rapido proliferare di dispositivi Internet of Things (IoT) e di sistemi di
+Il rapido proliferare di dispositivi per lo \ac{IoT} e di sistemi di
 calcolo pervasivo ha generato sfide senza precedenti nella programmazione e nel
-coordinamento di sistemi altamente distribuiti \cite{10.1007/978-3-031-95589-1_12}[cite: 34].
+coordinamento di sistemi altamente distribuiti.
 Gli approcci di programmazione tradizionali faticano a gestire la complessità
 derivante dalla necessità di far cooperare centinaia o migliaia di dispositivi
-in modo trasparente e resiliente \cite{10.1007/978-3-031-95589-1_12}[cite: 35].
+in modo trasparente e resiliente \cite[12.1]{10.1007/978-3-031-95589-1_12}.
+\sidenote{Questo primo paragrafo è praticamente la traduzione parola per parola della
+sezione citata del vostro paper: devo mettere la citazione in qualche modo per far
+capire che è esattamente lo stesso testo?}
 
-In questo contesto, l'Aggregate Computing si impone come un potente paradigma di
-macro-programmazione che astrae l'esecuzione su una rete di dispositivi interagenti
-considerandola come un'unica entità collettiva \cite{10.1007/978-3-031-95589-1_12}[cite: 66].
-Al centro di questo modello vi è l'introduzione dei \emph{computational fields}
-(campi computazionali), astrazioni che mappano punti nello spazio e nel tempo a
-valori che possono essere combinati funzionalmente \cite{10.1007/978-3-031-95589-1_12}[cite: 67].
-
-Il paradigma si basa su una semantica formale rigorosa, il \emph{field calculus},
-che definisce la propagazione, il recupero e l'evoluzione temporale delle informazioni
-attraverso costrutti funzionali di base \cite{10.1007/978-3-031-95589-1_12}[cite: 70]:
-\begin{itemize}
-    \item \texttt{rep}: gestisce l'evoluzione temporale e il mantenimento dello
-    stato locale di un dispositivo tra cicli di computazione successivi.
-    \item \texttt{nbr}: astrae l'interazione spaziale, permettendo di riferirsi
-    ai valori esposti dai nodi vicini (il \emph{neighborhood}).
-    \item \texttt{share}: un costrutto più avanzato che unisce l'evoluzione dello
-    stato locale allo scambio di messaggi con il vicinato.
-\end{itemize}
+In questo contesto, lo \ac{AC} si impone come un paradigma di
+\emph{macro-programmazione} \cite{enwiki:1313791910} che astrae l'esecuzione di un
+singolo programma su una rete di dispositivi considerandola come un'unica entità
+collettiva.
+Al centro di questo modello vi sono il \emph{field calculus} ed i \emph{campi
+computazionali}, astrazioni che mappano punti nello spazio e nel tempo a valori
+che possono essere combinati funzionalmente \cite[12.2.1]{10.1007/978-3-031-95589-1_12}.
 
 Ogni dispositivo nel sistema raccoglie dati dal proprio stato locale e dai vicini,
 calcola il programma aggregato costruendo un contesto, e infine aggiorna il proprio
-stato trasmettendo l'intento di attuazione o messaggi ai dispositivi adiacenti
-\cite{10.1007/978-3-031-95589-1_12}[cite: 90, 91, 92].
+stato trasmettendo il proprio intento ai dispositivi con cui è in relazione.
 Un esempio classico di questa computazione è la costruzione di un gradiente spaziale,
-utilizzato per misurare la distanza di ogni nodo da una sorgente (Figura~\ref{fig:gradient_ac}).
+utilizzato per misurare la distanza di ogni nodo da una sorgente,
+dove le relazioni tra i nodi sono basate sul concetto di vicinato
+\cite[12.2.2]{10.1007/978-3-031-95589-1_12}, ovvero sulla distanza cartesiana tra
+loro (\Cref{fig:gradient_ac}).
 
 \begin{figure}[htpb]
     \centering
@@ -67,7 +57,7 @@ utilizzato per misurare la distanza di ogni nodo da una sorgente (Figura~\ref{fi
         \node (E) [right of=C] {3};
 
         % Connections
-        \path[edge] (S) -- node[above, draw=none, fill=none] {} (A);
+        \path[edge] (S) -- (A);
         \path[edge] (A) -- (B);
         \path[edge] (A) -- (C);
         \path[edge] (B) -- (C);
