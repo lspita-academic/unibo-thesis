@@ -45,10 +45,9 @@ loro (\Cref{fig:gradient_ac}).
     \begin{tikzpicture}[
         >=stealth,
         node distance=2.5cm,
-        every node/.style={circle, draw, minimum size=8mm, font=\sffamily\bfseries},
+        every node/.style={circle, draw, minimum size=8mm, font=\bfseries},
         edge/.style={draw, thick, <->}
     ]
-        % Nodes
         \node[fill=red!30] (S) {0};
         \node (A) [right of=S] {1};
         \node (B) [above right of=A, yshift=-0.5cm] {2};
@@ -56,7 +55,6 @@ loro (\Cref{fig:gradient_ac}).
         \node (D) [right of=B] {3};
         \node (E) [right of=C] {3};
 
-        % Connections
         \path[edge] (S) -- (A);
         \path[edge] (A) -- (B);
         \path[edge] (A) -- (C);
@@ -64,7 +62,6 @@ loro (\Cref{fig:gradient_ac}).
         \path[edge] (B) -- (D);
         \path[edge] (C) -- (E);
         \path[edge] (D) -- (E);
-
     \end{tikzpicture}
     \caption{Rappresentazione di un gradiente spaziale in un sistema distribuito.
     Il nodo sorgente (in rosso) ha distanza 0, mentre i nodi adiacenti calcolano
