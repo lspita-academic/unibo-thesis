@@ -18,37 +18,56 @@ calcolo pervasivo ha generato sfide senza precedenti nella programmazione e nel
 coordinamento di sistemi altamente distribuiti.
 Gli approcci di programmazione tradizionali faticano a gestire la complessità
 derivante dalla necessità di far cooperare centinaia o migliaia di dispositivi
-in modo trasparente e resiliente \cite[12.1]{10.1007/978-3-031-95589-1_12}.
-\sidenote{Questo primo paragrafo è praticamente la traduzione parola per parola della
+in modo trasparente e resiliente~\cite[12.1]{10.1007/978-3-031-95589-1_12}.
+\note{Questo primo paragrafo è praticamente la traduzione parola per parola della
 sezione citata del vostro paper: devo mettere la citazione in qualche modo per far
 capire che è esattamente lo stesso testo?}
 
 \subsection{Modello computazionale}
 \label{ssec:ac-computational-model}
 
-Lo \ac{AC} si impone come un paradigma di \emph{macroprogrammazione} \cite{enwiki:1313791910}
+Lo \ac{AC} si impone come un paradigma di \emph{macroprogrammazione}~\cite{enwiki:1313791910}
 che astrae l'esecuzione di un singolo programma su una rete di dispositivi
 considerandola come un'unica entità collettiva.
-Al centro di questo modello vi sono il \emph{field calculus} ed i \emph{campi
-computazionali}, astrazioni che mappano punti nello spazio e nel tempo a valori
-che possono essere combinati funzionalmente \cite[12.2.1]{10.1007/978-3-031-95589-1_12}.
+Al centro di questo modello vi sono il \emph{field calculus} ed i \emph{campi computazionali}, astrazioni che mappano punti nello spazio e nel tempo a valori
+che possono essere combinati funzionalmente~\cite[12.2.1]{10.1007/978-3-031-95589-1_12}.
 Ad esempio, in uno sciame robotico, si possono definire diversi campi computazionali
 che associano ad ogni robot un valore come la distanza minima da una sorgente o
-un vettore rappresentante il movimento desiderato \cite[2.1.2, ACV25]{amslaurea37138}.
+un vettore rappresentante il movimento desiderato~\cite[2.1.2, ACV25]{amslaurea37138}.
 
 Ogni dispositivo nel sistema raccoglie dati dal proprio stato locale e dai vicini,
 calcola il programma aggregato costruendo un risultato da esportare, ed infine
 attua il risultato del calcolo ed invia il proprio risultato ai dispositivi con
-cui è in relazione \cite[2.1.1]{amslaurea37138}.
+cui è in relazione~\cite[2.1.1]{amslaurea37138}.
 
 Un esempio classico di questa computazione è la costruzione di un gradiente spaziale,
 utilizzato per misurare la distanza di ogni nodo da una sorgente, dove le relazioni
-tra i nodi sono basate sul concetto di vicinato definito distanza cartesiana tra loro
-\cite[12.2.2]{10.1007/978-3-031-95589-1_12} (\Cref{fig:gradient_ac}).
+tra i nodi sono basate sul concetto di vicinato definito distanza cartesiana tra
+loro~\cite[12.2.2]{10.1007/978-3-031-95589-1_12}~(\Cref{fig:gradient_ac}).
 
 \begin{figure}[htpb]
     \centering
-    \input{figures/ac-gradient.tex}
+    \begin{tikzpicture}[
+        >=stealth,
+        node distance=2.5cm,
+        every node/.style={circle, draw, minimum size=8mm, font=\bfseries},
+        edge/.style={draw, thick, <->}
+    ]
+        \node[fill=red!30] (S) {0};
+        \node (A) [right of=S] {1};
+        \node (B) [above right of=A, yshift=-0.5cm] {2};
+        \node (C) [below right of=A, yshift=0.5cm] {2};
+        \node (D) [right of=B] {3};
+        \node (E) [right of=C] {3};
+
+        \path[edge] (S) -- (A);
+        \path[edge] (A) -- (B);
+        \path[edge] (A) -- (C);
+        \path[edge] (B) -- (C);
+        \path[edge] (B) -- (D);
+        \path[edge] (C) -- (E);
+        \path[edge] (D) -- (E);
+    \end{tikzpicture}
     \caption{Rappresentazione di un gradiente spaziale in un sistema distribuito.
     Il nodo sorgente (in rosso) ha distanza 0, mentre i nodi adiacenti calcolano
     la propria distanza propagando il valore attraverso il vicinato.}
@@ -60,7 +79,7 @@ tra i nodi sono basate sul concetto di vicinato definito distanza cartesiana tra
 
 Il modello di computazione distribuita che offre il paradigma dello \ac{AC} si
 pone come soluzione naturale per reti di dispositivi \ac{IoT} e sciami robotici.
-Framework preesistenti, come ScaFi (basato su Scala \cite{itwiki:144756110}) \cite[2.3]{amslaurea37138},
+Framework preesistenti, come ScaFi (basato su Scala~\cite{itwiki:144756110})~\cite[2.3]{amslaurea37138},
 sono stati concepiti per simulazioni o esecuzioni su dispositivi general-purpose,
 il che li rende incompatibili con i microcontrollori a basso costo per l'assenza
 di memoria sufficiente e garanzie real-time.
@@ -68,7 +87,7 @@ Un programma aggregato deve operare in esecuzione asincrona e continua,
 richiedendo una gestione deterministica della memoria e un accesso efficiente ai
 protocolli di rete.
 
-In questo scenario, il linguaggio Rust \cite{itwiki:149175104} rappresenta una soluzione
+In questo scenario, il linguaggio Rust~\cite{itwiki:149175104} rappresenta una soluzione
 architetturale ideale: grazie al suo modello di \emph{ownership} e all'assenza di
 \ac{GC}, Rust fornisce astrazioni a costo zero garantendo prestazioni predicibili,
 latenze minime e una sicurezza della memoria fondamentale per la programmazione
@@ -77,136 +96,89 @@ embedded.
 \section{YAAIR}
 \label{sec:yaair}
 
-YAAIR è un framework open-source nativo in Rust per l'Aggregate Computing, ideato
-per risolvere le limitazioni prestazionali dei framework basati su Virtual Machine.
-Sfruttando la natura flessibile di Rust, YAAIR propone un modello architetturale
-a strati che disaccoppia la logica di calcolo (l'engine aggregato) dalla
-serializzazione e dai protocolli di rete sottostanti.
+\ac{YAAIR} \footnote{\url{https://github.com/nicolasfara/yaair}} è un framework
+Rust open-source per lo \ac{AC}, ideato per risolvere le limitazioni prestazionali
+dei framework basati su linguaggi ad alto livello che non permettono l'esecuzione
+su sistemi embedded.
+Sfruttando la natura flessibile di Rust data dal concetto di \emph{trait},
+\ac{YAAIR} propone un modello architetturale a strati che disaccoppia la logica
+di calcolo del programma aggregato dalla serializzazione e dai protocolli di rete
+sottostanti. Questo livello di isolamento consente al sistema di operare indipendentemente
+dall'hardware, eseguendo cicli di valutazione in modo totalmente agnostico rispetto
+al trasporto fisico dei dati.
 
-Questo livello di isolamento consente a YAAIR di operare indipendentemente
-dall'hardware, eseguendo cicli di valutazione locali (composti da fasi di sensing,
-computazione e attuazione) in modo totalmente agnostico rispetto al trasporto fisico.
-L'intero sistema comunica attraverso l'implementazione di tratti (traits) astratti,
-che permettono a ciascun nodo di serializzare il proprio stato esportato e
-trasmetterlo ai propri vicini logici.
-
-\subsection{La Network}
-\label{ssec:the-network-trait}
-
-All'interno di YAAIR, la gestione topologica e di comunicazione è astratta dal
-trait \texttt{Network<Id>}. Tale interfaccia è responsabile dell'instradamento
-dei messaggi aggregati (spesso denominati \emph{exports}) tra i vari dispositivi
-interagenti. Il trait definisce principalmente tre metodologie:
-
-\begin{enumerate}
-    \item \texttt{get\_local\_id()}: Fornisce l'identificatore univoco del nodo
-    all'interno della rete spaziale (ad esempio, uno \texttt{ZenohNodeId} a
-    16 byte).
-    \item \texttt{prepare\_outbound(data)}: Serializza e trasmette i dati aggregati
-    locali al resto della rete.
-    \item \texttt{prepare\_inbound()}: Raccoglie i messaggi ricevuti dai nodi
-    vicini prima dell'inizio di un nuovo ciclo computazionale, creando uno
-    snapshot coerente per l'engine locale e gestendo la scadenza (lifespan)
-    dei messaggi pregressi per tollerare la disconnessione dei nodi.
-\end{enumerate}
-
-Rendere distribuita un'implementazione di YAAIR necessita di un protocollo
-sottostante che supporti nativamente la scoperta dinamica dei vicini e l'architettura
-\emph{peer-to-peer}. I sistemi aggregate computing storici richiedono che la
-comunicazione sia basata sull'identità, permettendo ai dispositivi di riconoscersi
-univocamente tra di loro \cite{10.1007/978-3-031-95589-1_12}[cite: 85]. Inoltre,
-l'infrastruttura di comunicazione definisce attivamente le politiche di vicinato
-\cite{10.1007/978-3-031-95589-1_12}[cite: 101].
+Il contributo di questa tesi si concentra sull'implementazione di una alternativa
+decentralizzata per lo strato di rete basata sul protocollo Zenoh.
 
 \section{Zenoh}
 \label{sec:zenoh}
 
 Zenoh è un protocollo emergente e un'infrastruttura di rete decentralizzata per
-la comunicazione D2D (Device-to-Device), orientato a latenze minime e scalabilità
-su dispositivi eterogenei. A differenza di protocolli tradizionali dell'ecosistema
-IoT come MQTT, che si appoggiano obbligatoriamente a un broker centrale (creando
-colli di bottiglia e un singolo punto di fallimento), Zenoh è progettato per
-unificazioni edge-to-cloud senza vincoli topologici stretti.
+la comunicazione \emph{pub/sub/query}, orientato a latenze minime e scalabilità
+su dispositivi eterogenei.
+A differenza di protocolli tradizionali dell'ecosistema \ac{IoT} come \ac{MQTT}
+\footnote{\url{https://mqtt.org/}}, che si appoggiano obbligatoriamente ad un
+broker centrale (creando colli di bottiglia e un singolo punto di fallimento),
+Zenoh è progettato per unificazioni \emph{edge-to-cloud} senza vincoli topologici
+stretti~\cite{zenoh:what-is-zenoh}.
 
 \subsection{Modello di comunicazione}
-\label{ssec:communication-model}
+\label{ssec:zenoh-communication-model}
 
 Il modello di Zenoh adotta un approccio ibrido altamente flessibile, basato
-essenzialmente su architetture \emph{peer-to-peer}. I nodi sulla rete possono
+essenzialmente su architetture \ac{P2P}. I nodi sulla rete possono
 assumere ruoli differenziati:
+
 \begin{itemize}
     \item \textbf{Client}: Dispositivi con risorse minime, che si connettono ai
     router o ad altri peer per l'inoltro dei pacchetti senza occuparsi della
     topologia di routing globale.
     \item \textbf{Peer}: Nodi in grado di comunicare in maniera diretta fra loro
     e di gestire topologie P2P auto-organizzanti grazie a meccanismi integrati
-    di \emph{scouting} automatico (solitamente operanti tramite multicast UDP
-    su reti locali).
+    di scoperta automatica dei nodi nella rete (\emph{scouting}).
     \item \textbf{Router}: Elementi strutturali utilizzati per unire reti isolate
-    (es. diverse VLAN) o scalare la topologia su geografie estese.
+    o scalare la topologia su geografie estese.
 \end{itemize}
+
 Tale flessibilità sposa perfettamente i requisiti dei sistemi aggregati in cui
 il fallimento di un nodo non deve compromettere l'intera struttura di comunicazione
-del \emph{neighborhood}.
+del vicinato.
 
 \subsection{Attori e concetti fondamentali}
-\label{ssec:actors-and-fundamental-concepts}
+\label{ssec:zenoh-actors-and-fundamental-concepts}
 
 A livello applicativo, la comunicazione in Zenoh avviene all'interno di una
 \emph{Sessione}, la quale incapsula la connettività del nodo. Sfruttando un
-approccio incentrato sui dati (Data-Centric), l'indirizzamento è dettato tramite
-\emph{Key Expressions} (stringhe URI-like espandibili), permettendo a molteplici
-entità di registrarsi sugli stessi topic.
+approccio incentrato sui dati, l'indirizzamento è dettato tramite \emph{Key
+Expressions}, permettendo a molteplici entità di registrarsi sugli stessi topic.
 
-Gli attori primari sono:
-\begin{itemize}
-    \item \textbf{Publishers e Subscribers}: Modello per invio asincrono unidirezionale.
-    In un contesto YAAIR, un nodo definisce un publisher per divulgare il proprio
-    contesto usando una chiave del tipo \texttt{base\_keyexpr/messages/\{node\_id\}},
-    mentre mantiene un subscriber tramite wildcard (\texttt{.../messages/*}) per
-    captare le trasmissioni del vicinato logico.
-    \item \textbf{Queriers e Queryables}: Pattern utilizzato per comunicazioni
-    RPC-like (Richiesta-Risposta). Un querier richiede attivamente dei dati, a
-    cui un queryable associato alla specifica espressione chiave è delegato a
-    rispondere.
-\end{itemize}
+Zenoh permette di utilizzare modelli di comunicazione \emph{pub/sub} e \emph{query/reply}
+in maniera ibrida all'interno della stessa sessione, definendo rispettivamente
+\emph{Publishers} che pubblicano dati su topic specifici a cui i \emph{Subscribers}
+possono iscriversi o \emph{Queryables} che rispondono a richieste effettuate attivamente
+da \emph{Queriers} in una comunicazione più simile al modello \ac{RPC}.
 
 \section{Zenoh per sistemi embedded}
 \label{ssec:zenoh-for-embdedded-systems}
 
-L'inclusione di Zenoh in un contesto reale di droni o sistemi cibernetici leggeri
-incontra limitazioni se si utilizza l'implementazione completa in Rust nativo
-(\texttt{zenoh\_full}). Quest'ultima richiede il supporto per la libreria standard
-(allocatori complessi, stack asincroni profondi e moduli di rete OS-dependent),
-risultando inapplicabile a microcontrollori \emph{bare-metal} o RTOS.
+Nonostante la flessibilità di Rust come linguaggio che ne permette l'utilizzo
+anche per la programmazione di dispositivi \emph{bare-metal}, come diversi dispositivi
+utilizzati per la programmazione \ac{IoT}, Zenoh come libreria dipende da alcune
+funzionalità specifiche che richiedono la presenza di un sistema operativo completo
+sul dispositivo.
 
-Per colmare questa lacuna computazionale è stato introdotto \textbf{Zenoh-pico},
-un wrapper e porting leggero della libreria in C appositamente concepito per
-sistemi embedded dotati di vincoli severi. Si menziona, a corredo dell'ecosistema,
-il nascente progetto \texttt{zenoh-nostd}, un'iniziativa volta a fornire un porting
-interamente in Rust senza dipendenze dalla libreria standard. Tuttavia, trovandosi
-ancora in una fase sperimentale embrionale, il ricorso al C-wrapper di Zenoh-pico
-rimane l'approccio ingegneristico più stabile e consolidato per contesti di produzione
-embedded.
+Per colmare questa lacuna è stato introdotto Zenoh pico \footnote{\url{https://github.com/eclipse-zenoh/zenoh-pico}},
+un porting leggero della libreria in C appositamente concepito per sistemi embedded
+dotati di vincoli severi.
+Questa versione copre quasi completamente le funzionalità della libreria originale,
+omettendo la possibilità di utilizzare un nodo come \emph{router}
+(\cref{ssec:zenoh-communication-model}).
 
-\subsection{Limitazioni di Zenoh Pico}
-\label{ssec:zenoh-pico-limitations}
-
-Pur risolvendo i requisiti di sistema, Zenoh-pico differisce in vari aspetti
-dall'implementazione nativa, tra cui:
-\begin{itemize}
-    \item \textbf{Assenza di Async/Await Rust}: La libreria C sfrutta un modello
-    basato su loop di polling e callback, costringendo il programmatore a
-    implementare un layer di integrazione basato su FFI (Foreign Function Interface)
-    per trasformarlo in primitive asincrone per i moderni executor.
-    \item \textbf{Set di funzionalità ridotto}: Features di routing avanzate,
-    memorizzazione persistente interna e crittografia complessa sono disabilitate
-    di default o semplificate per abbattere l'impronta di memoria.
-    \item \textbf{Sicurezza della memoria}: Le comunicazioni transnazionali tra
-    il contesto C e Rust sollevano rischi legati a \emph{memory leaks} e
-    dereferenziazioni nulle, imponendo regole stringenti nella costruzione dei
-    binding (tramite crate come \texttt{zenoh-pico-sys}).
-\end{itemize}
+Si menziona, a corredo dell'ecosistema, il nascente progetto \texttt{zenoh-nostd}
+\footnote{\url{https://github.com/ZettaScaleLabs/zenoh-nostd}}, un'iniziativa
+volta a fornire un porting interamente in Rust senza dipendenze dalla libreria standard.
+Tuttavia, trovandosi ancora in una fase sperimentale, per la creazione del contributo
+di questa tesi è stato utilizzato Zenoh pico creando un wrapper Rust per la libreria.
 
 \section{Embedded Rust}
 \label{ssec:embedded-rust}
@@ -285,4 +257,4 @@ Sfruttando la generazione di macchine a stati finiti in fase di compilazione for
 da Rust Asincrono, Embassy assicura un'esecuzione efficiente del codice logico
 senza bloccaggi dell'OS sottostante, minimizzando il consumo energetico e
 abilitando, ad esempio, l'invio reattivo di pacchetti \emph{heartbeat} per
-notificare la presenza dinamica dei nodi all'interno dello sciame \emph{peer-to-peer}.
+notificare la presenza dinamica dei nodi all'interno dello sciame \ac{P2P}.
