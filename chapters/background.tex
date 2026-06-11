@@ -58,28 +58,21 @@ tra i nodi sono basate sul concetto di vicinato definito distanza cartesiana tra
 \subsection{Aggregate computing su sistemi embedded}
 \label{ssec:ac-on-embedded-devices}
 
-Sebbene l'Aggregate Computing offra soluzioni eleganti per sistemi complessi,
-l'implementazione pratica nel mondo reale deve affrontare sfide notevoli, specialmente
-quando l'esecuzione è demandata a dispositivi con risorse fortemente limitate
-\cite{10.1007/978-3-031-95589-1_12}[cite: 47]. Recenti avanzamenti hanno esplorato
-il rilascio di questi sistemi su architetture embedded, affinché piccoli microcontrollori
-possano eseguire le computazioni aggregate in modo efficiente in reti IoT o sciami
-robotici \cite{10.1007/978-3-031-95589-1_12}[cite: 72, 73].
+Il modello di computazione distribuita che offre il paradigma dello \ac{AC} si
+pone come soluzione naturale per reti di dispositivi \ac{IoT} e sciami robotici.
+Framework preesistenti, come ScaFi (basato su Scala \cite{itwiki:144756110}) \cite[2.3]{amslaurea37138},
+sono stati concepiti per simulazioni o esecuzioni su dispositivi general-purpose,
+il che li rende incompatibili con i microcontrollori a basso costo per l'assenza
+di memoria sufficiente e garanzie real-time.
+Un programma aggregato deve operare in esecuzione asincrona e continua,
+richiedendo una gestione deterministica della memoria e un accesso efficiente ai
+protocolli di rete.
 
-Framework preesistenti, come ScaFi (basato su Scala), sono stati concepiti per
-simulazioni o esecuzioni su dispositivi general-purpose dotati di un runtime
-Java (JVM) \cite{10.1007/978-3-031-95589-1_12}[cite: 74], il che li rende
-incompatibili con i microcontrollori a basso costo per l'assenza di memoria
-sufficiente e garanzie real-time. Un programma aggregato deve operare in esecuzione
-asincrona e continua \cite{10.1007/978-3-031-95589-1_12}[cite: 93], richiedendo
-una gestione deterministica della memoria e un accesso efficiente ai protocolli
-di rete.
-
-In questo scenario, il linguaggio \textbf{Rust} rappresenta una soluzione
-architetturale ideale. Grazie al suo modello di \emph{ownership} e all'assenza di
-\emph{Garbage Collector}, Rust fornisce astrazioni a costo zero garantendo
-prestazioni predicibili, latenze minime e una sicurezza della memoria fondamentale
-per la programmazione embedded.
+In questo scenario, il linguaggio Rust \cite{itwiki:149175104} rappresenta una soluzione
+architetturale ideale: grazie al suo modello di \emph{ownership} e all'assenza di
+\ac{GC}, Rust fornisce astrazioni a costo zero garantendo prestazioni predicibili,
+latenze minime e una sicurezza della memoria fondamentale per la programmazione
+embedded.
 
 \section{YAAIR}
 \label{sec:yaair}
