@@ -3,32 +3,32 @@
 
 Questo capitolo introduce le tecnologie, i paradigmi ed i concetti fondamentali
 necessari per la compensione del contributo della tesi.
-In apertura si delineano i principi dell'Aggregate Computing, con particolare
+In apertura si delineano i principi dello \ac{AC} \sidenote{Con le parole inglesi
+non bisogna usare l'apostrofo vero?}, con particolare
 attenzione all'implementazione nel contesto dei dispositivi con risorse limitate.
 Successivamente, si presentano il framework \ac{YAAIR}, il protocollo di rete
-Zenoh \footnote{\url{https://zenoh.io/}} ed il relativo ecosistema per sistemi embedded.
-In conclusione, viene fatta un'analisi delle tecnologie Rust necessarie per la
-programmazione e compilazione \emph{cross-platform} su architetture hardware
-eterogenee.
+Zenoh \footnote{\url{https://zenoh.io/}} e l'ecosistema di Rust per la programmazione
+embedded.
 
 \section{Aggregate computing}
 \label{sec:aggregate-computing}
 Il rapido proliferare di dispositivi per lo \ac{IoT} e di sistemi di
 calcolo pervasivo ha generato sfide senza precedenti nella programmazione e nel
-coordinamento di sistemi altamente distribuiti.
-Gli approcci di programmazione tradizionali faticano a gestire la complessità
-derivante dalla necessità di far cooperare centinaia o migliaia di dispositivi
-in modo trasparente e resiliente~\cite[12.1]{10.1007/978-3-031-95589-1_12}.
-\note{Questo primo paragrafo è praticamente la traduzione parola per parola della
+coordinamento di sistemi altamente distribuiti, dove gli approcci di programmazione
+tradizionali faticano a gestire la complessità derivante dalla necessità di far
+cooperare centinaia o migliaia di dispositivi in modo trasparente e
+resiliente~\cite[12.1]{10.1007/978-3-031-95589-1_12}.
+\sidenote{Questo primo paragrafo è praticamente la traduzione parola per parola della
 sezione citata del vostro paper: devo mettere la citazione in qualche modo per far
 capire che è esattamente lo stesso testo?}
-
-\subsection{Modello computazionale}
-\label{ssec:ac-computational-model}
 
 Lo \ac{AC} si impone come un paradigma di \emph{macroprogrammazione}~\cite{enwiki:1313791910}
 che astrae l'esecuzione di un singolo programma su una rete di dispositivi
 considerandola come un'unica entità collettiva.
+
+\subsection{Modello computazionale}
+\label{ssec:ac-computational-model}
+
 Al centro di questo modello vi sono il \emph{field calculus} ed i \emph{campi computazionali}, astrazioni che mappano punti nello spazio e nel tempo a valori
 che possono essere combinati funzionalmente~\cite[12.2.1]{10.1007/978-3-031-95589-1_12}.
 Ad esempio, in uno sciame robotico, si possono definire diversi campi computazionali
@@ -40,7 +40,7 @@ calcola il programma aggregato costruendo un risultato da esportare, ed infine
 attua il risultato del calcolo ed invia il proprio risultato ai dispositivi con
 cui è in relazione~\cite[2.1.1]{amslaurea37138}.
 
-Un esempio classico di questa computazione è la costruzione di un gradiente spaziale,
+Un esempio classico di programma aggregato è la costruzione di un gradiente spaziale,
 utilizzato per misurare la distanza di ogni nodo da una sorgente, dove le relazioni
 tra i nodi sono basate sul concetto di vicinato definito distanza cartesiana tra
 loro~\cite[12.2.2]{10.1007/978-3-031-95589-1_12}~(\Cref{fig:gradient_ac}).
@@ -81,17 +81,17 @@ Il modello di computazione distribuita che offre il paradigma dello \ac{AC} si
 pone come soluzione naturale per reti di dispositivi \ac{IoT} e sciami robotici.
 Framework preesistenti, come ScaFi (basato su Scala~\cite{itwiki:144756110})~\cite[2.3]{amslaurea37138},
 sono stati concepiti per simulazioni o esecuzioni su dispositivi general-purpose,
-il che li rende incompatibili con i microcontrollori a basso costo per l'assenza
-di memoria sufficiente e garanzie real-time.
-Un programma aggregato deve operare in esecuzione asincrona e continua,
-richiedendo una gestione deterministica della memoria e un accesso efficiente ai
-protocolli di rete.
+il che li rende incompatibili con i microcontrollori a basso costo a causa
+dell'assenza di memoria sufficiente e garanzie di esecuzione \emph{real-time}.
+Un programma aggregato deve operare in maniera asincrona e continua, richiedendo
+una gestione deterministica della memoria ed un accesso efficiente ai protocolli
+di rete.
 
 In questo scenario, il linguaggio Rust~\cite{itwiki:149175104} rappresenta una soluzione
 architetturale ideale: grazie al suo modello di \emph{ownership} e all'assenza di
-\ac{GC}, Rust fornisce astrazioni a costo zero garantendo prestazioni predicibili,
-latenze minime e una sicurezza della memoria fondamentale per la programmazione
-embedded.
+\ac{GC}, Rust fornisce astrazioni di alto livello a costo zero garantendo
+prestazioni predicibili, latenze minime e un uso sicuro della memoria fondamentale
+per la programmazione embedded.
 
 \section{YAAIR}
 \label{sec:yaair}
@@ -118,16 +118,15 @@ la comunicazione \emph{pub/sub/query}, orientato a latenze minime e scalabilità
 su dispositivi eterogenei.
 A differenza di protocolli tradizionali dell'ecosistema \ac{IoT} come \ac{MQTT}
 \footnote{\url{https://mqtt.org/}}, che si appoggiano obbligatoriamente ad un
-broker centrale (creando colli di bottiglia e un singolo punto di fallimento),
-Zenoh è progettato per unificazioni \emph{edge-to-cloud} senza vincoli topologici
-stretti~\cite{zenoh:what-is-zenoh}.
+broker centrale, Zenoh è progettato per unificazioni \emph{edge-to-cloud} senza
+vincoli topologici stretti~\cite{zenoh:what-is-zenoh}, permettendo di creare reti
+prive di colli di bottiglia o singoli punti di fallimento.
 
 \subsection{Modello di comunicazione}
 \label{ssec:zenoh-communication-model}
 
-Il modello di Zenoh adotta un approccio ibrido altamente flessibile, basato
-essenzialmente su architetture \ac{P2P}. I nodi sulla rete possono
-assumere ruoli differenziati:
+Per la comunicazione Zenoh adotta un approccio ibrido altamente flessibile in cui
+i nodi sulla rete possono assumere ruoli differenziati:
 
 \begin{itemize}
     \item \textbf{Client}: Dispositivi con risorse minime, che si connettono ai
@@ -140,9 +139,10 @@ assumere ruoli differenziati:
     o scalare la topologia su geografie estese.
 \end{itemize}
 
-Tale flessibilità sposa perfettamente i requisiti dei sistemi aggregati in cui
-il fallimento di un nodo non deve compromettere l'intera struttura di comunicazione
-del vicinato.
+Indipendentemente dal ruolo di un nodo, Zenoh astrare la comunicazione sulla rete
+permettendo ad ognuno di essi di agire in maniera indipendente, rendendolo una
+soluzione ideale per i programmi aggregati in quanto permette di comunicare in
+maniera diretta con altri nodi sulla rete astraendo i salti necessari per arrivarci.
 
 \subsection{Attori e concetti fondamentali}
 \label{ssec:zenoh-actors-and-fundamental-concepts}
@@ -184,8 +184,8 @@ di questa tesi è stato utilizzato Zenoh pico creando un wrapper Rust per la lib
 \label{ssec:embedded-rust}
 
 Rust offre un ecosistema robusto e maturo per la programmazione di sistemi embedded,
-con un supporto nativo del compilatore per la compilazione per diverse architetture,
-per l'accesso alla libreria standard completamente opzionale per i dispositivi che non
+con un supporto nativo del compilatore per diverse architetture, per l'accesso
+alla libreria standard completamente opzionale per i dispositivi che non
 ne offrono un'implementazione e per l'utilizzo di funzioni provenienti da librerie
 esterne precompilate.
 
@@ -203,6 +203,11 @@ dispositivo compatibile. L'ecosistema intorno a questo linguaggio permette inolt
 di definire o scaricare da fonti esterne versioni alternative della \emph{toolchain},
 permettendo di esterndere la compatibilità della libreria standard ad ulteriori
 piattaforme.
+
+Il linguaggio fornisce inoltre un sistema di compilazione condizionale che permette
+la definizione di moduli e porzioni di codice in base alle caratteristiche del
+target per cui viene compilato il programma, come l'architettura, il sistema operativo
+o la presenza di determinate funzionalità.
 
 \subsection{Embassy}
 \label{sec:embassy}
@@ -227,8 +232,8 @@ la loro gamma di prodotti.
 
 Tramite \ac{ESP-IDF}, viene fornita un'implementazione dell'astrazione dell hardware
 fornita da embassy (\cref{sec:embassy}) che permette
-l'interazione con le periferiche hardware disponibili sul microcontrollore tramite
-un'unica \ac{API} compatibile con tutti i dispositivi da loro prodotti, sfruttando
-la natura \emph{memory-safe} e le funzionalità di gestione degli errori del
-linguaggio per garantire un accesso facile e sicuro a funzionalità come Wi-Fi e
-comunicazione seriale, spesso utilizzate nel campo dello \ac{IoT}.
+l'interazione con le periferiche disponibili sul microcontrollore tramite un'unica
+\ac{API} compatibile con tutti i dispositivi da loro prodotti, sfruttando la natura
+\emph{memory-safe} e le funzionalità di gestione degli errori del linguaggio per
+garantire un accesso facile e sicuro a funzionalità come Wi-Fi e comunicazione
+seriale, spesso utilizzate nel campo dello \ac{IoT}.
