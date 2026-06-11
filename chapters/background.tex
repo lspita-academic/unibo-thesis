@@ -183,78 +183,52 @@ di questa tesi è stato utilizzato Zenoh pico creando un wrapper Rust per la lib
 \section{Embedded Rust}
 \label{ssec:embedded-rust}
 
-Per mitigare le discrepanze tra le piattaforme di testing (computer x86/ARM completi)
-e il dominio di attuazione robotico, Rust si presenta come ecosistema duale.
-Questo bivalente modello si adatta particolarmente all'astrazione hardware, requisito
-centrale nell'orchestrazione aggregata che postula l'agnosticismo della piattaforma,
-dove robot con piattaforme differenti dovrebbero poter unirsi al team in modo flessibile
-\cite{10.1007/978-3-031-95589-1_12}[cite: 154].
+Rust offre un ecosistema robusto e maturo per la programmazione di sistemi embedded,
+con un supporto nativo del compilatore per la compilazione per diverse architetture,
+per l'accesso alla libreria standard completamente opzionale per i dispositivi che non
+ne offrono un'implementazione e per l'utilizzo di funzioni provenienti da librerie
+esterne precompilate.
+
+La natura fortemente generalizzata del linguaggio permette inoltre di utilizzare
+le astrazioni di alto livello fornite dal linguaggio su qualsiasi piattaforma,
+delegando le implementazioni specifiche a librerie apposite lasciando libera scelta
+in base alle necessità del progetto.
 
 \subsection{Cross-compilation}
 \label{ssec:cross-compilation}
 
-L'infrastruttura di Cargo e \texttt{rustc} abilita la compilazione multipiattaforma
-mediante pattern di \emph{conditional compilation}. L'aggiunta di \emph{toolchain}
-specifiche (es. \texttt{nightly}) accoppiate alla feature \texttt{build-std}
-permette di generare binari compilati dal sorgente base per target come architetture
-RISC-V o Xtensa. Questo approccio è esplicitato attraverso direttive condizionali
-in Rust, che attivano moduli diversi in fase di build dipendentemente dall'OS
-target (e.g., \texttt{\#[cfg(target\_os = "espidf")]}), permettendo una vera e
-propria architettura a doppia implementazione.
-
-% \begin{lstlisting}[language=Rust, caption={Esempio di compilazione condizionale per l'architettura di rete YAAIR}, label={lst:cfg_zenoh}]
-% #[cfg(zenoh_impl = "zenoh_full")]
-% #[path = "zenoh_full/mod.rs"]
-% mod zenoh_impl;
-
-% #[cfg(zenoh_impl = "zenoh_pico")]
-% #[path = "zenoh_pico/mod.rs"]
-% mod zenoh_impl;
-% \end{lstlisting}
-
-\subsection{ESP-IDF}
-\label{ssec:esp-idf}
-
-Per i dispositivi basati sui chip Espressif (come ESP32), l'ambiente Embedded
-Rust sfrutta comunemente un bridge diretto con l'Espressif IoT Development Framework
-(ESP-IDF). Invece di adottare un approccio puramente \emph{bare-metal}
-(\texttt{no\_std}), la compilazione tramite l'ecosistema \texttt{esp-idf-sys}
-permette di dotare la CPU di una sottile implementazione della libreria standard
-di Rust, garantendo l'accesso ad allocatori heap globali e threading gestito
-dall'RTOS (FreeRTOS) fornito da Espressif.
-
-\subsubsection{Interazione con l'hardware}
-\label{sssec:hardware-interaction}
-
-L'astrazione fornita dai crate legati a ESP-IDF permette l'interazione type-safe
-con le periferiche hardware del microcontrollore. Il Wi-Fi, critico per la
-costituzione della rete di Zenoh, i pin GPIO, i timer e i canali I2C/SPI per
-l'attuazione cinetica, vengono mappati su struct Rust. Qualora la sicurezza non
-possa essere garantita a livello di compilatore (come nelle modifiche hardware
-concorrenti), la responsabilità è mediata da primitivi di sincronizzazione o
-passaggi di possesso espliciti.
-
-\subsubsection{Componenti e librerie esterne}
-\label{sssec:components-and-external-libraries}
-
-Un vantaggio sostanziale dell'architettura ESP-IDF in Rust risiede nella capacità
-di registrare librerie C come \emph{extra components} durante il processo di build
-basato su CMake. Nel contesto della tesi, questo paradigma ingegneristico è vitale:
-la libreria C \texttt{zenoh-pico} viene configurata come modulo esterno, in modo
-che l'infrastruttura di build di ESP-IDF la compili nativamente per l'architettura
-target, estraendo contestualmente i binding sicuri per Rust tramite utilità come
-\texttt{bindgen}.
+Il compilatore Rust \texttt{rustc} è nativamente un compilatore per diverse architetture,
+permettendo la creazione di artefatti binari autosufficienti ed eseguibili su qualsiasi
+dispositivo compatibile. L'ecosistema intorno a questo linguaggio permette inoltre
+di definire o scaricare da fonti esterne versioni alternative della \emph{toolchain},
+permettendo di esterndere la compatibilità della libreria standard ad ulteriori
+piattaforme.
 
 \subsection{Embassy}
 \label{sec:embassy}
 
-Infine, l'esecuzione in background di task legati allo scouting di rete, alla
-ricezione costante di messaggi tramite callback di Zenoh e ai cicli computazionali
-di YAAIR necessita di un approccio concorrente efficiente. Al fine di evitare i
-costi dei thread di sistema tradizionali, la libreria \textbf{Embassy} ricopre
-il ruolo di runtime asincrono moderno progettato esclusivamente per sistemi embedded.
-Sfruttando la generazione di macchine a stati finiti in fase di compilazione fornita
-da Rust Asincrono, Embassy assicura un'esecuzione efficiente del codice logico
-senza bloccaggi dell'OS sottostante, minimizzando il consumo energetico e
-abilitando, ad esempio, l'invio reattivo di pacchetti \emph{heartbeat} per
-notificare la presenza dinamica dei nodi all'interno dello sciame \ac{P2P}.
+Embassy \footnote{\url{https://embassy.dev/}} è un framework per lo sviluppo di
+programmi embedded che fornisce interfacce di astrazione verso l'hardware in maniera
+indipendente dalle specifiche del dispositivo.
+
+In particolare, per la creazione del contributo di questa tesi, è stato sfruttato
+il runtime per la programmazione di task concorrenti fornito dalla libreria,
+per permettere la creazione di una \ac{API} moderna tramite costrutti di
+\texttt{async/await}.
+
+\subsection{ESP-IDF}
+\label{ssec:esp-idf}
+
+Espressif Systems \footnote{\url{https://www.espressif.com/}}, azienda produttrice
+di microcontrollori della famiglia ESP, supporta lo sviluppo di programmi in Rust
+per i propri dispositivi fornendo implementazioni della toolchain per le architetture
+da loro utilizzate, permettendo così l'utilizzo della libreria standard su tutta
+la loro gamma di prodotti.
+
+Tramite \ac{ESP-IDF}, viene fornita un'implementazione dell'astrazione dell hardware
+fornita da embassy (\cref{sec:embassy}) che permette
+l'interazione con le periferiche hardware disponibili sul microcontrollore tramite
+un'unica \ac{API} compatibile con tutti i dispositivi da loro prodotti, sfruttando
+la natura \emph{memory-safe} e le funzionalità di gestione degli errori del
+linguaggio per garantire un accesso facile e sicuro a funzionalità come Wi-Fi e
+comunicazione seriale, spesso utilizzate nel campo dello \ac{IoT}.
