@@ -23,22 +23,28 @@ in modo trasparente e resiliente \cite[12.1]{10.1007/978-3-031-95589-1_12}.
 sezione citata del vostro paper: devo mettere la citazione in qualche modo per far
 capire che è esattamente lo stesso testo?}
 
-In questo contesto, lo \ac{AC} si impone come un paradigma di
-\emph{macro-programmazione} \cite{enwiki:1313791910} che astrae l'esecuzione di un
-singolo programma su una rete di dispositivi considerandola come un'unica entità
-collettiva.
+\subsection{Modello computazionale}
+\label{ssec:ac-computational-model}
+
+Lo \ac{AC} si impone come un paradigma di \emph{macroprogrammazione} \cite{enwiki:1313791910}
+che astrae l'esecuzione di un singolo programma su una rete di dispositivi
+considerandola come un'unica entità collettiva.
 Al centro di questo modello vi sono il \emph{field calculus} ed i \emph{campi
 computazionali}, astrazioni che mappano punti nello spazio e nel tempo a valori
 che possono essere combinati funzionalmente \cite[12.2.1]{10.1007/978-3-031-95589-1_12}.
+Ad esempio, in uno sciame robotico, si possono definire diversi campi computazionali
+che associano ad ogni robot un valore come la distanza minima da una sorgente o
+un vettore rappresentante il movimento desiderato \cite[2.1.2, ACV25]{amslaurea37138}.
 
 Ogni dispositivo nel sistema raccoglie dati dal proprio stato locale e dai vicini,
-calcola il programma aggregato costruendo un contesto, e infine aggiorna il proprio
-stato trasmettendo il proprio intento ai dispositivi con cui è in relazione.
+calcola il programma aggregato costruendo un risultato da esportare, ed infine
+attua il risultato del calcolo ed invia il proprio risultato ai dispositivi con
+cui è in relazione \cite[2.1.1]{amslaurea37138}.
+
 Un esempio classico di questa computazione è la costruzione di un gradiente spaziale,
-utilizzato per misurare la distanza di ogni nodo da una sorgente,
-dove le relazioni tra i nodi sono basate sul concetto di vicinato
-\cite[12.2.2]{10.1007/978-3-031-95589-1_12}, ovvero sulla distanza cartesiana tra
-loro (\Cref{fig:gradient_ac}).
+utilizzato per misurare la distanza di ogni nodo da una sorgente, dove le relazioni
+tra i nodi sono basate sul concetto di vicinato definito distanza cartesiana tra loro
+\cite[12.2.2]{10.1007/978-3-031-95589-1_12} (\Cref{fig:gradient_ac}).
 
 \begin{figure}[htpb]
     \centering
