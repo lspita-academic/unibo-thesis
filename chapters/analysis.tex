@@ -37,33 +37,29 @@ di studio e sviluppo.
 \section{Vincoli}
 \label{sec:constraints}
 
-\subsection{Vincoli hardware}
-\label{ssec:hardware-constraints}
+La natura eterogenea e trasparente della rete richiesta dagli obbiettivi del
+contributo impone alcuni vincoli su alcune scelte progettuali e di architettura.
 
-Caratteristiche del microcontrollore ESP32C3 target: memoria disponibile,
-assenza di MMU, architettura riscv. Come questi limiti condizionano
-le scelte su allocazione, dimensione dei buffer e footprint del codice.
-
-Descrizione di Raspberry Pi 0 come target embedded ma con un OS standard (Linux)
-che quindi può utilizzare la versione completa di Zenoh.
-
-\subsection{Vincoli imposti da Zenoh Pico}
-\label{ssec:zenoh-pico-constraints}
-
-Necessità di libreria ed interazione con il sistema tramite framework, rendendo
-quindi il progetto dipendente da esp-idf.
-Originariamente zenoh pico supporta molteplici tipi di dispositivi tramite platformio,
-ma si è scelto di restare limitati a dispositivi esp per poter utilizzare l'ecosistema
-esp-rs che rende il processo di integrazione della libreria molto più semplice
-rispetto all'integrare platformio dentro il processo di build Rust.
-
-\subsection{Compatibilità con YAAIR}
-\label{ssec:yaair-constraints}
-
-Il trait Network impone un contratto preciso da rispettare senza
-modificare il codice del framework.
-La soluzione deve essere trasparente: YAAIR non deve sapere se
-sotto c'è Zenoh o Zenoh Pico.
+\begin{description}
+	\item[V1] \textit{Compatibilità con sistemi Espressif}. Nonostante supporti
+	i dispositivi a risorse limitate, anche Zenoh pico richiede l'accesso ad alcune
+	primitive di sistema che non ne permettono l'utilizzo su dispositivi puramente
+	bare-metal.
+	Originariamente, la libreria utilizza PlatformIO \footnote{\url{https://platformio.org/}}
+	come strumento per la compilazione per diverse piattaforme, così da supportare
+	facilmente tutte le famiglie di dispositivi più popolari.
+	Nonostante una così vasta gamma di dispositivi supportati fosse l'obbiettivo
+	originale anche per questo progetto, l'integrazione di questo strumento all'interno
+	del processo di compilazione Rust non è semplice, di conseguenza a causa di
+	mancanza di tempo si è optato per ridurre il vincolo di compatibilità ai
+	sistemi Espressif, che offrono nativamente un supporto eccellente per il
+	linguaggio scelto (\cref{ssec:esp-idf}).
+	\item[V2] \textit{Compatibilità con \ac{YAAIR}}. Per sfruttare un'architettura
+	a strati flessibile, \ac{YAAIR} impone che l'implementazione della rete segua
+	un'interfaccia molto semplice ma specifica. L'implementazione create in questo
+	contributo deve essere perfettamente compatibile con essa e non deve richiedere
+	trattamenti speciali che impediscano al resto del framework di agire normalmente.
+\end{description}
 
 \section{Requisiti funzionali}
 \label{sec:functional-requirements}
