@@ -64,16 +64,50 @@ contributo impone alcuni vincoli su alcune scelte progettuali e di architettura.
 \section{Requisiti funzionali}
 \label{sec:functional-requirements}
 
-\begin{itemize}
-    \item Invio e ricezione di messaggi tra nodi.
-    \item Scoperta automatica dei nodi.
-    \item Rilevamento della perdita di un nodo entro un timeout configurabile.
-\end{itemize}
+I requisiti funzionali derivano in parte dall'interfaccia imposta da \ac{YAAIR}
+e in parte dalle necessità intrinseche della rete.
+
+\begin{description}
+	\item[RF1] \textit{Comunicazione tra nodi}. Ciascun nodo deve essere in grado
+	di pubblicare aggiornamenti ed ascoltare quelli dei nodi con cui è in relazione
+	per esportare il proprio risultato in maniera agnostica alla topologia
+	della rete.
+
+	\item[RF2] \textit{Scoperta automatica dei nodi}. Al momento dell'ingresso
+	in rete, un nodo deve essere in grado di individuare autonomamente gli altri
+	nodi presenti senza richiedere configurazione manuale o per mezzo di un'unità
+	dedicata, preservando così la natura decentralizzata del sistema.
+
+	\item[RF3] \textit{Rilevamento della perdita di un nodo}. La rete deve
+	rilevare l'uscita o il fallimento di un nodo entro un intervallo di tempo
+	configurabile. Alla scadenza del timeout, gli altri partecipanti devono
+	essere notificati e lo stato interno della rete deve essere aggiornato
+	di conseguenza, consentendo al framework di reagire opportunamente all'evento
+	e di non dedicare più risorse al nodo perso.
+
+	\item[RF4] \textit{Interfaccia compatibile con \ac{YAAIR}}. L'implementazione
+	deve esporre esattamente l'interfaccia di rete prevista dal framework
+	\ac{YAAIR}, senza richiedere modifiche al codice esistente né trattamenti
+	speciali da parte degli altri moduli. La compatibilità deve essere garantita
+	sia per la versione standard basata su Zenoh che per quella embedded
+	basata su Zenoh pico.
+\end{description}
 
 \section{Requisiti non funzionali}
 \label{sec:non-functional-requirements}
 
-\begin{itemize}
-    \item Portabilità tra Zenoh e Zenoh Pico.
-    \item Strategie alternative di gestione della perdita di nodi.
-\end{itemize}
+\begin{description}
+	\item[RNF1] \textit{Portabilità tra Zenoh e Zenoh pico}. L'architettura
+	della rete deve essere strutturata in modo da poter essere compilata e
+	utilizzata sia su sistemi desktop o server tramite la libreria Zenoh standard,
+	sia su sistemi embedded Espressif tramite Zenoh pico, senza duplicare la
+	logica applicativa. Le differenze tra le due librerie devono essere
+	incapsulate in un livello di astrazione dedicato.
+
+	\item[RNF2] \textit{Strategie alternative di gestione della perdita di nodi}.
+	Il meccanismo di rilevamento e gestione dell'uscita di un nodo dalla rete
+	deve essere progettato con una struttura modulare, così da permettere
+	l'adozione di strategie diverse a seconda del contesto applicativo.
+	Ad esempio, in scenari con risorse limitate può essere preferibile una strategia
+	semplificata rispetto a una più robusta ma costosa in termini di memoria o banda.
+\end{description}
