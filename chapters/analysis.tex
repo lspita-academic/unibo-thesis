@@ -8,9 +8,8 @@ Definizione chiara degli obbiettivi ed il focus di questo progetto:
 \begin{itemize}
 	\item Studio di Zenoh: il suo funzionamento, il modello peer
 	      to peer (scouting, router, etc\dots) e come può essere utilizzato.
-	\item Setup del techstack: embdedded rust, il framework esp-idf, integrazione
-	      di librerie esterne e creazione del wrapper.
-	      \sidenote{come dovrei usare inglesismi come techstack?}
+	\item Setup dello stack tecnologico: embdedded rust, il framework esp-idf,
+	      integrazione di librerie esterne e creazione del wrapper.
 	\item Creazione della network: comunicazione, gestione della perdita di nodi,
 	      integrazione con yaair.
 \end{itemize}
@@ -24,12 +23,19 @@ Definizione chiara degli obbiettivi ed il focus di questo progetto:
 Caratteristiche del microcontrollore ESP32C3 target: memoria disponibile,
 assenza di MMU, architettura riscv. Come questi limiti condizionano
 le scelte su allocazione, dimensione dei buffer e footprint del codice.
-Menzione dell'alternativa per Zenoh normale su Raspberry Pi 0.
+
+Descrizione di Raspberry Pi 0 come target embedded ma con un OS standard (Linux)
+che quindi può utilizzare la versione completa di Zenoh.
 
 \subsection{Vincoli imposti da Zenoh Pico}
 \label{ssec:zenoh-pico-constraints}
 
-Assenza di async nativo, callback tramite funzioni C-style, gestione del multithreading.
+Necessità di libreria ed interazione con il sistema tramite framework, rendendo
+quindi il progetto dipendente da esp-idf.
+Originariamente zenoh pico supporta molteplici tipi di dispositivi tramite platformio,
+ma si è scelto di restare limitati a dispositivi esp per poter utilizzare l'ecosistema
+esp-rs che rende il processo di integrazione della libreria molto più semplice
+rispetto all'integrare platformio dentro il processo di build Rust.
 
 \subsection{Compatibilità con YAAIR}
 \label{ssec:yaair-constraints}
