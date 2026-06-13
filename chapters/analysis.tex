@@ -8,15 +8,31 @@ hardware e software dalle tegnologie e dispositivi utilizzati.
 \section{Obbiettivi}
 \label{sec:objectives}
 
-Definizione chiara degli obbiettivi ed il focus di questo progetto:
-\begin{itemize}
-	\item Studio di Zenoh: il suo funzionamento, il modello peer
-	      to peer (scouting, router, etc\dots) e come può essere utilizzato.
-	\item Setup dello stack tecnologico: embdedded rust, il framework esp-idf,
-	      integrazione di librerie esterne e creazione del wrapper.
-	\item Creazione della network: comunicazione, gestione della perdita di nodi,
-	      integrazione con yaair.
-\end{itemize}
+L'obbiettivo primario del progetto, come menzionato in precedenza (\cref{sec:contribution}),
+consiste nello sviluppo di una rete decentralizzata per il framework \ac{YAAIR}
+che utilizzi il protocollo Zenoh e che supporti sistemi eterogenei: la natura
+del problem necessario uno studio non banale delle tecnologie e dell'ecosistema
+utilizzato che rende il contributo finale il risultato di una serie di processi
+di studio e sviluppo.
+
+\begin{description}
+	\item[O1] \textit{Studio di Zenoh}. Zenoh è la tecnologia che funge da base
+	fondamentale per la comunicazione nella rete implementata, è quindi necessario
+	uno studio approfondito del suo funzionamento, dei suoi costrutti ed elementi
+	primari e delle funzionalità sche offre e relative limitazioni.
+	\item[O2] \textit{Integrazione dell'ecosistema embedded}. I sistemi embedded
+	sono trattati come piattaforma non secondaria in questo progetto, e l'integrazione
+	con essi richiede l'utilizzo di diverse librerie e framework oltre che un'attenzione
+	particolare all'utilizzo delle risorse e l'interazione con i componenti del
+	dispositivo.
+	Inoltre, la scelta di Rust come linguaggio comporta la necessità di creare un
+	wrapper intorno alla libreria Zenoh pico (\cref{ssec:zenoh-for-embdedded-systems})
+	per un accesso alle primitive della libreria da parte della rete tramite una
+	\ac{API} memory-safe e più simile alla versione originale di Zenoh.
+	\item[O3] \textit{Implementazione della rete}. Il contributo principale di questa
+	tesi è la creazione della rete stessa, che deve fornire una comunicazione
+	decentralizzata, affidabile e compatibile in maniera trasparente con \ac{YAAIR}.
+\end{description}
 
 \section{Vincoli}
 \label{sec:constraints}
