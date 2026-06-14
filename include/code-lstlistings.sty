@@ -5,7 +5,7 @@
 % LISTING CONFIGURATIONS
 %-----------------------------------------------------
 
-\crefname{lstlisting}{listing}{listing}	
+\crefname{lstlisting}{listing}{listing}
 \Crefname{lstlisting}{Listing}{Listing}
 \renewcommand\lstlistlistingname{List of Listings}
 
@@ -36,5 +36,33 @@
 	morestring=[b]",
 	morestring=[s]{"""*}{*"""},
 	ndkeywords={@Deprecated, @JvmField, @JvmName, @JvmOverloads, @JvmStatic, @JvmSynthetic, Array, Byte, Double, Float, Int, Integer, Iterable, Long, Runnable, Short, String, Unit, it},
+	sensitive=true
+}
+
+\lstdefinelanguage{Rust}{
+	comment=[l]{//},
+	morecomment=[s]{/*}{*/},
+	morecomment=[l]{///},   % doc comments (outer)
+	morecomment=[l]{//!},   % doc comments (inner)
+	morestring=[b]",
+	morestring=[b]',
+	keywords={
+		as, async, await, break, const, continue, crate, dyn, else, enum,
+		extern, false, fn, for, if, impl, in, let, loop, match, mod, move,
+		mut, pub, ref, return, self, Self, static, struct, super, trait,
+		true, type, union, unsafe, use, where, while
+	},
+	ndkeywords={
+		bool, char, f32, f64, i8, i16, i32, i64, i128, isize,
+		u8, u16, u32, u64, u128, usize, str,
+		Arc, Box, Cell, Cow, HashMap, HashSet, Mutex, Option, Pin,
+		Rc, RefCell, Result, RwLock, String, Vec,
+		Err, None, Ok, Some
+	},
+	emph={
+		cfg, derive, allow, warn, deny, forbid, inline, must_use,
+		no_std, feature, target_os, repr, test, macro_export,
+		macro_rules
+	},
 	sensitive=true
 }
