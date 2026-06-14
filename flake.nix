@@ -32,6 +32,7 @@
             fancyhdr
             acronym
             bigfoot
+            uml
           ]
         );
       in

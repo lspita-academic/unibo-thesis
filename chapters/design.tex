@@ -8,9 +8,31 @@ obbiettivi imposti nel \cref{chap:analysis}.
 \section{Architettura generale}
 \label{sec:general-architecture}
 
-Schema a blocchi dell'intera soluzione: YAAIR in cima che usa il trait
-Network, ZenohNetwork come implementazione concreta, Zenoh / Zenoh Pico
-come layer di trasporto, hardware ESP come target di deployment.
+In \ac{YAAIR}, il cuore dell'esecuzione del programma aggregato è lo \emph{Engine},
+che oltre al programma stesso prende in input per la sua costruzione le
+implementazioni dei vari componenti da utilizzare.
+Tra questi, è richiesta un'implementazione della rete per la comunicazione, che
+deve soddisfare il contratto imposto dal trait \emph{Network}.
+
+La \emph{ZenohNetwork} implementata deve quindi soddisfare questo livello di
+compatibilità, e mantenere tutte le configurazioni specifiche invisibili allo
+\emph{Engine}: l'implementazione specifica di Zenoh utilizzata (normale o pico)
+deve essere mantenuta internamente, esponendo delle \ac{API} alla rete che siano
+trasparenti rispetto alla tecnologia utilizzata.
+
+Per la configurazione di Zenoh stesso, le due versioni offrono opzioni con requisiti
+differenti, rendendo quindi necessario esporre almeno in parte l'implementazione
+utilizzata. Per minimizzare questa necessità, viene esposta una \ac{API} comune
+che segue il \emph{builder pattern}~\cite{gamma1994design} per la configurazione
+delle opzioni comuni e più importanti nel contesto di questo progetto.
+Entrambe le versioni di Zenoh offrono un'implementazione di questa interfaccia,
+producendo solo al momento della creazione finale un oggetto specifico che potrà
+essere ulteriormente configurato utilizzando le api specifiche della libreria originale.
+Per ridurre ulteriormente l'utilizzo di \ac{API} specifiche, il progetto è strutturato
+in maniera tale da scegliere tra Zenoh e Zenoh pico a tempo di compilazione e
+riesporre eventuali tipi e funzioni specifici sotto lo stesso nome.
+
+% grafico UML
 
 \section{Il \texttt{MessageStore} e la gestione della concorrenza}
 \label{sec:message-store-and-concurrency-handling}
