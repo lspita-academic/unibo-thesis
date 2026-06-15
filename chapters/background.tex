@@ -1,30 +1,24 @@
 \chapter{Background}
 \label{chap:background}
 
-Questo capitolo introduce le tecnologie, i paradigmi ed i concetti fondamentali
-necessari per la compensione del contributo della tesi.
-In apertura si delineano i principi dello \ac{AC} \sidenote{Con le parole inglesi
-non bisogna usare l'apostrofo vero?}, con particolare
-attenzione all'implementazione nel contesto dei dispositivi con risorse limitate.
-Successivamente, si presentano il framework \ac{YAAIR}, il protocollo di rete
-Zenoh \footnote{\url{https://zenoh.io/}} e l'ecosistema di Rust per la programmazione
-embedded.
+Questo capitolo introduce le tecnologie, i paradigmi e i concetti fondamentali
+necessari per la comprensione del contributo della tesi.
+Vengono presentati i principi di \ac{AC}, con particolare attenzione all'implementazione
+nel contesto dei dispositivi con risorse limitate, seguiti dal framework \ac{YAAIR},
+dal protocollo di rete Zenoh \footnote{\url{https://zenoh.io/}} e dall'ecosistema
+di Rust per la programmazione embedded.
 
 \section{Aggregate computing}
 \label{sec:aggregate-computing}
-Il rapido proliferare di dispositivi per lo \ac{IoT} e di sistemi di
-calcolo pervasivo ha generato sfide senza precedenti nella programmazione e nel
-coordinamento di sistemi altamente distribuiti, dove gli approcci di programmazione
-tradizionali faticano a gestire la complessità derivante dalla necessità di far
-cooperare centinaia o migliaia di dispositivi in modo trasparente e
-resiliente~\cite[12.1]{10.1007/978-3-031-95589-1_12}.
-\sidenote{Questo primo paragrafo è praticamente la traduzione parola per parola della
-sezione citata del vostro paper: devo mettere la citazione in qualche modo per far
-capire che è esattamente lo stesso testo?}
 
-Lo \ac{AC} si impone come un paradigma di \emph{macroprogrammazione}~\cite{enwiki:1313791910}
-che astrae l'esecuzione di un singolo programma su una rete di dispositivi
-considerandola come un'unica entità collettiva.
+La proliferazione di dispositivi \ac{IoT} e sistemi pervasivi ha reso sempre più
+complessa la gestione di reti distribuite su larga scala, e gli approcci tradizionali
+faticano a garantire coordinamento trasparente e resiliente tra centinaia o migliaia
+di nodi~\cite[12.1]{10.1007/978-3-031-95589-1_12}.
+
+\ac{AC} è un paradigma di \emph{macroprogrammazione}~\cite{enwiki:1313791910}
+che astrae l'esecuzione di un singolo programma su una rete di dispositivi,
+trattandola come un'unica entità collettiva.
 
 \subsection{Modello computazionale}
 \label{ssec:ac-computational-model}
@@ -77,7 +71,7 @@ loro~\cite[12.2.2]{10.1007/978-3-031-95589-1_12}~(\Cref{fig:gradient_ac}).
 \subsection{Aggregate computing su sistemi embedded}
 \label{ssec:ac-on-embedded-devices}
 
-Il modello di computazione distribuita che offre il paradigma dello \ac{AC} si
+Il modello di computazione distribuita offerto da \ac{AC} si
 pone come soluzione naturale per reti di dispositivi \ac{IoT} e sciami robotici.
 Framework preesistenti, come ScaFi (basato su Scala~\cite{itwiki:144756110})~\cite[2.3]{amslaurea37138},
 sono stati concepiti per simulazioni o esecuzioni su dispositivi general-purpose,
