@@ -1,0 +1,15 @@
+---
+  config:
+    layout: elk
+    theme: neutral
+    class:
+      hideEmptyMembersBox: true
+---
+
+classDiagram
+    class MessageStore {
+        -threadSafeMap
+        +storeResult(id, result)
+        +updateTimestamp(id)
+        +updateLifespan(id, lifespan)
+    }

@@ -41,7 +41,8 @@ La natura eterogenea e trasparente della rete richiesta dagli obbiettivi del
 contributo impone alcuni vincoli su alcune scelte progettuali e di architettura.
 
 \begin{description}
-	\item[V1] \textit{Compatibilità con sistemi Espressif}. Nonostante supporti
+	\item[V1]\label{constraint:esp-compatibility}
+	\textit{Compatibilità con sistemi Espressif}. Nonostante supporti
 	i dispositivi a risorse limitate, anche Zenoh pico richiede l'accesso ad alcune
 	primitive di sistema che non ne permettono l'utilizzo su dispositivi puramente
 	bare-metal.
@@ -54,7 +55,8 @@ contributo impone alcuni vincoli su alcune scelte progettuali e di architettura.
 	mancanza di tempo si è optato per ridurre il vincolo di compatibilità ai
 	sistemi Espressif, che offrono nativamente un supporto eccellente per il
 	linguaggio scelto (\cref{ssec:esp-idf}).
-	\item[V2] \textit{Compatibilità con \ac{YAAIR}}. Per sfruttare un'architettura
+	\item[V2]\label{constraint:yaair-compatibility}
+	\textit{Compatibilità con \ac{YAAIR}}. Per sfruttare un'architettura
 	a strati flessibile, \ac{YAAIR} impone che l'implementazione della rete segua
 	un'interfaccia molto semplice ma specifica. L'implementazione create in questo
 	contributo deve essere perfettamente compatibile con essa e non deve richiedere
@@ -68,29 +70,25 @@ I requisiti funzionali derivano in parte dall'interfaccia imposta da \ac{YAAIR}
 e in parte dalle necessità intrinseche della rete.
 
 \begin{description}
-	\item[RF1] \textit{Comunicazione tra nodi}. Ciascun nodo deve essere in grado
+	\item[RF1]~\label{requirement:nodes-communication}
+	\textit{Comunicazione tra nodi}. Ciascun nodo deve essere in grado
 	di pubblicare aggiornamenti ed ascoltare quelli dei nodi con cui è in relazione
 	per esportare il proprio risultato in maniera agnostica alla topologia
 	della rete.
 
-	\item[RF2] \textit{Scoperta automatica dei nodi}. Al momento dell'ingresso
+	\item[RF2]~\label{requirement:nodes-discovery}
+    \textit{Scoperta automatica dei nodi}. Al momento dell'ingresso
 	in rete, un nodo deve essere in grado di individuare autonomamente gli altri
 	nodi presenti senza richiedere configurazione manuale o per mezzo di un'unità
 	dedicata, preservando così la natura decentralizzata del sistema.
 
-	\item[RF3] \textit{Rilevamento della perdita di un nodo}. La rete deve
+	\item[RF3]~\label{requirement:offline-node-detection}
+	\textit{Rilevamento della perdita di un nodo}. La rete deve
 	rilevare l'uscita o il fallimento di un nodo entro un intervallo di tempo
 	configurabile. Alla scadenza del timeout, gli altri partecipanti devono
 	essere notificati e lo stato interno della rete deve essere aggiornato
 	di conseguenza, consentendo al framework di reagire opportunamente all'evento
 	e di non dedicare più risorse al nodo perso.
-
-	\item[RF4] \textit{Interfaccia compatibile con \ac{YAAIR}}. L'implementazione
-	deve esporre esattamente l'interfaccia di rete prevista dal framework
-	\ac{YAAIR}, senza richiedere modifiche al codice esistente né trattamenti
-	speciali da parte degli altri moduli. La compatibilità deve essere garantita
-	sia per la versione standard basata su Zenoh che per quella embedded
-	basata su Zenoh pico.
 \end{description}
 
 \section{Requisiti non funzionali}
@@ -100,14 +98,16 @@ I requisiti non funzionali corrispondono a funzionalità ritenute secondarie ai
 fini del funzionamento progetto ma che ne rendono l'utilizzo più robusto e versatile.
 
 \begin{description}
-	\item[RNF1] \textit{Portabilità tra Zenoh e Zenoh pico}. L'architettura
+	\item[RNF1]\label{requirement:zenoh-portability}
+	\textit{Portabilità tra Zenoh e Zenoh pico}. L'architettura
 	della rete deve essere strutturata in modo da poter essere compilata e
 	utilizzata sia su sistemi desktop o server tramite la libreria Zenoh standard,
 	sia su sistemi embedded Espressif tramite Zenoh pico, senza duplicare la
 	logica applicativa. Le differenze tra le due librerie devono essere
 	incapsulate in un livello di astrazione dedicato.
 
-	\item[RNF2] \textit{Strategie alternative di gestione della perdita di nodi}.
+	\item[RNF2]\label{requirement:alternative-offlinte-nodes-detection-strategies}
+	\textit{Strategie alternative di gestione della perdita di nodi}.
 	Il meccanismo di rilevamento e gestione dell'uscita di un nodo dalla rete
 	deve essere progettato con una struttura modulare, così da permettere
 	l'adozione di strategie diverse a seconda del contesto applicativo.

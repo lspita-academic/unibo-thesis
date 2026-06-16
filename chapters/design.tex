@@ -3,70 +3,122 @@
 
 Nel seguente capitolo vengono illustrate le scelte architetturali adottate nella
 realizzazione del sistema per soddisfare tutti i requisiti e raggiungere gli
-obbiettivi imposti nel \cref{chap:analysis}.
+obbiettivi imposti nel \cref{chap:analysis}, rispettando al
+contempo i vincoli imposti (\cref{sec:constraints})
 
 \section{Architettura generale}
 \label{sec:general-architecture}
 
-In \ac{YAAIR}, il cuore dell'esecuzione del programma aggregato è lo \emph{Engine},
+In \ac{YAAIR}, il cuore dell'esecuzione del programma aggregato è lo \texttt{Engine},
 che oltre al programma stesso prende in input per la sua costruzione le
 implementazioni dei vari componenti da utilizzare.
 Tra questi, è richiesta un'implementazione della rete per la comunicazione, che
-deve soddisfare il contratto imposto dal trait \emph{Network}.
+deve soddisfare il contratto imposto dal trait \texttt{Network}.
 
-La \emph{ZenohNetwork} implementata deve quindi soddisfare questo livello di
-compatibilità, e mantenere tutte le configurazioni specifiche invisibili allo
-\emph{Engine}: l'implementazione specifica di Zenoh utilizzata (normale o pico)
-deve essere mantenuta internamente, esponendo delle \ac{API} alla rete che siano
+La \texttt{ZenohNetwork} implementata deve quindi soddisfare questo livello di
+compatibilità (\cref{constraint:yaair-compatibility} \sidenote{Non ho
+trovato un modo per far comparire RF4 come testo del link}), e mantenere
+tutte le configurazioni specifiche invisibili allo \texttt{Engine}:
+l'implementazione specifica di Zenoh utilizzata (normale o pico) deve essere
+mantenuta internamente, esponendo delle \ac{API} alla rete che siano
 trasparenti rispetto alla tecnologia utilizzata.
 
-Per la configurazione di Zenoh stesso, le due versioni offrono opzioni con requisiti
-differenti, rendendo quindi necessario esporre almeno in parte l'implementazione
-utilizzata. Per minimizzare questa necessità, viene esposta una \ac{API} comune
-che segue il \emph{builder pattern}~\cite{gamma1994design} per la configurazione
+Per la configurazione di Zenoh stesso (\cref{requirement:zenoh-portability}),
+le due versioni offrono opzioni con requisiti differenti, rendendo quindi necessario
+esporre almeno in parte l'implementazione utilizzata. Per minimizzare questa necessità,
+viene esposta una \ac{API} comune che segue il \emph{builder pattern}~\cite{gamma1994design}
+per la configurazione
 delle opzioni comuni e più importanti nel contesto di questo progetto.
 Entrambe le versioni di Zenoh offrono un'implementazione di questa interfaccia,
 producendo solo al momento della creazione finale un oggetto specifico che potrà
 essere ulteriormente configurato utilizzando le api specifiche della libreria originale.
 Per ridurre ulteriormente l'utilizzo di \ac{API} specifiche, il progetto è strutturato
 in maniera tale da scegliere tra Zenoh e Zenoh pico a tempo di compilazione e
-riesporre eventuali tipi e funzioni specifici sotto lo stesso nome.
+riesporre eventuali tipi e funzioni specifici sotto lo stesso nome (\Cref{fig:general-architecture}).
 
-% grafico UML
-
-\section{Il \texttt{MessageStore} e la gestione della concorrenza}
-\label{sec:message-store-and-concurrency-handling}
-
-Il MessageStore disaccoppia la ricezione dei messaggi (pilotata da
-callback o task asincrone) dalla loro consultazione da parte di YAAIR, in maniera
-thread-safe rispetto ai callback di Zenoh Pico.
-
-\subsection{Ciclo di vita dei nodi}
-\label{ssec:node-lifecycle}
-
-Come viene tracciato il timestamp dell'ultimo messaggio ricevuto
-da ciascun nodo e come i nodi possano notificare la loro presenza.
+\begin{figure}[ht]
+    \centering
+    \includegraphics{figures/general-architecture}
+    \caption[Architettura generale della rete]
+    {Architettura generale della rete.}
+    \label{fig:general-architecture}
+\end{figure}
 
 \section{La rete Zenoh}
 \label{sec:zenoh-network}
 
-La rete Zenoh implementa il trait Network astraendo le differenze
-tra Zenoh e Zenoh Pico ed esponendo la stessa interfaccia verso YAAIR.
+La rete zenoh implementata è costituita internamente da diverse parti che
+interagiscono tra loro: al centro di tutto è presente il \texttt{MessageStore}, il
+quale si occupa dell'accesso ed il salvataggio dei messaggi ricevuti dal nodo,
+con il quale interagiscono due distinti \texttt{Subscriber}
+(\cref{ssec:zenoh-actors-and-fundamental-concepts}),
+per i vari tipi di messaggi dei nodi, ovvero i risultati aggiornati
+(\cref{requirement:nodes-communication})  e le notifiche per segnalare
+la presenza del nodo stesso (\cref{requirement:offline-node-detection}).
 
-\subsection{Struttura dei topic}
-\label{ssec:topic-structure}
+\subsection{Il \texttt{MessageStore}}
+\label{ssec:message-store}
 
-Schema delle key expression usate per separare messaggi applicativi
-e segnali di heartbeat. Convenzione di naming per identificare i nodi.
+Il \texttt{MessageStore} disaccoppia la ricezione dei messaggi dalla loro consultazione
+da parte di \ac{YAAIR}, permettendo ai diversi subscriber che costituiscono la rete
+di aggiornare e salvare nuovi messaggi rispettando un semaforo per l'accesso concorrente.
+Ad ogni messaggio vengono anche associati una durata di vita e l'istante temporale
+dell'ultimo aggiornamento, che permettono il riconoscimento di eventuali nodi offline
+per l'eliminazione dalla rete (\Cref{fig:messages-store}).
 
-\subsection{Flusso di invio}
-\label{ssec:send-flow}
+\begin{figure}[h]
+    \centering
+    \includegraphics{figures/message-store}
+    \caption[Struttura ed operazioni del \texttt{MessageStore}]
+    {Struttura ed operazioni del \texttt{MessageStore}.}
+    \label{fig:messages-store}
+\end{figure}
 
-Percorso di un messaggio in uscita:
-layer YAAIR - ZenohNetwork - publisher - rete.
+\subsection{Zenoh e la comunicazione pub/sub}
+\label{ssec:zenoh-and-pubsub-communication}
 
-\subsection{Flusso di ricezione}
-\label{ssec:receive-flow}
+L'interoperabilità con Zenoh e Zenoh pico all'interno della rete è gestita secondo
+una scelta strutturale fondamentale: la rete definisce delle interfacce per l'interazione
+con i vari elementi offerti dal protocollo, ed interagisce con l'implementazione
+effettiva solo tramite esse.
+Questa strategia permette di centralizzare la scelta della versione e di poter
+interagire con la tecnologia in maniera agnostica alla tecnologia utilizzata.
 
-Percorso di un messaggio in ingresso:
-rete - subscriber (callback o task) - MessageStore - layer YAAIR.
+Internamente, la \texttt{ZenohNetwork} mantiene una sessione zenoh (\cref{ssec:zenoh-actors-and-fundamental-concepts}),
+la quale definisce la presenza e permette la scoperta automatica dei nodi nella rete
+(\cref{requirement:nodes-discovery}).
+Da quest'ultima si ha la possibilità di dichiarare \texttt{Publisher} e \texttt{Subscriber}
+su diversi topic, utilizzati per l'esportazione dei risultati e gli aggiornamenti
+sullo stato dei nodi.
+Ogni nodo della rete pubblica informazioni su topic che condividono il proprio id
+come radice, e si iscrive a tutti topic equivalenti degli altri membri della rete.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=1\linewidth]{figures/zenoh-network-design}
+    \caption[Design della \texttt{ZenohNetwork}]
+    {Design della \texttt{ZenohNetwork}. L'interfaccia \texttt{ZenohSubscriber} non
+    definisce metodi in quanto la funzione da chiamare alla ricezione di un messaggio
+    viene fornita al momento della creazione tramite il parametro \emph{callback}
+    del metodo \texttt{ZenohSession.declareSubscriber}. Lo scopo di un oggetto
+    di questo tipo è quello di rappresentare l'esistenza del subscriber in background.}
+    \label{fig:zenoh-network-design}
+\end{figure}
+
+\subsection{L'interazione con YAAIR}
+\label{ssec:yaair-interaction}
+
+\ac{YAAIR} richiede che la rete esponga due operazioni, una per la pubblicazione
+del risultato del programma aggregato, ed una che restituisca una mappa associativa
+con l'ultimo risultato ricevuto da ogni nodo con cui si è in relazione
+(\cref{ssec:ac-computational-model}).
+
+Mentre la pubblicazione del risultato si tratta di un'operazione banale tramite i
+costrutti di comunicazione \emph{pub/sub} utilizzati dalla \emph{ZenohNetwork}
+(\cref{ssec:zenoh-and-pubsub-communication}),
+la creazione della mappa associativa richiede l'eliminazione dal \texttt{MessageStore}
+di eventuali nodi offline per evitare di restituire dati ormai obsoleti.
+
+La pubblicazione di aggiornamenti sullo stato dei nodi, invece, viene mantenuta
+esterna a \ac{YAAIR}, tramite la possibilità di dichiarare publisher dedicati, in
+quanto completamente facoltativa.

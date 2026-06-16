@@ -1,0 +1,28 @@
+---
+  config:
+    layout: elk
+    theme: neutral
+    class:
+      hideEmptyMembersBox: true
+---
+
+classDiagram
+    namespace YAAIR {
+        class Engine { }
+        class Network {
+            <<interface>>
+        }
+        class AggregateProgram {  }
+    }
+
+    class ZenohNetwork { }
+
+    class ZenohConfigBuilder { }
+
+    class ZenohConfig { }
+
+    Engine *-- AggregateProgram : richiede
+    Engine *-- Network : richiede
+    Network <|.. ZenohNetwork : implementa
+    ZenohNetwork --> ZenohConfig : configurata da
+    ZenohConfigBuilder ..> ZenohConfig : crea

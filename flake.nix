@@ -32,7 +32,8 @@
             fancyhdr
             acronym
             bigfoot
-            uml
+            caption
+            pdfcrop
           ]
         );
       in
@@ -48,6 +49,9 @@
               # latex
               texlive-toolchain
               texlab
+              # figures building
+              mermaid-cli
+              gnumake
             ];
             shellHook = ''
               if [ -f .env ]; then

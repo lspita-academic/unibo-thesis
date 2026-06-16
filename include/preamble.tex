@@ -1,10 +1,11 @@
-\usepackage{silence}
+\usepackage{silence} % silence warnings/errors
 % rubber (used in ci) doesn't give this warning, so we mimic the ci build
 \WarningFilter{hyperref}{The anchor of a bookmark}
 
-\usepackage{microtype}
+\usepackage{microtype} % prevent some over/underfull hboxes errors
 \usepackage{acronym}
-\usepackage[autostyle]{csquotes}
+\usepackage[autostyle]{csquotes} % quote text
+\usepackage[hypcap=true]{caption} % point refs to figures at the top of the figure
 
 \usepackage{include/disi-thesis}
 \usepackage{include/code-lstlistings}

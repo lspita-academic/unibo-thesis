@@ -1,0 +1,51 @@
+---
+  config:
+    layout: elk
+    theme: neutral
+    class:
+      hideEmptyMembersBox: true
+---
+
+classDiagram
+    class ZenohNetwork { }
+
+    class ZenohSession {
+        <<interface>>
+        +declarePublisher(topic)
+        +declareSubscriber(keyexpr, callback)
+    }
+
+    class ZenohPublisher {
+        <<interface>>
+        +put(message)
+    }
+
+    class ZenohSubscriber {
+        <<interface>>
+    }
+
+    namespace Zenoh {
+        class ZenohFullPublisher ["Publisher"] {}
+        class ZenohFullSession ["Session"] {}
+        class ZenohFullSubscriber ["Subscriber"] {}
+    }
+
+    namespace ZenohPico {
+        class ZenohPicoPublisher ["Publisher"] {}
+        class ZenohPicoSession ["Session"] {}
+        class ZenohPicoSubscriber ["Subscriber"] {}
+    }
+
+    ZenohPublisher <-- ZenohSession
+    ZenohNetwork *-- ZenohPublisher
+    ZenohNetwork *-- ZenohSession
+    ZenohNetwork *-- ZenohSubscriber
+    ZenohSubscriber <-- ZenohSession
+
+    ZenohPublisher <|.. ZenohFullPublisher
+    ZenohSession <|.. ZenohFullSession
+    ZenohSubscriber <|.. ZenohFullSubscriber
+
+    ZenohPublisher <|.. ZenohPicoPublisher
+    ZenohSession <|.. ZenohPicoSession
+    ZenohSubscriber <|.. ZenohPicoSubscriber
