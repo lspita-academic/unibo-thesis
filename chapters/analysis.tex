@@ -15,24 +15,26 @@ del problem necessario uno studio non banale delle tecnologie e dell'ecosistema
 utilizzato che rende il contributo finale il risultato di una serie di processi
 di studio e sviluppo.
 
-\begin{description}
-	\item[O1] \textit{Studio di Zenoh}. Zenoh è la tecnologia che funge da base
-	fondamentale per la comunicazione nella rete implementata, è quindi necessario
-	uno studio approfondito del suo funzionamento, dei suoi costrutti ed elementi
-	primari e delle funzionalità sche offre e relative limitazioni.
-	\item[O2] \textit{Integrazione dell'ecosistema embedded}. I sistemi embedded
-	sono trattati come piattaforma non secondaria in questo progetto, e l'integrazione
-	con essi richiede l'utilizzo di diverse librerie e framework oltre che un'attenzione
-	particolare all'utilizzo delle risorse e l'interazione con i componenti del
-	dispositivo.
+\begin{objectives}
+	\titleditem{Studio di Zenoh}~\label{objective:zenoh-study}
+	Zenoh è la tecnologia che funge da base fondamentale per la comunicazione nella
+	rete implementata, è quindi necessario uno studio approfondito del suo
+	funzionamento, dei suoi costrutti ed elementi primari e delle funzionalità
+	che offre e relative limitazioni.
+	\titleditem{Integrazione dell'ecosistema embedded}~\label{objective:embedded-ecosystem-integration}
+	I sistemi embedded sono trattati come piattaforma non secondaria in questo
+	progetto, e l'integrazione con essi richiede l'utilizzo di diverse librerie
+	e framework oltre che un'attenzione particolare all'utilizzo delle risorse e
+	l'interazione con i componenti del dispositivo.
 	Inoltre, la scelta di Rust come linguaggio comporta la necessità di creare un
 	wrapper intorno alla libreria Zenoh pico (\cref{ssec:zenoh-for-embdedded-systems})
 	per un accesso alle primitive della libreria da parte della rete tramite una
 	\ac{API} memory-safe e più simile alla versione originale di Zenoh.
-	\item[O3] \textit{Implementazione della rete}. Il contributo principale di questa
-	tesi è la creazione della rete stessa, che deve fornire una comunicazione
-	decentralizzata, affidabile e compatibile in maniera trasparente con \ac{YAAIR}.
-\end{description}
+	\titleditem{Implementazione della rete}~\label{objective:network-implementation}
+	Il contributo principale di questa tesi è la creazione della rete stessa, che
+	deve fornire una comunicazione decentralizzata, affidabile e compatibile in
+	maniera trasparente con \ac{YAAIR}.
+\end{objectives}
 
 \section{Vincoli}
 \label{sec:constraints}
@@ -40,12 +42,11 @@ di studio e sviluppo.
 La natura eterogenea e trasparente della rete richiesta dagli obbiettivi del
 contributo impone alcuni vincoli su alcune scelte progettuali e di architettura.
 
-\begin{description}
-	\item[V1]\label{constraint:esp-compatibility}
-	\textit{Compatibilità con sistemi Espressif}. Nonostante supporti
-	i dispositivi a risorse limitate, anche Zenoh pico richiede l'accesso ad alcune
-	primitive di sistema che non ne permettono l'utilizzo su dispositivi puramente
-	bare-metal.
+\begin{constraints}
+	\titleditem{Compatibilità con sistemi Espressif}~\label{constraint:esp-compatibility}
+	Nonostante supporti i dispositivi a risorse limitate, anche Zenoh pico richiede
+	l'accesso ad alcune primitive di sistema che non ne permettono l'utilizzo su
+	dispositivi puramente bare-metal.
 	Originariamente, la libreria utilizza PlatformIO \footnote{\url{https://platformio.org/}}
 	come strumento per la compilazione per diverse piattaforme, così da supportare
 	facilmente tutte le famiglie di dispositivi più popolari.
@@ -55,13 +56,13 @@ contributo impone alcuni vincoli su alcune scelte progettuali e di architettura.
 	mancanza di tempo si è optato per ridurre il vincolo di compatibilità ai
 	sistemi Espressif, che offrono nativamente un supporto eccellente per il
 	linguaggio scelto (\cref{ssec:esp-idf}).
-	\item[V2]\label{constraint:yaair-compatibility}
-	\textit{Compatibilità con \ac{YAAIR}}. Per sfruttare un'architettura
-	a strati flessibile, \ac{YAAIR} impone che l'implementazione della rete segua
-	un'interfaccia molto semplice ma specifica. L'implementazione create in questo
-	contributo deve essere perfettamente compatibile con essa e non deve richiedere
-	trattamenti speciali che impediscano al resto del framework di agire normalmente.
-\end{description}
+	\titleditem{Compatibilità con \ac{YAAIR}}~\label{constraint:yaair-compatibility}
+	Per sfruttare un'architettura a strati flessibile, \ac{YAAIR} impone che
+	l'implementazione della rete segua un'interfaccia molto semplice ma specifica.
+	L'implementazione create in questo contributo deve essere perfettamente compatibile
+	con essa e non deve richiedere trattamenti speciali che impediscano al resto
+	del framework di agire normalmente.
+\end{constraints}
 
 \section{Requisiti funzionali}
 \label{sec:functional-requirements}
@@ -69,27 +70,25 @@ contributo impone alcuni vincoli su alcune scelte progettuali e di architettura.
 I requisiti funzionali derivano in parte dall'interfaccia imposta da \ac{YAAIR}
 e in parte dalle necessità intrinseche della rete.
 
-\begin{description}
-	\item[RF1]~\label{requirement:nodes-communication}
-	\textit{Comunicazione tra nodi}. Ciascun nodo deve essere in grado
-	di pubblicare aggiornamenti ed ascoltare quelli dei nodi con cui è in relazione
-	per esportare il proprio risultato in maniera agnostica alla topologia
-	della rete.
+\begin{functionalrequirements}
+	\titleditem{Comunicazione tra nodi}~\label{requirement:nodes-communication}
+	Ciascun nodo deve essere in grado di pubblicare aggiornamenti ed ascoltare
+	quelli dei nodi con cui è in relazione per esportare il proprio risultato in
+	maniera agnostica alla topologia della rete.
 
-	\item[RF2]~\label{requirement:nodes-discovery}
-    \textit{Scoperta automatica dei nodi}. Al momento dell'ingresso
-	in rete, un nodo deve essere in grado di individuare autonomamente gli altri
-	nodi presenti senza richiedere configurazione manuale o per mezzo di un'unità
-	dedicata, preservando così la natura decentralizzata del sistema.
+	\titleditem{Scoperta automatica dei nodi}~\label{requirement:nodes-discovery}
+    Al momento dell'ingresso in rete, un nodo deve essere in grado di individuare
+    autonomamente gli altri nodi presenti senza richiedere configurazione manuale
+    o per mezzo di un'unità dedicata, preservando così la natura decentralizzata
+    del sistema.
 
-	\item[RF3]~\label{requirement:offline-node-detection}
-	\textit{Rilevamento della perdita di un nodo}. La rete deve
-	rilevare l'uscita o il fallimento di un nodo entro un intervallo di tempo
-	configurabile. Alla scadenza del timeout, gli altri partecipanti devono
-	essere notificati e lo stato interno della rete deve essere aggiornato
-	di conseguenza, consentendo al framework di reagire opportunamente all'evento
+	\titleditem{Rilevamento della perdita di un nodo}~\label{requirement:offline-node-detection}
+	La rete deve rilevare l'uscita o il fallimento di un nodo entro un intervallo
+	di tempo configurabile. Alla scadenza del timeout, gli altri partecipanti devono
+	essere notificati e lo stato interno della rete deve essere aggiornato di
+	conseguenza, consentendo al framework di reagire opportunamente all'evento
 	e di non dedicare più risorse al nodo perso.
-\end{description}
+\end{functionalrequirements}
 
 \section{Requisiti non funzionali}
 \label{sec:non-functional-requirements}
@@ -97,20 +96,18 @@ e in parte dalle necessità intrinseche della rete.
 I requisiti non funzionali corrispondono a funzionalità ritenute secondarie ai
 fini del funzionamento progetto ma che ne rendono l'utilizzo più robusto e versatile.
 
-\begin{description}
-	\item[RNF1]\label{requirement:zenoh-portability}
-	\textit{Portabilità tra Zenoh e Zenoh pico}. L'architettura
-	della rete deve essere strutturata in modo da poter essere compilata e
-	utilizzata sia su sistemi desktop o server tramite la libreria Zenoh standard,
+\begin{nonfunctionalrequirements}
+	\titleditem{Portabilità tra Zenoh e Zenoh pico}~\label{requirement:zenoh-portability}
+	L'architettura della rete deve essere strutturata in modo da poter essere compilata
+	e utilizzata sia su sistemi desktop o server tramite la libreria Zenoh standard,
 	sia su sistemi embedded Espressif tramite Zenoh pico, senza duplicare la
 	logica applicativa. Le differenze tra le due librerie devono essere
 	incapsulate in un livello di astrazione dedicato.
 
-	\item[RNF2]\label{requirement:alternative-offlinte-nodes-detection-strategies}
-	\textit{Strategie alternative di gestione della perdita di nodi}.
-	Il meccanismo di rilevamento e gestione dell'uscita di un nodo dalla rete
-	deve essere progettato con una struttura modulare, così da permettere
-	l'adozione di strategie diverse a seconda del contesto applicativo.
+	\titleditem{Strategie alternative di gestione della perdita di nodi}~\label{requirement:alternative-offlinte-nodes-detection-strategies}
+	Il meccanismo di rilevamento e gestione dell'uscita di un nodo dalla rete deve
+	essere progettato con una struttura modulare, così da permettere l'adozione
+	di strategie diverse a seconda del contesto applicativo.
 	Ad esempio, in scenari con risorse limitate può essere preferibile una strategia
 	semplificata rispetto a una più robusta ma costosa in termini di memoria o banda.
-\end{description}
+\end{nonfunctionalrequirements}

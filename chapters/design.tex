@@ -16,14 +16,13 @@ Tra questi, è richiesta un'implementazione della rete per la comunicazione, che
 deve soddisfare il contratto imposto dal trait \texttt{Network}.
 
 La \texttt{ZenohNetwork} implementata deve quindi soddisfare questo livello di
-compatibilità (\cref{constraint:yaair-compatibility} \sidenote{Non ho
-trovato un modo per far comparire RF4 come testo del link}), e mantenere
-tutte le configurazioni specifiche invisibili allo \texttt{Engine}:
-l'implementazione specifica di Zenoh utilizzata (normale o pico) deve essere
-mantenuta internamente, esponendo delle \ac{API} alla rete che siano
-trasparenti rispetto alla tecnologia utilizzata.
+compatibilità (\ref{constraint:yaair-compatibility}), e mantenere
+tutte le configurazioni specifiche invisibili allo \texttt{Engine}: l'implementazione
+specifica di Zenoh utilizzata (normale o pico) deve essere mantenuta internamente,
+esponendo delle \ac{API} alla rete che siano trasparenti rispetto alla tecnologia
+utilizzata.
 
-Per la configurazione di Zenoh stesso (\cref{requirement:zenoh-portability}),
+Per la configurazione di Zenoh stesso (\ref{requirement:zenoh-portability}),
 le due versioni offrono opzioni con requisiti differenti, rendendo quindi necessario
 esporre almeno in parte l'implementazione utilizzata. Per minimizzare questa necessità,
 viene esposta una \ac{API} comune che segue il \emph{builder pattern}~\cite{gamma1994design}
@@ -38,7 +37,7 @@ riesporre eventuali tipi e funzioni specifici sotto lo stesso nome (\Cref{fig:ge
 
 \begin{figure}[ht]
     \centering
-    \includegraphics{figures/general-architecture}
+    \includegraphics[width=1\linewidth]{figures/general-architecture}
     \caption[Architettura generale della rete]
     {Architettura generale della rete.}
     \label{fig:general-architecture}
@@ -53,8 +52,8 @@ quale si occupa dell'accesso ed il salvataggio dei messaggi ricevuti dal nodo,
 con il quale interagiscono due distinti \texttt{Subscriber}
 (\cref{ssec:zenoh-actors-and-fundamental-concepts}),
 per i vari tipi di messaggi dei nodi, ovvero i risultati aggiornati
-(\cref{requirement:nodes-communication})  e le notifiche per segnalare
-la presenza del nodo stesso (\cref{requirement:offline-node-detection}).
+(\ref{requirement:nodes-communication})  e le notifiche per segnalare
+la presenza del nodo stesso (\ref{requirement:offline-node-detection}).
 
 \subsection{Il \texttt{MessageStore}}
 \label{ssec:message-store}
@@ -66,7 +65,7 @@ Ad ogni messaggio vengono anche associati una durata di vita e l'istante tempora
 dell'ultimo aggiornamento, che permettono il riconoscimento di eventuali nodi offline
 per l'eliminazione dalla rete (\Cref{fig:messages-store}).
 
-\begin{figure}[h]
+\begin{figure}[ht]
     \centering
     \includegraphics{figures/message-store}
     \caption[Struttura ed operazioni del \texttt{MessageStore}]
@@ -86,14 +85,14 @@ interagire con la tecnologia in maniera agnostica alla tecnologia utilizzata.
 
 Internamente, la \texttt{ZenohNetwork} mantiene una sessione zenoh (\cref{ssec:zenoh-actors-and-fundamental-concepts}),
 la quale definisce la presenza e permette la scoperta automatica dei nodi nella rete
-(\cref{requirement:nodes-discovery}).
+(\ref{requirement:nodes-discovery}).
 Da quest'ultima si ha la possibilità di dichiarare \texttt{Publisher} e \texttt{Subscriber}
 su diversi topic, utilizzati per l'esportazione dei risultati e gli aggiornamenti
 sullo stato dei nodi.
 Ogni nodo della rete pubblica informazioni su topic che condividono il proprio id
 come radice, e si iscrive a tutti topic equivalenti degli altri membri della rete.
 
-\begin{figure}[h]
+\begin{figure}[ht]
     \centering
     \includegraphics[width=1\linewidth]{figures/zenoh-network-design}
     \caption[Design della \texttt{ZenohNetwork}]
