@@ -18,7 +18,7 @@ deve soddisfare il contratto imposto dal trait \texttt{Network}.
 La \texttt{ZenohNetwork} implementata deve quindi soddisfare questo livello di
 compatibilità (\ref{constraint:yaair-compatibility}), e mantenere
 tutte le configurazioni specifiche invisibili allo \texttt{Engine}: l'implementazione
-specifica di Zenoh utilizzata (normale o pico) deve essere mantenuta internamente,
+specifica di Zenoh utilizzata (standard o pico) deve essere mantenuta internamente,
 esponendo delle \ac{API} alla rete che siano trasparenti rispetto alla tecnologia
 utilizzata.
 
@@ -35,7 +35,7 @@ Per ridurre ulteriormente l'utilizzo di \ac{API} specifiche, il progetto è stru
 in maniera tale da scegliere tra Zenoh e Zenoh pico a tempo di compilazione e
 riesporre eventuali tipi e funzioni specifici sotto lo stesso nome (\Cref{fig:general-architecture}).
 
-\begin{figure}[ht]
+\begin{figure}[H]
     \centering
     \includegraphics[width=1\linewidth]{figures/general-architecture}
     \caption[Architettura generale della rete]
@@ -46,44 +46,63 @@ riesporre eventuali tipi e funzioni specifici sotto lo stesso nome (\Cref{fig:ge
 \section{La rete Zenoh}
 \label{sec:zenoh-network}
 
-La rete zenoh implementata è costituita internamente da diverse parti che
-interagiscono tra loro: al centro di tutto è presente il \texttt{MessageStore}, il
-quale si occupa dell'accesso ed il salvataggio dei messaggi ricevuti dal nodo,
-con il quale interagiscono due distinti \texttt{Subscriber}
-(\cref{ssec:zenoh-actors-and-fundamental-concepts}),
+La rete Zenoh implementata è costituita internamente da diverse parti che
+interagiscono tra loro: al centro di tutto è presente una base di dati che si
+occupa dell'accesso ed il salvataggio dei messaggi ricevuti dal nodo, con la
+quale interagiscono due distinti \texttt{Subscriber} (\cref{ssec:zenoh-actors-and-fundamental-concepts}),
 per i vari tipi di messaggi dei nodi, ovvero i risultati aggiornati
-(\ref{requirement:nodes-communication})  e le notifiche per segnalare
-la presenza del nodo stesso (\ref{requirement:offline-node-detection}).
+(\ref{requirement:nodes-communication}) e le
+notifiche per segnalare la presenza del nodo stesso (\ref{requirement:offline-node-detection}).
 
-\subsection{Il \texttt{MessageStore}}
+\subsection{Memorizzazione e ciclo di vita dei messaggi}
 \label{ssec:message-store}
 
-Il \texttt{MessageStore} disaccoppia la ricezione dei messaggi dalla loro consultazione
-da parte di \ac{YAAIR}, permettendo ai diversi subscriber che costituiscono la rete
-di aggiornare e salvare nuovi messaggi rispettando un semaforo per l'accesso concorrente.
-Ad ogni messaggio vengono anche associati una durata di vita e l'istante temporale
-dell'ultimo aggiornamento, che permettono il riconoscimento di eventuali nodi offline
-per l'eliminazione dalla rete (\Cref{fig:messages-store}).
+La comunicazione distribuita pone un problema fondamentale di disaccoppiamento
+temporale: i messaggi provenienti dagli altri nodi della rete arrivano in modo
+asincrono, guidati dalla rete e non dall'avanzamento del programma aggregato.
+\ac{YAAIR}, al contrario, interroga la rete in momenti precisi del proprio ciclo
+di esecuzione, aspettandosi di ricevere una visione coerente e aggiornata dello
+stato dell'intero sistema. Occorre quindi un componente che faccia da intermediario,
+assorbendo i messaggi non appena arrivano e rendendoli disponibili su richiesta.
 
-\begin{figure}[ht]
+Il \texttt{MessagesStore} è progettato per assolvere esattamente questo ruolo:
+si interpone tra le entità Zenoh interne, che scrivono i messaggi alla loro
+ricezione, e \ac{YAAIR}, che li legge ogni ciclo del programma, mantenendo una
+struttura dati che associ ogni nodo al suo ultimo messaggio. Poiché Zenoh mantiene
+i suoi subscriber su thread separati, l'accesso alla mappa è gestito in modo da
+garantire la correttezza in presenza di concorrenza.
+
+Oltre al contenuto del messaggio, il \texttt{MessagesStore} associa ad ogni voce
+due metadati: la durata di vita attesa (\emph{lifespan}) e l'istante dell'ultimo
+aggiornamento (\emph{timestamp}). Questa informazione è necessaria per rispondere
+al requisito di rilevamento dei nodi offline (\ref{requirement:offline-node-detection}):
+quando \ac{YAAIR} interroga la rete per eventuali nuovi risultati ricevuti, viene
+confrontato il tempo trascorso dall'ultimo aggiornamento con il lifespan dichiarato,
+così da non fornire risultati obsoleti (\Cref{fig:messages-store-sequence}).
+
+\begin{figure}[H]
     \centering
-    \includegraphics{figures/message-store}
-    \caption[Struttura ed operazioni del \texttt{MessageStore}]
-    {Struttura ed operazioni del \texttt{MessageStore}.}
-    \label{fig:messages-store}
+    \includegraphics[width=1\linewidth]{figures/messages-store-sequence}
+    \caption[Flusso di interazione tra i componenti della rete]
+    {Flusso di interazione tra i componenti della rete.
+    I subscriber Zenoh aggiornano lo store alla ricezione di ogni messaggio tramite
+    le operazioni dedicate, mentre la rete può richiedere una fotografia dello store
+    in un determinato istante o di eliminare eventuali nodi offline ed i relativi
+    risultati.}
+    \label{fig:messages-store-sequence}
 \end{figure}
 
 \subsection{Zenoh e la comunicazione pub/sub}
 \label{ssec:zenoh-and-pubsub-communication}
 
-L'interoperabilità con Zenoh e Zenoh pico all'interno della rete è gestita secondo
-una scelta strutturale fondamentale: la rete definisce delle interfacce per l'interazione
-con i vari elementi offerti dal protocollo, ed interagisce con l'implementazione
-effettiva solo tramite esse.
+L'interoperabilità con la versione standard e pico di Zenoh all'interno della rete
+è gestita secondo una scelta strutturale fondamentale: la rete definisce delle
+interfacce per l'interazione con i vari elementi offerti dal protocollo, ed
+interagisce con l'implementazione effettiva solo tramite esse.
 Questa strategia permette di centralizzare la scelta della versione e di poter
-interagire con la tecnologia in maniera agnostica alla tecnologia utilizzata.
+interagire con la tecnologia in maniera agnostica alle specifiche.
 
-Internamente, la \texttt{ZenohNetwork} mantiene una sessione zenoh (\cref{ssec:zenoh-actors-and-fundamental-concepts}),
+Internamente, la \texttt{ZenohNetwork} mantiene una sessione Zenoh (\cref{ssec:zenoh-actors-and-fundamental-concepts}),
 la quale definisce la presenza e permette la scoperta automatica dei nodi nella rete
 (\ref{requirement:nodes-discovery}).
 Da quest'ultima si ha la possibilità di dichiarare \texttt{Publisher} e \texttt{Subscriber}
@@ -92,7 +111,7 @@ sullo stato dei nodi.
 Ogni nodo della rete pubblica informazioni su topic che condividono il proprio id
 come radice, e si iscrive a tutti topic equivalenti degli altri membri della rete.
 
-\begin{figure}[ht]
+\begin{figure}[H]
     \centering
     \includegraphics[width=1\linewidth]{figures/zenoh-network-design}
     \caption[Design della \texttt{ZenohNetwork}]
@@ -115,8 +134,21 @@ con l'ultimo risultato ricevuto da ogni nodo con cui si è in relazione
 Mentre la pubblicazione del risultato si tratta di un'operazione banale tramite i
 costrutti di comunicazione \emph{pub/sub} utilizzati dalla \emph{ZenohNetwork}
 (\cref{ssec:zenoh-and-pubsub-communication}),
-la creazione della mappa associativa richiede l'eliminazione dal \texttt{MessageStore}
-di eventuali nodi offline per evitare di restituire dati ormai obsoleti.
+la creazione della mappa associativa richiede l'eliminazione dal \texttt{MessagesStore}
+di eventuali nodi offline per evitare di restituire dati ormai obsoleti \Cref{fig:yaair-network-interaction}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\linewidth]{figures/yaair-network-interaction}
+    \caption[Flusso di interazione tra \ac{YAAIR} e la \texttt{ZenohNetwork}]
+    {Flusso di interazione tra \ac{YAAIR} e la \texttt{ZenohNetwork}.
+    \ac{YAAIR} richiede due operazioni alla rete: la pubblicazione di un nuovo
+    risultato del programma, delegata direttamente al \texttt{Publisher} apposito,
+    e la lettura dei risultati degli altri nodi, che passa per il
+    \texttt{MessagesStore}. Prima di restituire lo snapshot, la rete elimina
+    le voci scadute, garantendo che \ac{YAAIR} riceva solo dati ancora validi.}
+    \label{fig:yaair-network-interaction}
+\end{figure}
 
 La pubblicazione di aggiornamenti sullo stato dei nodi, invece, viene mantenuta
 esterna a \ac{YAAIR}, tramite la possibilità di dichiarare publisher dedicati, in

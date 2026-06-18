@@ -1,0 +1,19 @@
+---
+  config:
+    layout: elk
+    theme: neutral
+    class:
+      hideEmptyMembersBox: true
+---
+
+sequenceDiagram
+    participant ResultsSubscriber@{ "type": "control" }
+    participant PresenceSubscriber@{ "type": "control" }
+    participant MessagesStore
+    participant ZenohNetwork
+
+    ResultsSubscriber ->> MessagesStore : storeResult(id, result)
+    PresenceSubscriber ->> MessagesStore : updateTimestamp(id)
+    PresenceSubscriber ->> MessagesStore : updateLifespan(id, lifespan)
+    ZenohNetwork ->> MessagesStore : deleteOutdatedNodes
+    ZenohNetwork ->> MessagesStore : getSnapshot

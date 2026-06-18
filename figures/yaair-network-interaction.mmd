@@ -1,0 +1,24 @@
+---
+  config:
+    layout: elk
+    theme: neutral
+    class:
+      hideEmptyMembersBox: true
+---
+
+sequenceDiagram
+    participant YAAIR
+    participant ZenohNetwork
+    participant ResultsPublisher
+    participant MessagesStore
+
+    YAAIR ->> ZenohNetwork : publishResult(result)
+    ZenohNetwork ->> ResultsPublisher : publish(result)
+    ResultsPublisher -->> ZenohNetwork : ok
+    ZenohNetwork -->> YAAIR : ok
+    YAAIR ->> ZenohNetwork : getResults
+    ZenohNetwork ->> MessagesStore : deleteOutdatedNodes
+    MessagesStore -->> ZenohNetwork : ok
+    ZenohNetwork ->> MessagesStore : getSnapshot
+    MessagesStore -->> ZenohNetwork : snapshot
+    ZenohNetwork -->> YAAIR : snapshot
