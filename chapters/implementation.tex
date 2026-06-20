@@ -53,7 +53,45 @@ più diretto ed accedere ai componenti aggiunti esposti tramite moduli dedicati 
 \subsection{Le macro in Rust}
 \label{ssec:macros-in-rust}
 
-Introduzione alle macro in Rust ed alla generazione di codice a tempo di compilazione.
+Rust fornisce costrutti di \emph{metaprogrammazione}~\cite{enwiki:1335302027} per
+la generazione di codice a tempo di compilazione. Alla base di questo sistema si
+trovano le \emph{macro}, un costrutto concettualmente simile a una funzione, che
+riceve in input e produce come output dei flussi di simboli (\emph{token stream})
+elaborati dal compilatore (\Cref{lst:vec-macro}).
+
+\lstinputlisting[
+    language=Rust,
+    caption={[Implementazione semplificata della macro \texttt{vec}]
+    Implementazione semplificata della macro \texttt{vec}~\cite[Listing 20-35]{rust-book},
+    che inizializza un vettore con le espressioni fornite in input.},
+    label={lst:vec-macro}
+]{listings/vec-macro.rs}
+
+Le macro si dividono in due categorie principali, dichiarative e procedurali:
+mentre le prime permettono di definire il codice da generare in maniera
+statica rispetto all'input, fornendo solamente qualche costrutto di
+\emph{pattern matching} sulla struttura delle espressioni in input,
+le macro procedurali sono effettive funzioni che operano su flussi di simboli,
+prendendo in input e fornendo come output delle \texttt{TokenStream}
+interpretabili dal compilatore \cite[20.5.3]{rust-book}.
+Quest'ultime vengono utilizzate come attributi da poter applicare a definizioni di
+simboli per modificarne la struttura o il comportamento. Un esempio sono le \emph{derive macro},
+un caso particolare di macro procedurali per implementare automaticamente un \emph{trait}
+per un tipo di dato.
+
+Siccome la struttura \texttt{TokenStream} è molto primitiva e priva di operazioni
+di alto livello per la manipolazione e la generazione dei simboli, nel tempo sono
+nate diverse librerie per semplificarne l'utilizzo, come \emph{syn} \footnote{\url{https://docs.rs/syn/2.0.118/syn/}}
+e \emph{darling} \footnote{\url{https://docs.rs/darling/0.23.0/darling/}} per il
+parsing automatico dell'input in maniera strutturata o \emph{quote} \footnote{\url{https://docs.rs/quote/1.0.45/quote/}}
+per la generazione dell'output a partire da codice standard (\Cref{lst:derive-macro-example}).
+
+\lstinputlisting[
+    language=Rust,
+    caption={Esempio di implementazione di una \emph{derive macro} utilizzando le
+    librerie syn, quote e darling.},
+    label={lst:derive-macro-example}
+]{listings/derive-macro-example.rs}
 
 \subsection{L'ownership model in Zenoh pico}
 \label{ssec:ownership-model-in-zenoh-pico}
