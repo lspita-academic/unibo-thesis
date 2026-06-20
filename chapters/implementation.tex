@@ -4,13 +4,51 @@
 \section{Il wrapper di Zenoh pico}
 \label{sec:zenoh-pico-wrapper}
 
-La versione pico di Zenoh è una libreria C pensata per
+A differenza della versione standard di Zenoh, che offre una libreria nativa Rust,
+Zenoh pico dispone solo di una libreria C, così da poter sfruttare PlatformIO come
+strumento per supportare facilmente tutte le famiglie di dispositivi embedded più
+popolari.
+Per utilizzare questa versione di Zenoh, di conseguenza, è necessario
+creare dei \emph{binding} che permettano di interagire con la libreria tramite
+chiamate a funzioni inter-linguaggio.
 
-\subsubsection{Compilazione della libreria}
-\label{sssec:zenoh-pico-library-compilation}
+Inoltre, la creazione di un wrapper Rust permette di nascondere le \ac{API} C dietro
+delle strutture più adeguate e coerenti con lo stile di programmazione e gestione
+della memoria unici del linguaggio.
 
-Come è stato sfruttato il sistema di componenti di esp-idf per la compilazione ed
-il linking della libreria zenoh pico.
+\subsection{Integrazione della libreria}
+\label{ssec:zenoh-pico-library-compilation}
+
+Per semplificare l'integrazione della libreria e per ridurre i tempi di sviluppo,
+il contributo di questa tesi si limita i vincoli di compatibilità nel contesto dei
+sistemi embedded solo ai dispositivi della famiglia Espressif e compatibili (\ref{constraint:esp-compatibility}).
+
+Questa limitazione permette di sfruttare il framework \ac{ESP-IDF}, introdotto nella
+\cref{ssec:esp-idf}, che offre un sistema di componenti
+per integrare librerie esterne al processo di compilazione: semplicemente definendo
+i file sorgenti da considerare, questi vengono compilati con le impostazioni necessarie
+per avere accesso alle funzioni della libreria standard C offerte dalla piattaforma,
+per poi essere esposti pubblicamente come modulo all'interno del framework.
+Nonostante Zenoh pico sia una libreria pensata per sistemi embedded, la sua compatibilità
+con essi è limitata a quelli che dispongono di un'implementazione, anche se limitata,
+della libreria standard C; rendendo quindi necessario sfruttare questa funzionalità.
+
+Per poi rendere accessibili le funzioni e tipi del framework originale C,
+\ac{ESP-IDF} utilizza \emph{bindgen} \footnote{\url{https://rust-lang.github.io/rust-bindgen/}},
+uno strumento per la generazione automatica di bindings Rust per chiamate a funzioni
+di librerie esterne.
+In questo modo, il programma può utilizzare un'unica libreria per interagire con
+il sistema tramite astrazioni di alto livello, utilizzare le primitive C per un controllo
+più diretto ed accedere ai componenti aggiunti esposti tramite moduli dedicati (\Cref{lst:esp-idf-ffi}).
+
+\lstinputlisting[
+    language=Rust,
+    caption={[Esempio di utilizzo del framework \ac{ESP-IDF} da Rust]
+    Esempio di utilizzo del framework \ac{ESP-IDF} da Rust: astrazioni di alto
+    livello, primitive C e utilizzo di componenti extra tramite i moduli generati
+    automaticamente da bindgen.},
+    label={lst:esp-idf-ffi}
+]{listings/esp-idf-ffi.rs}
 
 \subsection{Le macro in Rust}
 \label{ssec:macros-in-rust}
