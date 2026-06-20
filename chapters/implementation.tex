@@ -1,12 +1,10 @@
 \chapter{Implementazione}
 \label{chap:implementation}
 
-\section{Il wrapper di Zenoh Pico}
+\section{Il wrapper di Zenoh pico}
 \label{sec:zenoh-pico-wrapper}
-\sidenote{non mi veniva un nome migliore}
 
-Breve introduzione alla creazione di un wrapper safe-rust per zenoh pico ed alle
-varie sezioni.
+La versione pico di Zenoh è una libreria C pensata per
 
 \subsubsection{Compilazione della libreria}
 \label{sssec:zenoh-pico-library-compilation}
@@ -19,7 +17,7 @@ il linking della libreria zenoh pico.
 
 Introduzione alle macro in Rust ed alla generazione di codice a tempo di compilazione.
 
-\subsection{L'ownership model in Zenoh Pico}
+\subsection{L'ownership model in Zenoh pico}
 \label{ssec:ownership-model-in-zenoh-pico}
 
 Come zenoh pico simuli l'ownership model di Rust in C per mantenere un API il più
@@ -65,7 +63,7 @@ lifespan dei nodi in base all'ultimo update.
 
 Spiegazione della hearthbit task per mantenere vivo un nodo.
 
-\subsection{Implementazione tramite Zenoh Pico}
+\subsection{Implementazione tramite Zenoh pico}
 \label{sec:zenoh-pico-implementation}
 
 Approfondimento sull'implementazione zenoh pico
