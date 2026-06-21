@@ -167,15 +167,41 @@ alternativa moderna e versatile (\Cref{lst:async-closure}).
 \section{Implementazione della rete}
 \label{sec:network-implementation}
 
-\subsection{Il trait \texttt{Network}}
-\label{sec:the-network-trait}
+\subsection{Integrazione con YAAIR}
+\label{ssec:the-network-trait}
 
-Spiegazione più dettagliata del concetto di network e dei due metodi da cui è composta.
+Un requisito fondamentale per il contributo di questa tesi è la compatibilità con
+\ac{YAAIR} (\ref{constraint:yaair-compatibility}), il quale
+definisce un'interfaccia da rispettare per implementare una rete utilizzabile dal
+framework.
+È necessario quindi analizzare le firme ed il comportamento atteso di queste
+operazioni, così da poter adeguare l'implementazione di conseguenza.
 
-\section{La ZenohNetwork}
-\label{sec:the-zenoh-network}
-\sidenote{La generalizzazione per zenoh e zenoh pico devo ancora implementarla, quindi
-potrebbe cambiare questa sezione}
+Quest'interfaccia è definita da un trait \texttt{Network} composto da 3 metodi (\Cref{lst:network-trait}):
+
+\begin{itemize}
+    \item \texttt{get\_local\_id}: ritorna il valore identificativo del nodo
+    corrente nella rete.
+    \item \texttt{prepare\_outbound}: prende in input l'ultimo risultato del
+    programma aggregato, già serializzato sotto forma di sequenza di byte, e lo
+    pubblica sulla rete per renderlo disponibile agli altri nodi presenti.
+    \item \texttt{prepare\_inbound}: ritorna un'istanza di una struttura dati
+    di \ac{YAAIR}, lo \texttt{InboundMessage}, che associa ogni nodo raggiungibile
+    con l'ultimo messaggio da esso ricevuto.
+\end{itemize}
+
+\lstinputlisting[
+    language=Rust,
+    caption={[Definizione del trait \texttt{Network} del framework \ac{YAAIR}]
+    Definizione del trait \texttt{Network} del framework \ac{YAAIR}. È presente
+    un argomento generico per il tipo dell'identificativo utilizzato della rete,
+    il quale deve soddisfare diversi vincoli tra cui l'implementazione dei trait
+    di serializzazione e deserializzazione definiti dalla libreria \texttt{serde}.},
+    label={lst:network-trait}
+]{listings/network-trait.rs}
+
+\subsection{La ZenohNetwork}
+\label{ssec:the-zenoh-network}
 
 Spiegazione del funzionamento della rete zenoh e della generalizzazione riguardo
 all'implementazione usata.
