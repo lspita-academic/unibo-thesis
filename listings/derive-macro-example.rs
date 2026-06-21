@@ -1,5 +1,5 @@
 // Procedural macros must be defined in a separate crate from the one that uses
-// them, but for the sake of this example, everything is shown in a single file.
+// them, but for the sake of this example everything is shown in a single file.
 
 use darling::FromDeriveInput;
 use proc_macro::TokenStream;
@@ -24,11 +24,12 @@ struct HelloWorldOpts {
 
 // This function is the entry point for the derive macro, which is called
 // automatically by the compiler when the `HelloWorld` trait is derived for type.
-// It also defines an associated `hello_world` attribute that can be used for extra
-// options.
+// It also defines an associated `hello_world` attribute that can be used for
+// extra options.
 #[proc_macro_derive(HelloWorld, attributes(hello_world))]
 pub fn hello_world_derive(input: TokenStream) -> TokenStream {
-    // Syn automatically parses the tokens stream into an Abstract Syntax Tree (AST).
+    // Syn automatically parses the tokens stream into an
+    // Abstract Syntax Tree (AST).
     let derive_input = parse_macro_input!(input as DeriveInput);
 
     // Darling extracts the options from the `hello_world` attribute to populate
@@ -63,7 +64,8 @@ pub fn hello_world_derive(input: TokenStream) -> TokenStream {
 struct Foo;
 
 #[derive(HelloWorld)]
-// The `hello_world` attribute can be also added to override the default behaviour.
+// The `hello_world` attribute can be also added to override the default
+// behaviour.
 #[hello_world(greeting = "Good morning")]
 struct Bar;
 
