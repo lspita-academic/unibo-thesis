@@ -142,9 +142,27 @@ di \emph{ownership} di Rust (\Cref{lst:wrapper-implementation}).
 \subsection{Il sistema di closure}
 \label{sec:closure-system}
 
-Descrizione di come è stato gestito il concetto di closure di zenoh pico e di come
-sono stati utilizzati i signal (non del sistema operativo, quelli di embassy) per
-permettere un utilizzo asincrono invece che a callback.
+Zenoh pico utilizza pervasivamente il concetto di \emph{closure} \cite{itwiki:143621010}
+per tutte quelle operazioni che forniscono un riscontro ritardato rispetto al
+momento dell'invocazione, per esempio quando richiedono delle comunicazioni con
+gli altri nodi sulla rete, permettendo di operare in maniera asincrona e di non
+bloccare il thread chiamante.
+Queste \emph{emph} closure sono implementate come delle strutture che contengono
+tutti gli elementi necessari per fornire alla funzione di callback un contesto
+mutabile a cui può accedere liberamente, rispettando sempre l'uso delle risorse
+e le regole di gestione della memoria utilizzate anche nel resto della libreria.
+
+Nel wrapper Rust, oltre alla possibilità di utilizzare queste strutture normalmente,
+vengono implementate delle funzioni per un utilizzo tramite i costrutti per la
+programmazione concorrente \texttt{async/await}, offrendo così una \ac{API}
+alternativa moderna e versatile (\Cref{lst:async-closure}).
+
+\lstinputlisting[
+    language=Rust,
+    caption={Esempio di utilizzo della \ac{API} asincrona per le closure del
+    wrapper di Zenoh pico},
+    label={lst:async-closure}
+]{listings/async-closure.rs}
 
 \section{Implementazione della rete}
 \label{sec:network-implementation}

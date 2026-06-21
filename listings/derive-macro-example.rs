@@ -27,7 +27,7 @@ struct HelloWorldOpts {
 // It also defines an associated `hello_world` attribute that can be used for
 // extra options.
 #[proc_macro_derive(HelloWorld, attributes(hello_world))]
-pub fn hello_world_derive(input: TokenStream) -> TokenStream {
+fn hello_world_derive(input: TokenStream) -> TokenStream {
     // Syn automatically parses the tokens stream into an
     // Abstract Syntax Tree (AST).
     let derive_input = parse_macro_input!(input as DeriveInput);

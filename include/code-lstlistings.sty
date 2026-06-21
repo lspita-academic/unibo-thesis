@@ -45,12 +45,12 @@
 	morecomment=[l]{///},   % doc comments (outer)
 	morecomment=[l]{//!},   % doc comments (inner)
 	morestring=[b]",
-	morestring=[b]',
 	keywords={
-		as, async, await, break, const, continue, crate, dyn, else, enum,
-		extern, false, fn, for, if, impl, in, let, loop, match, mod, move,
-		mut, pub, ref, return, self, Self, static, struct, super, trait,
-		true, type, union, unsafe, use, where, while
+		as, async, await, box, break, const, continue, crate, dyn, else,
+		enum, extern, false, fn, for, if, impl, in, let, loop, macro,
+		match, mod, move, mut, pub, ref, return, self, Self, static,
+		struct, super, trait, true, try, type, union, unsafe, use,
+		where, while, yield
 	},
 	ndkeywords={
 		bool, char, f32, f64, i8, i16, i32, i64, i128, isize,
@@ -62,7 +62,8 @@
 	emph={
 		cfg, derive, allow, warn, deny, forbid, inline, must_use,
 		no_std, feature, target_os, repr, test, macro_export,
-		macro_rules
+		macro_rules, println, vec, assert, assert_eq, format, write, panic
 	},
+	literate={`}{{\textasciigrave}}1,
 	sensitive=true
 }

@@ -1,6 +1,6 @@
 // Traits are defined to represent the memory management operations on the
 // library side.
-pub trait ZValue {
+trait ZValue {
     // This is the internal C type that is being wrapped.
     // Since one struct should become a newtype for only one C type, it is
     // defined as an associated type instead of a generic parameter.
@@ -31,7 +31,7 @@ pub trait ZValue {
 )]
 // The struct is expanded into a newtype `ZString(_z_string_t)` that wraps the C
 // type and implements all the traits defined in the `zwrap` attribute arguments.
-pub struct ZString;
+struct ZString;
 
 // (*) We can later implement the Drop trait manually to add extra functionality
 // without the need to reach for the C raw functions.
