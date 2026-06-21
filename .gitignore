@@ -5,6 +5,10 @@
 # latexmk
 /*.pdf
 
+# editors
+/.zed/
+/.vscode/
+
 ## Core latex/pdflatex auxiliary files:
 *.aux
 *.lof

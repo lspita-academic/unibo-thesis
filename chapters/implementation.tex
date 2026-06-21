@@ -62,8 +62,8 @@ elaborati dal compilatore (\Cref{lst:vec-macro}).
 \lstinputlisting[
     language=Rust,
     caption={[Implementazione semplificata della macro \texttt{vec}]
-    Implementazione semplificata della macro \texttt{vec}~\cite[Listing 20-35]{rust-book},
-    che inizializza un vettore con le espressioni fornite in input.},
+    Implementazione semplificata della macro \texttt{vec}, che inizializza un
+    vettore con le espressioni fornite in input.~\cite[Listing 20-35]{rust-book}},
     label={lst:vec-macro}
 ]{listings/vec-macro.rs}
 
@@ -96,8 +96,24 @@ per la generazione dell'output a partire da codice standard (\Cref{lst:derive-ma
 \subsection{L'ownership model in Zenoh pico}
 \label{ssec:ownership-model-in-zenoh-pico}
 
-Come zenoh pico simuli l'ownership model di Rust in C per mantenere un API il più
-simile possibile alla libreria originale e per facilitare la gestione della memoria.
+Nonostante Zenoh pico sia una libreria distinta ed indipendente da Zenoh standard,
+oltre ad essere compatibile a livello logico la \ac{API} offerta cercha di riprodurre
+a livello strutturale la versione originale in maniera più fedele possibile, fornendo
+non solo tipi ed operazioni equivalenti, ma anche funzioni per la gestione della memoria
+secondo lo stesso modello di \emph{ownership} che distingue Rust da altri linguaggi
+di basso livello.
+Nonostante questi vincoli sull'utilizzo delle risorse siano raggirabili in quanto
+non imposti direttamente dal compilatore, vengono messe a disposizione funzioni e
+macro per emulare i concetti di proprietari, riferimenti, spostamento dei valori
+e mutabilità esplicita che rendono la gestione manuale della memoria più semplice
+e sicura (\Cref{lst:zenoh-pico-ownership}).
+
+\lstinputlisting[
+    language=C,
+    caption={Esempio di gestione delle risorse in Zenoh pico tramite funzioni per
+    l'emulazione del modello di \emph{ownership} di Rust \cite{zenoh-pico:concepts}.},
+    label={lst:zenoh-pico-ownership}
+]{listings/zenoh-pico-ownership.c}
 
 \subsection{L'implementazione tramite macro}
 \label{ssec:implementation-via-macros}
