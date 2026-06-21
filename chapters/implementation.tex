@@ -58,6 +58,10 @@ la generazione di codice a tempo di compilazione. Alla base di questo sistema si
 trovano le \emph{macro}, un costrutto concettualmente simile a una funzione, che
 riceve in input e produce come output dei flussi di simboli (\emph{token stream})
 elaborati dal compilatore (\Cref{lst:vec-macro}).
+Siccome l'espansione delle macro da parte del compilatore avviene prima della
+fase di validazione delle espressioni, il codice generato viene automaticamente
+incluso nei controlli di validazione dei tipi e correttezza del codice, garantendo
+così lo stesso livello di sicurezza e robustezza del codice scritto manualmente.
 
 \lstinputlisting[
     language=Rust,
@@ -118,8 +122,22 @@ e sicura (\Cref{lst:zenoh-pico-ownership}).
 \subsection{L'implementazione tramite macro}
 \label{ssec:implementation-via-macros}
 
-Come il wrapper sia stato implementato tramite macro sfruttando la strutturazione
-simil-rust della libreria originale \cref{ssec:ownership-model-in-zenoh-pico}
+Unendo la struttura simil-Rust di Zenoh pico (\cref{ssec:ownership-model-in-zenoh-pico})
+con i costrutti di metaprogrammazione offerti dal linguaggio (\cref{ssec:macros-in-rust}),
+la creazione del wrapper per la libreria può essere quasi completamente automatizzata
+tramite la generazione di codice.
+È stata quindi implementata una macro, chiamata \texttt{zwrap} per rimanere coerente
+con il prefisso utilizzato dalla libreria, che permette di generare automaticamente
+strutture Rust che racchiudono il corrispondente tipo C e che implementano i trait
+necessari per la gestione delle risorse, integrando così il tipo generato nel modello
+di \emph{ownership} di Rust (\Cref{lst:wrapper-implementation}).
+
+\lstinputlisting[
+    language=Rust,
+    caption={Esempio di utilizzo di macro per la generazione automatica del
+    wrapper Rust per Zenoh pico.},
+    label={lst:wrapper-implementation}
+]{listings/wrapper-implementation.rs}
 
 \subsection{Il sistema di closure}
 \label{sec:closure-system}
