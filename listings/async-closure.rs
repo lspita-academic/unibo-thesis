@@ -1,7 +1,7 @@
 trait ZClosure {
     // This is the standard initialization method, that requires the callback
     // function and optionally a context.
-    // The context is behind an Atomically Reference Counted’ (ARC) smart
+    // The context is behind an Atomically Reference Counted (ARC) smart
     // pointer to allow sharing it in a thread-safe way.
     fn from_callback<T>(
         callback: unsafe extern "C" fn(*const Self::CallbackValue, *const T),
