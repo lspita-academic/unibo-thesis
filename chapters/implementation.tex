@@ -296,7 +296,7 @@ stato attuale (\Cref{lst:network-trait-implementation}).
 I messaggi per la notifica manuale di esistenza del nodo ed aggiornamento della
 longevità dei risultati, invece, sono gestiti in maniera indipendente dal framework,
 tramite una comunicazione \emph{pub/sub} analoga a quella per i risultati sul topic
-\texttt{heartbit}. La rete offre la possibilità di dichiarare dei publisher appositi
+\texttt{heartbeat}. La rete offre la possibilità di dichiarare dei publisher appositi
 prima di passare l'istanza allo \texttt{Engine} del framework, così da lasciare
 libertà sulla strategia di utilizzo, e tutti i tipi ed operazioni e logica applicativa
 associata a questa categoria di messaggi vengono definiti dietro una \emph{feature}
@@ -305,4 +305,38 @@ del crate dedicata, così da renderne l'integrazione completamente opzionale.
 \subsection{Configurazione ed utilizzo}
 \label{sec:configuration-and-usage}
 
-Come la rete viene configurata (il builder per poi passare la configurazione esterna)
+La configurazione della rete avviene al momento dell'inizializzazione, tramite una
+struttura dedicata che definisce le opzioni disponibili.
+Nel caso della \texttt{ZenohNetwork}, questa si divide in due categorie principali:
+le opzioni per la rete ed il suo comportamento nel contesto di \ac{YAAIR}, e la
+configurazione per la sessione Zenoh utilizzata internamente.
+
+Come descritto nella \cref{sec:general-architecture},
+la configurazione di Zenoh avviene secondo il \emph{builder pattern}, definendo
+un trait per tutte le opzioni comuni implementato da entrambe le versioni di Zenoh.
+Per tutte le opzioni specifiche di Zenoh standard o pico, invece, è possibile
+semplicemente continuare a modificare il valore di configurazione prodotto dal
+builder prima di fornirlo in input alla rete per l'inizializzazione. Inoltre, se
+sono presenti opzioni mandatorie per il corretto funzionamento di una determinata
+versione di Zenoh, l'implementazione del builder può definire eventuali argomenti
+necessari per la sua creazione.
+
+Per la configurazione della rete stessa, invece, viene usata una normale struttura
+che racchiude tutte le opzioni possibili.
+Nonostante sia buona norma dare un'implementazione di default per le strutture
+rappresentanti collezioni di campi o opzioni per la configurazione, in questo
+caso non è previsto, in quanto è necessaria almeno al configurazione di Zenoh
+creata dal builder: come alternativa, sono stati implementati i trait appositi
+per convertire la configurazione Zenoh in una per la rete automaticamente, impostando
+i campi restanti con dei valori predefiniti.
+
+Oltre alla sua configurazione, la rete necessita per l'inizializzazione anche di
+un serializzatore compatibile con quello usato da \ac{YAAIR} per il programma
+aggregato, così da poter deserializzare correttamente i messaggi inoltrati sotto
+forma di sequenze di byte (\Cref{lst:usage-example}).
+
+\lstinputlisting[
+    language=Rust,
+    caption={Esempio di configurazione ed utilizzo della rete.},
+    label={lst:usage-example}
+]{listings/usage-example.rs}
