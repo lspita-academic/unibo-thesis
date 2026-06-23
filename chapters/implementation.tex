@@ -167,15 +167,15 @@ alternativa moderna e versatile (\Cref{lst:async-closure}).
 \section{Implementazione della rete}
 \label{sec:network-implementation}
 
-\subsection{Integrazione con YAAIR}
-\label{ssec:the-network-trait}
+\subsection{L'integrazione con YAAIR}
+\label{ssec:yaair-integration}
 
 Un requisito fondamentale per il contributo di questa tesi è la compatibilità con
 \ac{YAAIR} (\ref{constraint:yaair-compatibility}), il quale
 definisce un'interfaccia da rispettare per implementare una rete utilizzabile dal
 framework.
 È necessario quindi analizzare le firme ed il comportamento atteso di queste
-operazioni, così da poter adeguare l'implementazione di conseguenza.
+operazioni, così da poter adeguare la rete di conseguenza.
 
 Quest'interfaccia è definita da un trait \texttt{Network} composto da 3 metodi (\Cref{lst:network-trait}):
 
@@ -186,7 +186,8 @@ Quest'interfaccia è definita da un trait \texttt{Network} composto da 3 metodi 
     programma aggregato, già serializzato sotto forma di sequenza di byte, e lo
     pubblica sulla rete per renderlo disponibile agli altri nodi presenti.
     \item \texttt{prepare\_inbound}: ritorna un'istanza di una struttura dati
-    di \ac{YAAIR}, lo \texttt{InboundMessage}, che associa ogni nodo raggiungibile
+    di \ac{YAAIR}, \\
+    \texttt{InboundMessage}, che associa ogni nodo raggiungibile
     con l'ultimo messaggio da esso ricevuto.
 \end{itemize}
 
@@ -200,27 +201,59 @@ Quest'interfaccia è definita da un trait \texttt{Network} composto da 3 metodi 
     label={lst:network-trait}
 ]{listings/network-trait.rs}
 
-\subsection{La ZenohNetwork}
-\label{ssec:the-zenoh-network}
+La \texttt{ZenohNetwork} implementata dovrà rispettare questo trait, sfruttando
+Zenoh ed i suoi costrutti per la comunicazione con gli altri nodi.
+Come descritto nel \cref{chap:design}, la rete mantiene
+un \texttt{MessagesStore} centrale per la memorizzazione dei messaggi accessibile
+dai vari subscriber in background.
+Tutte le entità Zenoh vengono utilizzate attraverso dei trait definiti per rendere
+la logica applicativa indipendente dalla versione di Zenoh utilizzata, secondo la
+progettazione definita nella \cref{ssec:zenoh-and-pubsub-communication}.
 
-Spiegazione del funzionamento della rete zenoh e della generalizzazione riguardo
-all'implementazione usata.
+Per i nodi nella rete viene definito un tipo \texttt{ZenohNodeId}, costituito da
+una sequenza di 16 byte, utilizzato da tutti i componenti come identificativo sia
+interno che nel framework, tramite il parametro generico \texttt{Id} del trait
+\texttt{Network}.
 
-\subsection{Il \texttt{AtomicMessagesStore}}
+\subsection{Il sistema di messagistica}
 \label{sec:the-atomic-message-store}
 
-Spiegazione del concetto di message store, della gestione della concorrenza e della
-lifespan dei nodi in base all'ultimo update.
+Al centro della comunicazione nell'implementazione troviamo il \texttt{MessagesStore},
+una struttura che mantiene una mappa associativa dei nodi con l'ultimo risultato
+da loro pubblicato, arricchito con metadati sull'istante in cui è stato inserito
+e la durata della sua validità.
 
-\subsubsection{La task di hearthbit}
-\label{sec:the-heartbeat-task}
+Internamente utilizza una \texttt{HashMap} protetta tramite un mutex, per permettere
+un accesso sicuro anche da diversi thread paralleli, ed espone diversi metodi per
+interagire con essa, tra cui l'aggiunta di un risultato per un nodo (\texttt{store\_message}),
+l'aggiornamento dell'istante di ultima attività (\texttt{keep\_alive}) e
+della durata della validità di un risultato (\texttt{store\_lifespan}),
+l'eliminazione dalla mappa di tutte le coppie chiave-valore contenenti risultati
+ormai obsoleti (\texttt{clear\_dead}) e la creazione di una fotografia dei
+risultati attuali (\texttt{create\_snapshot}).
 
-Spiegazione della hearthbit task per mantenere vivo un nodo.
+Per un'architettura più versatile, il \texttt{MessagesStore} è implementato in
+maniera generica rispetto ai valori specifici utilizzati dalla rete, ed è configurabile
+tramite parametri di inizializzazione per definire opzioni come la durata di validità
+dei risultati se non specificata.
 
-\subsection{Implementazione tramite Zenoh pico}
-\label{sec:zenoh-pico-implementation}
+\lstinputlisting[
+    language=Rust,
+    caption={[Implementazione grossolana del \texttt{MessagesStore}]
+    Implementazione grossolana del \texttt{MessagesStore}, con lo scopo di mostrare
+    un'approssimazione delle opzioni ed operazioni definite.},
+    label={lst:messages-store}
+]{listings/messages-store.rs}
 
-Approfondimento sull'implementazione zenoh pico
+\subsection{Zenoh e la comunicazione}
+\label{sec:zenoh-communication}
+
+
+
+\subsection{Configurazione ed utilizzo}
+\label{sec:configuration-and-usage}
+
+Come la rete viene configurata (il builder per poi passare la configurazione esterna)
 
 \subsection{Implementazione tramite Zenoh}
 \label{sec:zenoh-implementation}
