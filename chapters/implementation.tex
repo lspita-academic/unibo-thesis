@@ -206,10 +206,6 @@ Zenoh ed i suoi costrutti per la comunicazione con gli altri nodi.
 Come descritto nel \cref{chap:design}, la rete mantiene
 un \texttt{MessagesStore} centrale per la memorizzazione dei messaggi accessibile
 dai vari subscriber in background.
-Tutte le entità Zenoh vengono utilizzate attraverso dei trait definiti per rendere
-la logica applicativa indipendente dalla versione di Zenoh utilizzata, secondo la
-progettazione definita nella \cref{ssec:zenoh-and-pubsub-communication}.
-
 Per i nodi nella rete viene definito un tipo \texttt{ZenohNodeId}, costituito da
 una sequenza di 16 byte, utilizzato da tutti i componenti come identificativo sia
 interno che nel framework, tramite il parametro generico \texttt{Id} del trait
@@ -248,7 +244,25 @@ dei risultati se non specificata.
 \subsection{Zenoh e la comunicazione}
 \label{sec:zenoh-communication}
 
+Insieme al \texttt{MessagesStore}, la rete è composta da diversi subscriber che
+interagiscono con esso in maniera diretta secondo i messaggi ricevuti dai vari
+nodi e publisher per comunicare nuovi risultati o aggiornamenti di stato sulla
+rete.
 
+Tutte le entità Zenoh vengono utilizzate attraverso dei trait definiti per rendere
+la logica applicativa indipendente dalla versione utilizzata, secondo la progettazione
+definita nella \cref{ssec:zenoh-and-pubsub-communication}.
+Vengono quindi definiti diversi trait per rappresentare la sessione, i publisher,
+i subscriber e le \emph{keyexpression}, implementati sia da Zenoh standard che pico
+in appositi moduli poi importati in base le caratteristiche del target di compilazione
+specificato tramite i costrutti di compilazione condizionale introdotti nella \cref{ssec:cross-compilation}
+(\Cref{lst:zenoh-comm-traits}).
+
+\lstinputlisting[
+    language=Rust,
+    caption={Definizione dei trait per le entità Zenoh utilizzate dalla rete.},
+    label={lst:zenoh-comm-traits}
+]{listings/zenoh-comm-traits.rs}
 
 \subsection{Configurazione ed utilizzo}
 \label{sec:configuration-and-usage}
