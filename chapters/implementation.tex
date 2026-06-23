@@ -167,9 +167,6 @@ alternativa moderna e versatile (\Cref{lst:async-closure}).
 \section{Implementazione della rete}
 \label{sec:network-implementation}
 
-\subsection{L'integrazione con YAAIR}
-\label{ssec:yaair-integration}
-
 Un requisito fondamentale per il contributo di questa tesi è la compatibilità con
 \ac{YAAIR} (\ref{constraint:yaair-compatibility}), il quale
 definisce un'interfaccia da rispettare per implementare una rete utilizzabile dal
@@ -264,12 +261,48 @@ specificato tramite i costrutti di compilazione condizionale introdotti nella \c
     label={lst:zenoh-comm-traits}
 ]{listings/zenoh-comm-traits.rs}
 
+\subsection{L'integrazione con YAAIR}
+\label{ssec:yaair-integration}
+
+L'implementazione della \texttt{ZenohNetwork} è vincolata dal trait \texttt{Network}
+definito da \ac{YAAIR} per rendere la rete utilizzabile dal framework ed il
+programma aggregato, descritto all'inizio della \cref{sec:network-implementation}.
+Sfruttando le varie entità Zenoh ed il \texttt{MessagesStore}, vengono implementati
+i metodi necessari per rendere la comunicazione tra i nodi semplice ed efficace.
+
+Quando la rete viene inizializzata, viene creata la sessione Zenoh che rappresenterà
+il nodo nella rete come peer per la comunicazione decentralizzata, dalla quale viene
+creato l'indentificativo nella rete associato al nodo.
+Attraverso la sessione vengono poi dichiarate le entità per la comunicazione
+\emph{pub/sub} dei risultati: un subscriber sul topic \texttt{*/messages} che
+ascolta i nuovi messaggi contenenti i risultati aggiornati di tutti i nodi della
+rete, ed un publisher corrispondente che pubblica questi messaggi tramite il metodo
+\texttt{prepare\_outbound} sul topic \texttt{<nodeid>/messages/}, dove \texttt{<nodeid>}
+corrisponde ad una rappresentazione testuale dell'identificativo definito in precedenza.
+
+Quando il subscriber riceve un messaggio da un altro nodo, ne deserializza il
+contenuto e aggiorna il \texttt{MessagesStore} con il nuovo risultato: nel momento
+in cui il metodo \texttt{prepare\_inbound} viene chiamato da \ac{YAAIR}, verrà
+fatta pulizia dei risultati obsoleti e creata un'istanza della mappa associativa
+richiesta dei nodi con il loro ultimo risultato a partire da una fotografia dello
+stato attuale (\Cref{lst:network-trait-implementation}).
+
+\lstinputlisting[
+    language=Rust,
+    caption={Implementazione del trait Network per la rete Zenoh.},
+    label={lst:network-trait-implementation}
+]{listings/network-trait-implementation.rs}
+
+I messaggi per la notifica manuale di esistenza del nodo ed aggiornamento della
+longevità dei risultati, invece, sono gestiti in maniera indipendente dal framework,
+tramite una comunicazione \emph{pub/sub} analoga a quella per i risultati sul topic
+\texttt{heartbit}. La rete offre la possibilità di dichiarare dei publisher appositi
+prima di passare l'istanza allo \texttt{Engine} del framework, così da lasciare
+libertà sulla strategia di utilizzo, e tutti i tipi ed operazioni e logica applicativa
+associata a questa categoria di messaggi vengono definiti dietro una \emph{feature}
+del crate dedicata, così da renderne l'integrazione completamente opzionale.
+
 \subsection{Configurazione ed utilizzo}
 \label{sec:configuration-and-usage}
 
 Come la rete viene configurata (il builder per poi passare la configurazione esterna)
-
-\subsection{Implementazione tramite Zenoh}
-\label{sec:zenoh-implementation}
-
-Approfondimento sull'implementazione zenoh
