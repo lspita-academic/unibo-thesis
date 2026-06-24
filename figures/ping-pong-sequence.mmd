@@ -1,0 +1,37 @@
+---
+  config:
+    layout: elk
+    theme: neutral
+    class:
+      hideEmptyMembersBox: true
+---
+
+sequenceDiagram
+    participant PingNode@{ "type": "control" }
+    participant PongNode@{ "type": "control" }
+
+    par
+        PingNode ->> PingNode : x = 0
+    and
+        PongNode ->> PongNode : start listening on ping topic
+        activate PongNode
+    end
+    loop
+        PingNode ->> PongNode : publish x on ping topic
+        deactivate PongNode
+        par
+            PingNode ->> PingNode : start listening on pong topic
+            activate PingNode
+        and
+            PongNode ->> PongNode : x += 1
+        end
+        PongNode ->> PingNode : publish x on pong topic
+        deactivate PingNode
+        par
+            PongNode ->> PongNode : start listening on ping topic
+            activate PongNode
+        and
+            PingNode ->> PingNode : x += 1
+        end
+        deactivate PongNode
+    end
