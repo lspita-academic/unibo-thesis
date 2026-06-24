@@ -95,20 +95,115 @@ tramite il wrapper Zenoh pico funziona correttamente.
 \section{La rete Zenoh: test del gradiente}
 \label{sec:zenoh-network-gradient-test}
 
-Descrizione del test del gradiente e la sua struttura.
+Il test del gradiente consiste in un'implementazione del noto esempio di programma
+aggregato per il calcolo di un gradiente spaziale tra i nodi della rete, come definito
+nella \cref{ssec:ac-computational-model}
+ed illustrato nella \cref{fig:ac-gradient-example}.
+Nel contesto di questo esempio, il calcolo delle distanze minime viene effettuato
+tra 3 nodi i cui collegamenti nel grafo della rete sono definiti in maniera statica,
+così da poter verificare facilmente la correttezza del risultato ottenuto.
 
 \subsection{Obbiettivi}
 \label{ssec:gradient-objectives}
 
-Obbiettivi del test del gradiente.
+L'obbiettivo principale di questo test non è verificare la correttezza del programma
+aggregato stesso, il quale implementa un problema noto e facilmente risolvibile,
+bensì si tratta di valutare il corretto funzionamento della rete Zenoh quando
+utilizzata in un contesto reale da \ac{YAAIR}, facendo interagire nodi di diverso
+tipo e verificando la correttezza dei messaggi scambiati.
 
-\subsection{Setup}
-\label{ssec:gradient-setup}
+\subsection{Implementazione}
+\label{ssec:gradient-implementation}
 
-Setup del test del gradiente: numero di esp utilizzati, tipo, tipo di rete
-(wifi o cablata), etc\dots
+Come per il test del wrapper di Zenoh pico discusso nella \cref{sec:zenoh-pico-ping-pong-test},
+anche per questo vengono definiti diversi programmi rappresentanti i vari nodi
+necessari per la comunicazione, così da poter verificare il supporto per l'interazione
+tra dispositivi eterogenei.
+
+L'implementazione del gradiente è basata su quella fornita dagli esempi nella
+repository originale di \ac{YAAIR} \footnote{\url{https://github.com/nicolasfara/yaair/blob/master/examples/gradient.rs}},
+modificata per implementare in maniera statica e prevedibile le distanze tra i
+vari nodi secondo il grafo rappresentato dalla \Cref{fig:gradient-test-graph}.
+
+\begin{figure}[h]
+    \centering
+    \begin{tikzpicture}[
+        >=stealth,
+        node distance=2.5cm,
+        every node/.style={circle, draw, minimum size=8mm, font=\bfseries},
+        edge/.style={draw, thick, <->},
+        edgelabel/.style={fill=white, draw=none, font=\normalfont, midway}
+    ]
+        \node[fill=red!30] (1) {1};
+        \node (2) [right of=1] {2};
+        \node (3) [right of=2] {3};
+
+        \path[edge] (1) -- (2) node[edgelabel, above] {1.0};
+        \path[edge] (2) -- (3) node[edgelabel, above] {1.5};
+    \end{tikzpicture}
+    \caption[Gradiente spaziale utilizzato per il test della rete Zenoh]{
+    Gradiente spaziale utilizzato per il test della rete Zenoh.
+    Gli archi rappresentano i collegamenti tra i vari nodi, mentre i valori
+    su di essi la distanza tra i nodi. Il nodo sorgente è evidenziato in rosso.}
+    \label{fig:gradient-test-graph}
+\end{figure}
+
+\lstinputlisting[
+    language=Rust,
+    caption={[Implementazione del test del gradiente per la \texttt{ZenohNetwork}
+    e \ac{YAAIR}]
+    Implementazione del test del gradiente per la \texttt{ZenohNetwork}
+    e \ac{YAAIR}. Nel test originale vengono anche utilizzate le funzioni di
+    heartbeat per verificarne il corretto funzionamento, che qui vengono omesse
+    per semplificare la lettura.},
+    label={lst:gradient-test}
+]{listings/gradient-test.rs}
 
 \subsection{Risultati}
 \label{ssec:gradient-results}
 
-Risultati del test del gradiente.
+Il test è stato eseguito con un dispositivo diverso per ogni nodo, per verificare
+il supporto della rete per dispositivi eterogenei: il primo è
+rappresentato da un ESP32-C3 Mini 1, lo stesso utilizzato nella \cref{ssec:ping-pong-results},
+il secondo è una Raspberry Pi Zero W, che rientra nella categoria di sistemi embedded
+che utilizzano comunque la versione standard di Zenoh in quanto disposti di un
+sistema operativo, ed infine il terzo è una macchina Linux standard, che rappresenta
+un dispositivo general-purpouse generico.
+
+Possiamo notare dai log mostrati nella \cref{fig:gradient-nodes} che i nodi sono riusciti a
+scovarsi l'un l'altro nella rete autonomamente senza connesioni dirette, per poi
+correttamente condividere i risultati del gradiente ad ogni iterazione, ottenendo
+i valori finali previsti di 0 per il nodo 1 sorgente, 1 per il nodo 2 e 2.5
+(dato dalla somma di 1 + 1.5) per il nodo 3.
+
+Inoltre, si possono anche identificare tra i messaggi gli istanti in cui sono stati
+utilizzati dei messaggi di heartbeat per notificare la propria presenza nella rete.
+In particolare, nella \cref{fig:gradient-node3} si può notare come dopo aver interrotto il nodo 2
+manualmente i suoi risultati sono diventati obsoleti e di conseguenza eliminati
+dalla rete.
+
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}{0.45\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{figures/gradient-node1}
+        \caption{Nodo 1.}
+        \label{fig:gradient-node1}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.45\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{figures/gradient-node2}
+        \caption{Nodo 2.}
+        \label{fig:gradient-node2}
+    \end{subfigure}
+    \vfill
+    \begin{subfigure}{0.45\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{figures/gradient-node3}
+        \caption{Nodo 3.}
+        \label{fig:gradient-node3}
+    \end{subfigure}
+    \caption{Log di esecuzione del test del gradiente per la rete Zenoh.}
+    \label{fig:gradient-nodes}
+\end{figure}
