@@ -62,12 +62,6 @@ A questo punto inizia il ciclo infinito di scambio del valore (\Cref{lst:ping-po
     interrotto il programma manualmente.
 \end{enumerate}
 
-\lstinputlisting[
-    language=Rust,
-    caption={Implementazione del test del ping-pong per il wrapper di Zenoh pico.},
-    label={lst:ping-pong-test}
-]{listings/ping-pong-test.rs}
-
 \subsection{Risultati}
 \label{ssec:ping-pong-results}
 
@@ -136,17 +130,6 @@ vari nodi secondo il grafo rappresentato dalla \Cref{fig:gradient-test-graph}.
     su di essi la distanza tra i nodi. Il nodo sorgente è evidenziato in rosso.}
     \label{fig:gradient-test-graph}
 \end{figure}
-
-\lstinputlisting[
-    language=Rust,
-    caption={[Implementazione del test del gradiente per la \texttt{ZenohNetwork}
-    e \ac{YAAIR}]
-    Implementazione del test del gradiente per la \texttt{ZenohNetwork}
-    e \ac{YAAIR}. Nel test originale vengono anche utilizzate le funzioni di
-    heartbeat per verificarne il corretto funzionamento, che qui vengono omesse
-    per semplificare la lettura.},
-    label={lst:gradient-test}
-]{listings/gradient-test.rs}
 
 \subsection{Risultati}
 \label{ssec:gradient-results}

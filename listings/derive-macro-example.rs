@@ -1,11 +1,3 @@
-// Procedural macros must be defined in a separate crate from the one that uses
-// them, but for the sake of this example everything is shown in a single file.
-
-use darling::FromDeriveInput;
-use proc_macro::TokenStream;
-use quote::quote;
-use syn::{parse_macro_input, DeriveInput, Ident};
-
 /// This is an example trait that we want to be able to implement automatically.
 trait HelloWorld {
     fn hello_world();
@@ -14,11 +6,9 @@ trait HelloWorld {
 // This struct describes the parameters of the optional customization attribute
 // that can sit on top of the struct being derived, which darling populates
 // accordingly.
-#[derive(FromDeriveInput, Default)]
-#[darling(attributes(hello_world), default)]
+#[derive(darling::FromDeriveInput, Default)]
 struct HelloWorldOpts {
-    // `ident` is a special field containing the identifier of the derived struct.
-    ident: Ident,
+    ident: Ident, // special field containing the identifier of the derived struct
     greeting: Option<String>,
 }
 
@@ -28,48 +18,30 @@ struct HelloWorldOpts {
 // extra options.
 #[proc_macro_derive(HelloWorld, attributes(hello_world))]
 fn hello_world_derive(input: TokenStream) -> TokenStream {
-    // Syn automatically parses the tokens stream into an
-    // Abstract Syntax Tree (AST).
-    let derive_input = parse_macro_input!(input as DeriveInput);
+    // Here syn and quote can be used to parse the input tokens stream into an
+    // AST and to generate the output tokens stream directly from code.
+    let derive_input = syn::parse_macro_input!(input as syn::DeriveInput);
 
-    // Darling extracts the options from the `hello_world` attribute to populate
-    // the options struct.
-    let opts = match HelloWorldOpts::from_derive_input(&derive_input) {
-        Ok(opts) => opts,
-        // If there is any error, make it appear at compile time.
-        Err(err) => return TokenStream::from(err.write_errors()),
-    };
-
+    let opts = HelloWorldOpts::from_derive_input(&derive_input);
     let ident = opts.ident;
-    // Default greeting is "Hello" if omitted in the options attribute.
     let greeting = opts.greeting.unwrap_or("Hello".to_string());
-
     let message = format!("{greeting} world from {ident}!");
 
-    // Quote creates the output tokens stream directly from code, with the ability
-    // to interpolate values in it using the # syntax.
-    let expanded = quote! {
+    quote! {
         impl HelloWorld for #ident {
             fn hello_world() {
                 println!(#message);
             }
         }
-    };
-    expanded.into()
+    }
 }
 
-// The derive attribute automatically calls the associated procedural macro to
-// implement the trait automatically.
-#[derive(HelloWorld)]
-struct Foo;
-
+// The derive attribute calls the associated procedural macro to implement the
+// trait automatically.
 #[derive(HelloWorld)]
 // The `hello_world` attribute can be also added to override the default
 // behaviour.
 #[hello_world(greeting = "Good morning")]
-struct Bar;
+struct Foo;
 
-fn main() {
-    Foo::hello_world(); // output: Hello world from Foo!
-    Bar::hello_world(); // output: Good morning world from Bar!
-}
+Foo::hello_world(); // output: Good morning world from Foo!
