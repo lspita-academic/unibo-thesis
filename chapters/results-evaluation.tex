@@ -77,20 +77,9 @@ connettività tramite WiFi.
 Ognuno di questi dispositivi esegue un solo programma tra \texttt{ping}
 e \texttt{pong}, caricato via cavo dalla macchina host.
 
-Possiamo notare dai log mostrati in \cref{fig:ping-pong-logs} che il valore viene
-trasferito tra un nodo e l'altro, di conseguenza la comunicazione \emph{pub/sub}
-tramite il wrapper Zenoh pico funziona correttamente.
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=1\linewidth]{figures/ping-pong-logs}
-    \caption[Log di esecuzione del test del ping pong.]{
-    Log di esecuzione del test del ping pong. È possibile vedere come ogni volta
-    che viene scambiato il valore, viene incrementato di 1 prima di essere rimandato
-    indietro. Inoltre, a puro scopo informativo, viene anche mostrata la dimensione
-    della sequenza di byte rappresentante il valore.}
-    \label{fig:ping-pong-logs}
-\end{figure}
+Tramite i messaggi di log dei programmi in esecuzione è stato verificato che il
+valore viene trasferito tra un nodo e l'altro, di conseguenza la comunicazione
+\emph{pub/sub} tramite il wrapper Zenoh pico funziona correttamente.
 
 \section{La rete Zenoh: test del gradiente}
 \label{sec:zenoh-network-gradient-test}
@@ -170,40 +159,13 @@ che utilizzano comunque la versione standard di Zenoh in quanto disposti di un
 sistema operativo, ed infine il terzo è una macchina Linux standard, che rappresenta
 un dispositivo general-purpouse generico.
 
-Possiamo notare dai log mostrati nella \cref{fig:gradient-nodes} che i nodi sono riusciti a
-scovarsi l'un l'altro nella rete autonomamente senza connesioni dirette, per poi
-correttamente condividere i risultati del gradiente ad ogni iterazione, ottenendo
-i valori finali previsti di 0 per il nodo 1 sorgente, 1 per il nodo 2 e 2.5
-(dato dalla somma di 1 + 1.5) per il nodo 3.
+Grazie ai messaggi di log dei programmi in esecuzione è stato verificato che i
+dispositivi si sono identificati nella rete autonomamente senza connesioni dirette,
+per poi correttamente condividere i risultati del gradiente ad ogni iterazione,
+ottenendo i valori finali previsti di 0 per il nodo 1 sorgente, 1 per il nodo 2
+e 2.5 (dato dalla somma di 1 + 1.5) per il nodo 3.
 
 Inoltre, si possono anche identificare tra i messaggi gli istanti in cui sono stati
 utilizzati dei messaggi di heartbeat per notificare la propria presenza nella rete.
-In particolare, nella \cref{fig:gradient-node3} si può notare come dopo aver interrotto il nodo 2
-manualmente i suoi risultati sono diventati obsoleti e di conseguenza eliminati
-dalla rete.
-
-\begin{figure}[H]
-    \centering
-    \begin{subfigure}{0.45\linewidth}
-        \centering
-        \includegraphics[width=\linewidth]{figures/gradient-node1}
-        \caption{Nodo 1.}
-        \label{fig:gradient-node1}
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}{0.45\linewidth}
-        \centering
-        \includegraphics[width=\linewidth]{figures/gradient-node2}
-        \caption{Nodo 2.}
-        \label{fig:gradient-node2}
-    \end{subfigure}
-    \vfill
-    \begin{subfigure}{0.45\linewidth}
-        \centering
-        \includegraphics[width=\linewidth]{figures/gradient-node3}
-        \caption{Nodo 3.}
-        \label{fig:gradient-node3}
-    \end{subfigure}
-    \caption{Log di esecuzione del test del gradiente per la rete Zenoh.}
-    \label{fig:gradient-nodes}
-\end{figure}
+In particolare, dopo aver interrotto il nodo 2 manualmente i suoi risultati sono
+diventati obsoleti e di conseguenza eliminati dalla rete.
