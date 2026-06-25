@@ -62,8 +62,8 @@ loro~\cite[12.2.2]{10.1007/978-3-031-95589-1_12}~(\Cref{fig:ac-gradient-example}
         \path[edge] (C) -- (E);
         \path[edge] (D) -- (E);
     \end{tikzpicture}
-    \caption[Esempio del gradiente spaziale per aggregate computing]{
-    Rappresentazione di un gradiente spaziale in un sistema distribuito.
+    \caption[Esempio del gradiente spaziale per aggregate computing.]{
+    Esempio del gradiente spaziale per aggregate computing.
     Il nodo sorgente (in rosso) ha distanza 0, mentre i nodi adiacenti calcolano
     la propria distanza propagando il valore attraverso il vicinato.}
     \label{fig:ac-gradient-example}
@@ -143,15 +143,15 @@ maniera diretta con altri nodi sulla rete astraendo i salti necessari per arriva
 \label{ssec:zenoh-actors-and-fundamental-concepts}
 
 A livello applicativo, la comunicazione in Zenoh avviene all'interno di una
-\emph{Sessione}, la quale incapsula la connettività del nodo. Sfruttando un
+sessione, la quale incapsula la connettività del nodo. Sfruttando un
 approccio incentrato sui dati, l'indirizzamento è dettato tramite \emph{key
 expressions}, permettendo a molteplici entità di registrarsi sugli stessi topic.
 
 Zenoh permette di utilizzare modelli di comunicazione \emph{pub/sub} e \emph{query/reply}
 in maniera ibrida all'interno della stessa sessione, definendo rispettivamente
-\texttt{Publisher} che pubblicano dati su topic specifici a cui i \texttt{Subscriber}
-possono iscriversi o \texttt{Queryable} che rispondono a richieste effettuate attivamente
-da \texttt{Querier} in una comunicazione più simile al modello \ac{RPC}.
+\texttt{publisher} che pubblicano dati su topic specifici a cui i \texttt{subscriber}
+possono iscriversi o \texttt{queryable} che rispondono a richieste effettuate attivamente
+da \texttt{querier} in una comunicazione più simile al modello \ac{RPC}.
 
 \section{Zenoh per sistemi embedded}
 \label{ssec:zenoh-for-embdedded-systems}

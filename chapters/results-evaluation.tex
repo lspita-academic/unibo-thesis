@@ -1,9 +1,8 @@
 \chapter{Valutazione dei risultati}
 \label{chap:results-evaluation}
 
-L'unione delle necessità di comunicazione di rete ed il coinvolgimento di sistemi
-embedded nel contributo di questa tesi rende la validazione dei risultati difficile
-da automatizzare in maniera efficace.
+La natura distribuita della rete e il coinvolgimento di dispositivi embedded
+rendono difficile automatizzare in modo efficace la validazione dei risultati.
 Per ridurre i tempi di sviluppo è stato quindi adottato un approccio più manuale:
 sono stati creati dei programmi specifici che utilizzano i vari componenti
 implementati coprendo diversi casi e piattaforme, per poi verificare manualmente
@@ -29,7 +28,7 @@ ricevere (\Cref{fig:ping-pong-sequence}).
     \label{fig:ping-pong-sequence}
 \end{figure}
 
-\subsection{Obbiettivi}
+\subsection{Obiettivi}
 \label{ssec:ping-pong-objectives}
 
 Questo test non utilizza nè \ac{YAAIR} nè la rete per esso creata, bensì ha
@@ -37,7 +36,7 @@ lo scopo di verificare il corretto funzionamento del wrapper per Zenoh pico impl
 nella \cref{sec:zenoh-pico-wrapper} anche al di fuori
 del contesto di un programma aggregato.
 
-\subsection{Implementationze}
+\subsection{Implementazione}
 \label{ssec:ping-pong-implementation}
 
 Essendo un test per il wrapper di Zenoh pico, è stato pensato per i sistemi
@@ -47,11 +46,11 @@ Sono quindi previsti programmi distinti, eseguibili su dispositivi separati,
 rappresentanti i due diversi nodi descritti nella \cref{sec:zenoh-pico-ping-pong-test}.
 
 Dopo una fase di inizializzazione per avviare la sessione Zenoh e dichiarare i
-\emph{publisher} e \emph{subscriber} necessari, il nodo \texttt{ping} imposta
+publisher e subscriber necessari, il nodo \texttt{ping} imposta
 un valore \texttt{x=0}, mentre il nodo \texttt{pong} si mette in ascolto per nuovi
 messaggi sul topic \texttt{ping/value} sfruttando la \ac{API} asincrona del wrapper
 definita nella \cref{sec:closure-system}.
-A questo punto inizia il ciclo infinito di scambio del valore (\Cref{lst:ping-pong-test}):
+A questo punto inizia il ciclo infinito di scambio del valore:
 
 \begin{enumerate}
     \item il nodo \texttt{ping} pubblica il valore di \texttt{x} sul topic
@@ -88,10 +87,10 @@ Nel contesto di questo esempio, il calcolo delle distanze minime viene effettuat
 tra 3 nodi i cui collegamenti nel grafo della rete sono definiti in maniera statica,
 così da poter verificare facilmente la correttezza del risultato ottenuto.
 
-\subsection{Obbiettivi}
+\subsection{Obiettivi}
 \label{ssec:gradient-objectives}
 
-L'obbiettivo principale di questo test non è verificare la correttezza del programma
+L'obiettivo principale di questo test non è verificare la correttezza del programma
 aggregato stesso, il quale implementa un problema noto e facilmente risolvibile,
 bensì si tratta di valutare il corretto funzionamento della rete Zenoh quando
 utilizzata in un contesto reale da \ac{YAAIR}, facendo interagire nodi di diverso
@@ -126,10 +125,13 @@ vari nodi secondo il grafo rappresentato dalla \Cref{fig:gradient-test-graph}.
         \path[edge] (1) -- (2) node[edgelabel, above] {1.0};
         \path[edge] (2) -- (3) node[edgelabel, above] {1.5};
     \end{tikzpicture}
-    \caption[Gradiente spaziale utilizzato per il test della rete Zenoh]{
+    \caption[Gradiente spaziale utilizzato per il test della rete Zenoh.]{
     Gradiente spaziale utilizzato per il test della rete Zenoh.
     Gli archi rappresentano i collegamenti tra i vari nodi, mentre i valori
-    su di essi la distanza tra i nodi. Il nodo sorgente è evidenziato in rosso.}
+    su di essi la distanza tra i nodi. Il nodo sorgente è evidenziato in rosso.
+    Il risultato atteso per ogni nodo corrisponde alla somma degli archi per arrivare
+    ad esso dalla sorgente tramite il percorso più breve, ovvero 0 per la sorgente,
+    1 per il nodo 2 e 2.5 per il nodo 3.}
     \label{fig:gradient-test-graph}
 \end{figure}
 
@@ -140,15 +142,15 @@ Il test è stato eseguito con un dispositivo diverso per ogni nodo, per verifica
 il supporto della rete per dispositivi eterogenei: il primo è
 rappresentato da un ESP32-C3 Mini 1, lo stesso utilizzato nella \cref{ssec:ping-pong-results},
 il secondo è una Raspberry Pi Zero W, che rientra nella categoria di sistemi embedded
-che utilizzano comunque la versione standard di Zenoh in quanto disposti di un
-sistema operativo, ed infine il terzo è una macchina Linux standard, che rappresenta
-un dispositivo general-purpouse generico.
+che utilizzano la versione standard di Zenoh in quanto dotati di un sistema operativo
+compatibile, ed infine il terzo è una macchina Linux standard, che rappresenta
+un dispositivo general-purpose.
 
 Grazie ai messaggi di log dei programmi in esecuzione è stato verificato che i
 dispositivi si sono identificati nella rete autonomamente senza connesioni dirette,
 per poi correttamente condividere i risultati del gradiente ad ogni iterazione,
 ottenendo i valori finali previsti di 0 per il nodo 1 sorgente, 1 per il nodo 2
-e 2.5 (dato dalla somma di 1 + 1.5) per il nodo 3.
+e 2.5 per il nodo 3, dato dalla somma di tutti gli archi percorsi.
 
 Inoltre, si possono anche identificare tra i messaggi gli istanti in cui sono stati
 utilizzati dei messaggi di heartbeat per notificare la propria presenza nella rete.

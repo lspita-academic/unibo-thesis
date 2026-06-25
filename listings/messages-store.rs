@@ -11,7 +11,7 @@ struct StoreEntity<T> {
 }
 
 struct MessagesStore<Id, T> {
-    // The internal structure of the `MessagesStore` is an hash map behid a mutex
+    // The internal structure of the `MessagesStore` is an hash map behind a mutex
     // for thread safety.
     // Each operation that interacts with the values of the map automatically
     // updates the `StoreEntity` lifespan, keeping the node alive.

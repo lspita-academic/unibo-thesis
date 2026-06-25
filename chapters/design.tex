@@ -3,7 +3,7 @@
 
 Nel seguente capitolo vengono illustrate le scelte architetturali adottate nella
 realizzazione del sistema per soddisfare tutti i requisiti e raggiungere gli
-obbiettivi imposti nel \cref{chap:analysis}, rispettando al
+obiettivi imposti nel \cref{chap:analysis}, rispettando al
 contempo i vincoli imposti (\cref{sec:constraints})
 
 \section{Architettura generale}
@@ -25,21 +25,22 @@ utilizzata.
 Per la configurazione di Zenoh stesso (\ref{requirement:zenoh-portability}),
 le due versioni offrono opzioni con requisiti differenti, rendendo quindi necessario
 esporre almeno in parte l'implementazione utilizzata. Per minimizzare questa necessità,
-viene esposta una \ac{API} comune che segue il \emph{builder pattern}~\cite{gamma1994design}
-per la configurazione
-delle opzioni comuni e più importanti nel contesto di questo progetto.
+viene definita una \ac{API} comune che segue il \emph{builder pattern}~\cite{gamma1994design}
+per la configurazione delle opzioni comuni e più importanti nel contesto di questo progetto.
 Entrambe le versioni di Zenoh offrono un'implementazione di questa interfaccia,
 producendo solo al momento della creazione finale un oggetto specifico che potrà
-essere ulteriormente configurato utilizzando le api specifiche della libreria originale.
-Per ridurre ulteriormente l'utilizzo di \ac{API} specifiche, il progetto è strutturato
-in maniera tale da scegliere tra Zenoh e Zenoh pico a tempo di compilazione e
-riesporre eventuali tipi e funzioni specifici sotto lo stesso nome (\Cref{fig:general-architecture}).
+essere ulteriormente configurato utilizzando le funzioni specifiche della libreria
+originale.
+
+Per ridurre ulteriormente l'interazione diretta con la libreria originale,
+il progetto è strutturato in maniera tale da scegliere tra Zenoh e Zenoh pico a
+tempo di compilazione e riesporre eventuali tipi e funzioni specifici sotto lo
+stesso nome (\Cref{fig:general-architecture}).
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\linewidth]{figures/general-architecture}
-    \caption[Architettura generale della rete]
-    {Architettura generale della rete.}
+    \caption{Diagramma dell'architettura generale della rete.}
     \label{fig:general-architecture}
 \end{figure}
 
@@ -49,13 +50,13 @@ riesporre eventuali tipi e funzioni specifici sotto lo stesso nome (\Cref{fig:ge
 La rete Zenoh implementata è costituita internamente da diverse parti che
 interagiscono tra loro: al centro di tutto è presente una base di dati che si
 occupa dell'accesso ed il salvataggio dei messaggi ricevuti dal nodo, con la
-quale interagiscono due distinti \texttt{Subscriber} (\cref{ssec:zenoh-actors-and-fundamental-concepts}),
+quale interagiscono due distinti subscriber (\cref{ssec:zenoh-actors-and-fundamental-concepts}),
 per i vari tipi di messaggi dei nodi, ovvero i risultati aggiornati
 (\ref{requirement:nodes-communication}) e le
 notifiche per segnalare la presenza del nodo stesso (\ref{requirement:offline-node-detection}).
 
 \subsection{Memorizzazione e ciclo di vita dei messaggi}
-\label{ssec:message-store}
+\label{ssec:messages-life-cycle}
 
 La comunicazione distribuita pone un problema fondamentale di disaccoppiamento
 temporale: i messaggi provenienti dagli altri nodi della rete arrivano in modo
@@ -83,12 +84,12 @@ così da non fornire risultati obsoleti (\Cref{fig:messages-store-sequence}).
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\linewidth]{figures/messages-store-sequence}
-    \caption[Flusso di interazione tra i componenti della rete]
+    \caption[Flusso di interazione tra i componenti della rete.]
     {Flusso di interazione tra i componenti della rete.
-    I subscriber Zenoh aggiornano lo store alla ricezione di ogni messaggio tramite
-    le operazioni dedicate, mentre la rete può richiedere una fotografia dello store
-    in un determinato istante o di eliminare eventuali nodi offline ed i relativi
-    risultati.}
+    I subscriber Zenoh aggiornano il \texttt{MessagesStore} alla ricezione di ogni
+    messaggio tramite le operazioni dedicate, mentre la rete può richiedere una
+    fotografia dei risultati attuali o di eliminare eventuali nodi scollegati dalla
+    rete i cui risultati sono ormai obsoleti.}
     \label{fig:messages-store-sequence}
 \end{figure}
 
@@ -105,7 +106,7 @@ interagire con la tecnologia in maniera agnostica alle specifiche.
 Internamente, la \texttt{ZenohNetwork} mantiene una sessione Zenoh (\cref{ssec:zenoh-actors-and-fundamental-concepts}),
 la quale definisce la presenza e permette la scoperta automatica dei nodi nella rete
 (\ref{requirement:nodes-discovery}).
-Da quest'ultima si ha la possibilità di dichiarare \texttt{Publisher} e \texttt{Subscriber}
+Da quest'ultima si ha la possibilità di dichiarare publisher e subscriber
 su diversi topic, utilizzati per l'esportazione dei risultati e gli aggiornamenti
 sullo stato dei nodi.
 Ogni nodo della rete pubblica informazioni su topic che condividono il proprio id
@@ -114,8 +115,8 @@ come radice, e si iscrive a tutti topic equivalenti degli altri membri della ret
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\linewidth]{figures/zenoh-network-design}
-    \caption[Design della \texttt{ZenohNetwork}]
-    {Design della \texttt{ZenohNetwork}. L'interfaccia \texttt{ZenohSubscriber} non
+    \caption[Schema dei componenti della \texttt{ZenohNetwork}.]
+    {Schema dei componenti della \texttt{ZenohNetwork}. L'interfaccia per i subscriber non
     definisce metodi in quanto la funzione da chiamare alla ricezione di un messaggio
     viene fornita al momento della creazione tramite il parametro \emph{callback}
     del metodo \texttt{ZenohSession.declareSubscriber}. Lo scopo di un oggetto
@@ -140,13 +141,14 @@ di eventuali nodi offline per evitare di restituire dati ormai obsoleti \Cref{fi
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\linewidth]{figures/yaair-network-interaction}
-    \caption[Flusso di interazione tra \ac{YAAIR} e la \texttt{ZenohNetwork}]
+    \caption[Flusso di interazione tra \ac{YAAIR} e la \texttt{ZenohNetwork}.]
     {Flusso di interazione tra \ac{YAAIR} e la \texttt{ZenohNetwork}.
     \ac{YAAIR} richiede due operazioni alla rete: la pubblicazione di un nuovo
-    risultato del programma, delegata direttamente al \texttt{Publisher} apposito,
+    risultato del programma, delegata direttamente al publisher apposito,
     e la lettura dei risultati degli altri nodi, che passa per il
-    \texttt{MessagesStore}. Prima di restituire lo snapshot, la rete elimina
-    le voci scadute, garantendo che \ac{YAAIR} riceva solo dati ancora validi.}
+    \texttt{MessagesStore}. Prima di restituire fotografia dei risultati attuali,
+    la rete elimina le voci scadute, garantendo che \ac{YAAIR} riceva solo dati
+    ancora validi.}
     \label{fig:yaair-network-interaction}
 \end{figure}
 

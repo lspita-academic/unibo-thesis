@@ -19,7 +19,7 @@ impl Network<ZenohNodeId> for ZenohNetwork {
             // If the snapshot creation fails, a default empty map is given
             // to YAAIR.
             Ok(s) => s,
-            Err(e) => return Default::default(),
+            Err(_) => return Default::default(),
         };
         // Create the YAAIR associative map from the snapshot of the current
         // node results.

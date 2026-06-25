@@ -51,8 +51,8 @@ aggiuntivi esposti tramite moduli dedicati (\Cref{lst:esp-idf-ffi}).
 
 \lstinputlisting[
     language=Rust,
-    caption={[Esempio di utilizzo del framework \ac{ESP-IDF} da Rust]
-    Esempio di utilizzo del framework \ac{ESP-IDF} da Rust: astrazioni di alto
+    caption={[Esempio di utilizzo del framework \ac{ESP-IDF} in Rust.]
+    Esempio di utilizzo del framework \ac{ESP-IDF} in Rust: astrazioni di alto
     livello, primitive C e utilizzo di componenti extra tramite i moduli generati
     automaticamente da bindgen.},
     label={lst:esp-idf-ffi}
@@ -73,7 +73,7 @@ lo stesso livello di sicurezza e robustezza del codice scritto manualmente.
 
 \lstinputlisting[
     language=Rust,
-    caption={[Implementazione semplificata della macro \texttt{vec}]
+    caption={[Implementazione semplificata della macro \texttt{vec}.]
     Implementazione semplificata della macro \texttt{vec}, che inizializza un
     vettore con le espressioni fornite in input.~\cite[Listing 20-35]{rust-book}},
     label={lst:vec-macro}
@@ -101,8 +101,9 @@ l'output a partire da codice standard (\Cref{lst:derive-macro-example}).
 
 \lstinputlisting[
     language=Rust,
-    caption={Esempio di implementazione di una \emph{derive macro} utilizzando le
-    librerie syn, quote e darling.},
+    caption={[Esempio di implementazione di una \emph{derive macro}.]
+    Esempio di implementazione di una \emph{derive macro}. Vengono sfruttate le
+    librerie syn, quote e darling per la manipolazione e la generazione dei simboli.},
     label={lst:derive-macro-example}
 ]{listings/derive-macro-example.rs}
 
@@ -113,7 +114,7 @@ Nonostante Zenoh pico sia una libreria distinta e indipendente da Zenoh standard
 oltre a essere compatibile a livello logico, la sua \ac{API} cerca di riprodurre
 la versione originale anche a livello strutturale nella maniera più fedele
 possibile, fornendo non solo tipi e operazioni equivalenti, ma anche funzioni per
-la gestione della memoria secondo lo stesso modello di \emph{ownership} che
+la gestione della memoria secondo lo stesso modello di ownership che
 distingue Rust dagli altri linguaggi di basso livello.
 Sebbene questi vincoli sull'utilizzo delle risorse siano in realtà raggirabili,
 non essendo imposti direttamente dal compilatore, la libreria mette a disposizione
@@ -123,8 +124,8 @@ più semplice e sicura (\Cref{lst:zenoh-pico-ownership}).
 
 \lstinputlisting[
     language=C,
-    caption={Esempio di gestione delle risorse in Zenoh pico tramite funzioni per
-    l'emulazione del modello di \emph{ownership} di Rust \cite{zenoh-pico:concepts}.},
+    caption={[Esempio di gestione delle risorse in Zenoh pico.]
+    Esempio di gestione delle risorse in Zenoh pico~\cite{zenoh-pico:concepts}.},
     label={lst:zenoh-pico-ownership}
 ]{listings/zenoh-pico-ownership.c}
 
@@ -139,7 +140,7 @@ automatizzata tramite generazione di codice.
 coerente con il prefisso utilizzato dalla libreria, che permette di generare
 automaticamente strutture Rust contenenti il corrispondente tipo C e che
 implementano i trait necessari per la gestione delle risorse, integrando così il
-tipo generato nel modello di \emph{ownership} di Rust (\Cref{lst:wrapper-implementation}).
+tipo generato nel modello di ownership di Rust (\Cref{lst:wrapper-implementation}).
 
 \lstinputlisting[
     language=Rust,
@@ -167,8 +168,8 @@ un'\ac{API} alternativa, moderna e versatile (\Cref{lst:async-closure}).
 
 \lstinputlisting[
     language=Rust,
-    caption={Esempio di utilizzo della \ac{API} asincrona per le closure del
-    wrapper di Zenoh pico},
+    caption={Esempio di utilizzo della \ac{API} asincrona per le chiusure di
+    Zenoh pico.},
     label={lst:async-closure}
 ]{listings/async-closure.rs}
 
@@ -182,7 +183,7 @@ framework.
 È quindi necessario analizzare le firme e il comportamento atteso di queste
 operazioni, in modo da poter adeguare la rete di conseguenza.
 
-Quest'interfaccia è definita da un trait \texttt{Network} composto da 3 metodi (\Cref{lst:network-trait}):
+Quest'interfaccia è definita da un trait \texttt{Network} composto da tre metodi (\Cref{lst:network-trait}):
 
 \begin{itemize}
     \item \texttt{get\_local\_id}: ritorna il valore identificativo del nodo
@@ -198,7 +199,7 @@ Quest'interfaccia è definita da un trait \texttt{Network} composto da 3 metodi 
 
 \lstinputlisting[
     language=Rust,
-    caption={[Definizione del trait \texttt{Network} del framework \ac{YAAIR}]
+    caption={[Definizione del trait \texttt{Network} del framework \ac{YAAIR}.]
     Definizione del trait \texttt{Network} del framework \ac{YAAIR}. È presente
     un argomento generico per il tipo dell'identificativo utilizzato dalla rete,
     il quale deve soddisfare diversi vincoli, tra cui l'implementazione dei trait
@@ -239,9 +240,9 @@ dei risultati se non specificata.
 
 \lstinputlisting[
     language=Rust,
-    caption={[Implementazione grossolana del \texttt{MessagesStore}]
-    Implementazione grossolana del \texttt{MessagesStore}, con lo scopo di mostrare
-    un'approssimazione delle opzioni ed operazioni definite.},
+    caption={[Implementazione semplificata del \texttt{MessagesStore}.]
+    Implementazione semplificata del \texttt{MessagesStore}, con lo scopo di mostrare
+    un'approssimazione del suo funzionamento.},
     label={lst:messages-store}
 ]{listings/messages-store.rs}
 
@@ -257,7 +258,7 @@ Tutte le entità Zenoh vengono utilizzate attraverso dei trait definiti per rend
 la logica applicativa indipendente dalla versione utilizzata, secondo la progettazione
 definita nella \cref{ssec:zenoh-and-pubsub-communication}.
 Vengono quindi definiti diversi trait per rappresentare la sessione, i publisher,
-i subscriber e le \emph{keyexpression}, implementati sia da Zenoh standard che da
+i subscriber e le \emph{key expression}, implementati sia da Zenoh standard che da
 Zenoh pico in appositi moduli, poi importati in base alle caratteristiche del
 target di compilazione specificato tramite i costrutti di compilazione
 condizionale introdotti nella \cref{ssec:cross-compilation}
@@ -279,9 +280,9 @@ sia dal framework che dal programma aggregato, descritto all'inizio della
 Sfruttando le varie entità Zenoh e il \texttt{MessagesStore}, vengono implementati
 i metodi necessari per rendere la comunicazione tra i nodi semplice ed efficace.
 
-Quando la rete viene inizializzata, viene creata la sessione Zenoh che
-rappresenterà il nodo come peer per la comunicazione decentralizzata, dalla
-quale viene poi derivato l'identificativo del nodo all'interno della rete.
+Quando la rete viene inizializzata, viene creata la sessione Zenoh, che rappresenta
+il nodo come peer per la comunicazione decentralizzata. Da questa sessione viene
+poi derivato l'identificativo del nodo all'interno della rete.
 Attraverso la sessione vengono poi dichiarate le entità per la comunicazione
 \emph{pub/sub} dei risultati: un subscriber sul topic \texttt{*/messages} che
 ascolta i nuovi messaggi contenenti i risultati aggiornati di tutti i nodi della
@@ -298,7 +299,7 @@ stato attuale (\Cref{lst:network-trait-implementation}).
 
 \lstinputlisting[
     language=Rust,
-    caption={Implementazione del trait Network per la rete Zenoh.},
+    caption={Implementazione del trait \texttt{Network} per la rete Zenoh.},
     label={lst:network-trait-implementation}
 ]{listings/network-trait-implementation.rs}
 

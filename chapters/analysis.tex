@@ -1,30 +1,30 @@
 \chapter{Analisi}
 \label{chap:analysis}
 
-In questo capitolo viene effettuata un'analisi degli obbiettivi e requisiti del
+In questo capitolo viene effettuata un'analisi degli obiettivi e requisiti del
 contributo di questa tesi, concentrandosi anche sui vincoli imposti a livello
-hardware e software dalle tegnologie e dispositivi utilizzati.
+hardware e software dalle tecnologie e dispositivi utilizzati.
 
-\section{Obbiettivi}
+\section{Obiettivi}
 \label{sec:objectives}
 
-L'obbiettivo primario del progetto, come menzionato in precedenza (\cref{sec:contribution}),
+L'obiettivo primario del progetto, come menzionato in precedenza (\cref{sec:contribution}),
 consiste nello sviluppo di una rete decentralizzata per il framework \ac{YAAIR}
 che utilizzi il protocollo Zenoh e che supporti sistemi eterogenei: la natura
-del problem necessario uno studio non banale delle tecnologie e dell'ecosistema
+del problema necessita uno studio non banale delle tecnologie e dell'ecosistema
 utilizzato che rende il contributo finale il risultato di una serie di processi
 di studio e sviluppo.
 
 \begin{objectives}
 	\titleditem{Studio di Zenoh}~\label{objective:zenoh-study}
 	Zenoh è la tecnologia che funge da base fondamentale per la comunicazione nella
-	rete implementata, è quindi necessario uno studio approfondito del suo
+	rete implementata: è quindi necessario uno studio approfondito del suo
 	funzionamento, dei suoi costrutti ed elementi primari e delle funzionalità
 	che offre e relative limitazioni.
 
 	\titleditem{Integrazione dell'ecosistema embedded}~\label{objective:embedded-ecosystem-integration}
-	I sistemi embedded sono trattati come piattaforma non secondaria in questo
-	progetto, e l'integrazione con essi richiede l'utilizzo di diverse librerie
+	I sistemi embedded sono trattati come piattaforma di primaria importanza in
+	questo progetto, e l'integrazione con essi richiede l'utilizzo di diverse librerie
 	e framework oltre che un'attenzione particolare all'utilizzo delle risorse e
 	l'interazione con i componenti del dispositivo.
 	Inoltre, la scelta di Rust come linguaggio comporta la necessità di creare un
@@ -41,7 +41,7 @@ di studio e sviluppo.
 \section{Vincoli}
 \label{sec:constraints}
 
-La natura eterogenea e trasparente della rete richiesta dagli obbiettivi del
+La natura eterogenea e trasparente della rete richiesta dagli obiettivi del
 contributo impone alcuni vincoli su alcune scelte progettuali e di architettura.
 
 \begin{constraints}
@@ -52,7 +52,7 @@ contributo impone alcuni vincoli su alcune scelte progettuali e di architettura.
 	Originariamente, la libreria utilizza PlatformIO \footnote{\url{https://platformio.org/}}
 	come strumento per la compilazione per diverse piattaforme, così da supportare
 	facilmente tutte le famiglie di dispositivi più popolari.
-	Nonostante una così vasta gamma di dispositivi supportati fosse l'obbiettivo
+	Nonostante una così vasta gamma di dispositivi supportati fosse l'obiettivo
 	originale anche per questo progetto, l'integrazione di questo strumento all'interno
 	del processo di compilazione Rust non è semplice, di conseguenza a causa di
 	mancanza di tempo si è optato per ridurre il vincolo di compatibilità ai

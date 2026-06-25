@@ -1,22 +1,23 @@
 \begin{abstract}
-I sistemi embedded distribuiti, come gli sciami robotici e le reti IoT,
+I sistemi embedded distribuiti, come gli sciami robotici e le reti \ac{IoT},
 richiedono un coordinamento autonomo e resiliente, senza un orchestratore
 centrale, operando spesso con risorse computazionali e di memoria limitate.
 \ac{AC} è un paradigma di macroprogrammazione adatto a questo scenario, ma molti
 framework esistenti, come ScaFi, sono pensati per dispositivi general-purpose e
 risultano incompatibili con i microcontrollori a basso costo.
-\ac{YAAIR} nasce per superare questa limitazione, proponendo un'architettura a strati
-che disaccoppia la logica del programma aggregato dal livello di rete, sfruttando
-Rust per garantire prestazioni predicibili e un uso sicuro della memoria senza
-compromettere sull'utilizzo delle risorse.
+\ac{YAAIR} è un framework che nasce per superare questa limitazione, proponendo
+un'architettura a strati che disaccoppia la logica del programma aggregato dal
+livello di rete, sfruttando Rust per garantire prestazioni predicibili e prevenire
+errori dati da un uso improprio della memoria senza compromettere sulla disponibilità
+di astrazioni di alto livello e l'impatto sulle risorse disponibili.
 
 Il contributo principale di questa tesi consiste nella progettazione ed implementazione
-di un livello di rete decentralizzato per \ac{YAAIR} basato sul protocollo Zenoh,
+di un livello di rete decentralizzato per questo framework basato sul protocollo Zenoh,
 pensato per superare i vincoli topologici di soluzioni tradizionali come \ac{MQTT}
 e per supportare dispositivi eterogenei, da embedded a sistemi general-purpose.
 
 Il risultato finale è stato valutato tramite test sperimentali, volti a valutare
-il corretto funzionamento della comunicazione tramite Zenoh tra dispositivi di
-diverso tipo e l'integrazione della rete con \ac{YAAIR} per il suo utilizzo
-nell'esecuzione di un programma aggregato.
+il corretto funzionamento della comunicazione tra dispositivi di diverso tipo e
+l'integrazione della rete con \ac{YAAIR} per il suo utilizzo nell'esecuzione di
+un programma aggregato.
 \end{abstract}
