@@ -21,6 +21,7 @@ di studio e sviluppo.
 	rete implementata, è quindi necessario uno studio approfondito del suo
 	funzionamento, dei suoi costrutti ed elementi primari e delle funzionalità
 	che offre e relative limitazioni.
+
 	\titleditem{Integrazione dell'ecosistema embedded}~\label{objective:embedded-ecosystem-integration}
 	I sistemi embedded sono trattati come piattaforma non secondaria in questo
 	progetto, e l'integrazione con essi richiede l'utilizzo di diverse librerie
@@ -30,6 +31,7 @@ di studio e sviluppo.
 	wrapper intorno alla libreria Zenoh pico (\cref{ssec:zenoh-for-embdedded-systems})
 	per un accesso alle primitive della libreria da parte della rete tramite una
 	\ac{API} memory-safe e più simile alla versione originale di Zenoh.
+
 	\titleditem{Implementazione della rete}~\label{objective:network-implementation}
 	Il contributo principale di questa tesi è la creazione della rete stessa, che
 	deve fornire una comunicazione decentralizzata, affidabile e compatibile in
@@ -56,6 +58,7 @@ contributo impone alcuni vincoli su alcune scelte progettuali e di architettura.
 	mancanza di tempo si è optato per ridurre il vincolo di compatibilità ai
 	sistemi Espressif, che offrono nativamente un supporto eccellente per il
 	linguaggio scelto (\cref{ssec:esp-idf}).
+
 	\titleditem{Compatibilità con \ac{YAAIR}}~\label{constraint:yaair-compatibility}
 	Per sfruttare un'architettura a strati flessibile, \ac{YAAIR} impone che
 	l'implementazione della rete segua un'interfaccia molto semplice ma specifica.

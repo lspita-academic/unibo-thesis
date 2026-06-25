@@ -151,11 +151,10 @@ tipo generato nel modello di \emph{ownership} di Rust (\Cref{lst:wrapper-impleme
 \subsection{Il sistema di closure}
 \label{sec:closure-system}
 
-Zenoh pico utilizza pervasivamente il concetto di \emph{closure} \cite{itwiki:143621010}
-per tutte quelle operazioni che forniscono un riscontro ritardato rispetto al
-momento dell'invocazione, ad esempio quando richiedono comunicazioni con gli
-altri nodi della rete, permettendo così di operare in maniera asincrona senza
-bloccare il thread chiamante.
+Zenoh pico utilizza pervasivamente il concetto di chiusura per tutte quelle
+operazioni che forniscono un riscontro ritardato rispetto al momento dell'invocazione,
+ad esempio quando richiedono comunicazioni con gli altri nodi della rete,
+permettendo così di operare in maniera asincrona senza bloccare il thread chiamante.
 Queste closure sono implementate come strutture che contengono tutti gli elementi
 necessari per fornire alla funzione di callback un contesto mutabile a cui può
 accedere liberamente, rispettando sempre l'uso delle risorse e le regole di

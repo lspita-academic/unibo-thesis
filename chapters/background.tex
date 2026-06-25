@@ -16,8 +16,8 @@ complessa la gestione di reti distribuite su larga scala, e gli approcci tradizi
 faticano a garantire coordinamento trasparente e resiliente tra centinaia o migliaia
 di nodi~\cite[12.1]{10.1007/978-3-031-95589-1_12}.
 
-\ac{AC} è un paradigma di \emph{macroprogrammazione}~\cite{enwiki:1313791910}
-che astrae l'esecuzione di un singolo programma su una rete di dispositivi,
+\ac{AC} è un paradigma di \emph{macroprogrammazione} che astrae l'esecuzione di
+un singolo programma su una rete di dispositivi,
 trattandola come un'unica entità collettiva.
 
 \subsection{Modello computazionale}
@@ -74,7 +74,7 @@ loro~\cite[12.2.2]{10.1007/978-3-031-95589-1_12}~(\Cref{fig:ac-gradient-example}
 
 Il modello di computazione distribuita offerto da \ac{AC} si
 pone come soluzione naturale per reti di dispositivi \ac{IoT} e sciami robotici.
-Framework preesistenti, come ScaFi (basato su Scala~\cite{itwiki:144756110})~\cite[2.3]{amslaurea37138},
+Framework preesistenti, come ScaFi basato sul linguaggio Scala~\cite[2.3]{amslaurea37138},
 sono stati concepiti per simulazioni o esecuzioni su dispositivi general-purpose,
 il che li rende incompatibili con i microcontrollori a basso costo a causa
 dell'assenza di memoria sufficiente e garanzie di esecuzione \emph{real-time}.
@@ -82,11 +82,11 @@ Un programma aggregato deve operare in maniera asincrona e continua, richiedendo
 una gestione deterministica della memoria ed un accesso efficiente ai protocolli
 di rete.
 
-In questo scenario, il linguaggio Rust~\cite{itwiki:149175104} rappresenta una soluzione
-architetturale ideale: grazie al suo modello di \emph{ownership} e all'assenza di
-\ac{GC}, Rust fornisce astrazioni di alto livello a costo zero garantendo
-prestazioni predicibili, latenze minime e un uso sicuro della memoria fondamentale
-per la programmazione embedded.
+In questo scenario, il linguaggio Rust rappresenta una soluzione architetturale
+ideale: grazie al suo modello di \emph{ownership} e all'assenza di \ac{GC},
+fornisce astrazioni di alto livello a costo zero garantendo prestazioni predicibili,
+latenze minime e un uso sicuro della memoria fondamentale per la programmazione
+embedded.
 
 \section{YAAIR}
 \label{sec:yaair}

@@ -1,24 +1,86 @@
 \chapter{Introduzione}
 \label{chap:introduction}
 
-Introduzione di quello di cui si parlerà nella tesi.
+Negli ultimi anni, la diffusione di dispositivi \ac{IoT} e di
+sistemi pervasivi ha reso sempre più centrale il problema del coordinamento
+di reti distribuite su larga scala. Sciami robotici, reti di sensori e sistemi
+embedded interconnessi devono spesso operare in modo autonomo e resiliente,
+senza la possibilità di affidarsi a un orchestratore centrale, mentre gli
+approcci tradizionali alla programmazione distribuita faticano a garantire un
+coordinamento trasparente tra centinaia o migliaia di nodi. A questo si
+aggiunge la natura intrinsecamente vincolata di molti di questi dispositivi,
+che dispongono di risorse di calcolo e di memoria limitate, che limita le
+possibilità nella scelta delle tecnologie e di implementazione.
 
-Contestualizzare il problema: sistemi embedded distribuiti che devono coordinarsi
-in modo autonomo e resiliente, senza un orchestratore centrale, ed in un contesto
-resource-constrained, e Rust come linguaggio memory-safe ed ad alte prestazioni
-per la programmazione embedded.
+\ac{AC} si è affermato come un paradigma di macroprogrammazione capace di rispondere
+a queste esigenze, astraendo l'esecuzione di un singolo programma su un'intera rete
+di dispositivi e trattandola come un'unica entità collettiva.
+Framework esistenti come ScaFi hanno permesso di sperimentare efficacemente i
+principi di \ac{AC} in ambito di simulazione e su dispositivi general-purpose, ma
+la loro dipendenza da runtime e \ac{GC} li rende incompatibili con i
+microcontrollori a basso costo, che richiedono invece una gestione deterministica
+della memoria e garanzie di esecuzione in tempo reale.
 
-Introduzione a YAAIR ed al concetto di Network, e Zenoh come soluzione per la
-comunicazione.
+In questo contesto si inserisce \ac{YAAIR}, un framework open-source scritto in
+Rust pensato per superare i limiti prestazionali dei framework di \ac{AC} basati
+su linguaggi ad alto livello.
+Grazie al modello di ownership e la compilazione ad un file eseguibile autosufficiente,
+Rust consente di ottenere astrazioni di alto livello a costo zero, garantendo al
+contempo prestazioni predicibili, latenze minime e un uso sicuro della memoria,
+requisiti fondamentali per la programmazione embedded.
+
+I protocolli \ac{IoT} tradizionali come \ac{MQTT} richiedono la presenza obbligatoria
+di un broker centrale, il quale costituisce un singolo punto di fallimento e un
+possibile collo di bottiglia per la rete, in contrasto con la natura decentralizzata
+che si vorrebbe garantire ai sistemi di \ac{AC}.
+Zenoh si pone come alternativa a questi protocolli, proponendo un'infrastruttura
+di rete decentralizzata orientata a basse latenze e alla scalabilità su dispositivi
+eterogenei, capace di supportare comunicazioni peer-to-peer senza vincoli topologici
+stretti.
 
 \section{Contributo della tesi}
 \label{sec:contribution}
 
-Presentare in modo sintetico il lavoro svolto.
+\ac{YAAIR} adotta un'architettura a strati che disaccoppia la logica di calcolo
+del programma aggregato dalla serializzazione e dai protocolli di rete sottostanti,
+permettendo al sistema di operare in modo agnostico rispetto al trasporto fisico
+dei dati e quindi di essere facilmente estendibile a diversi protocolli di
+comunicazione.
+Il contributo di questa tesi consiste nella progettazione e nell'implementazione
+di un livello di rete decentralizzato per il framework, basato sul protocollo Zenoh,
+in grado di supportare la comunicazione tra dispositivi eterogenei, da microcontrolli
+che dispongono di risorse fortemente limitate fino a sistemi general-purpose
+dotati di un sistema operativo completo.
+
 
 \section{Struttura della tesi}
 \label{sec:thesis-structure}
 
-Descrivere brevemente il contenuto di ciascun capitolo, una riga per
-capitolo. Es.: "Il Capitolo~\ref{chap:background} introduce i concetti
-di background necessari alla comprensione del contributo..."
+Il \cref{chap:background} introduce i concetti di background
+necessari alla comprensione del contributo: vengono presentati i principi di \ac{AC},
+con particolare attenzione alla loro applicazione su dispositivi a risorse
+limitate, il framework \ac{YAAIR}, il protocollo di rete Zenoh e l'ecosistema di
+Rust per la programmazione embedded.
+
+A seguire, il \cref{chap:analysis} analizza gli obiettivi e
+i requisiti del contributo, evidenziando i vincoli imposti a livello hardware e
+software dalle tecnologie e dai dispositivi utilizzati.
+
+Con il \cref{chap:design} si descrivoni le scelte
+architetturali adottate nella realizzazione del sistema, mostrando come la
+rete implementata e i suoi componenti principali soddisfino i requisiti e
+i vincoli definiti nel capitolo precedente.
+
+Nel \cref{chap:implementation} si illustra in dettaglio
+l'implementazione dell'architettura progettata, dall'adattamento della libreria Zenoh
+a diverse architetture eterogenee alla creazione della rete e la sua integrazione
+con \ac{YAAIR}, motivando le scelte tecniche effettuate e le librerie utilizzate.
+
+All'interno del \cref{chap:results-evaluation}
+vengono presentati i test sperimentali condotti per validare i componenti
+principali del contributo di questa tesi, descrivendo gli obiettivi, l'implementazione
+e i risultati ottenuti per ciascuno di essi.
+
+Infine, il \cref{chap:conclusions} riassume il lavoro
+svolto rispetto agli obiettivi fissati nel \cref{chap:analysis}
+e propone alcuni possibili sviluppi futuri del progetto.

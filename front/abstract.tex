@@ -1,3 +1,22 @@
 \begin{abstract}
-% Max 2000 characters, strict.
+I sistemi embedded distribuiti, come gli sciami robotici e le reti IoT,
+richiedono un coordinamento autonomo e resiliente, senza un orchestratore
+centrale, operando spesso con risorse computazionali e di memoria limitate.
+\ac{AC} è un paradigma di macroprogrammazione adatto a questo scenario, ma molti
+framework esistenti, come ScaFi, sono pensati per dispositivi general-purpose e
+risultano incompatibili con i microcontrollori a basso costo.
+\ac{YAAIR} nasce per superare questa limitazione, proponendo un'architettura a strati
+che disaccoppia la logica del programma aggregato dal livello di rete, sfruttando
+Rust per garantire prestazioni predicibili e un uso sicuro della memoria senza
+compromettere sull'utilizzo delle risorse.
+
+Il contributo principale di questa tesi consiste nella progettazione ed implementazione
+di un livello di rete decentralizzato per \ac{YAAIR} basato sul protocollo Zenoh,
+pensato per superare i vincoli topologici di soluzioni tradizionali come \ac{MQTT}
+e per supportare dispositivi eterogenei, da embedded a sistemi general-purpose.
+
+Il risultato finale è stato valutato tramite test sperimentali, volti a valutare
+il corretto funzionamento della comunicazione tramite Zenoh tra dispositivi di
+diverso tipo e l'integrazione della rete con \ac{YAAIR} per il suo utilizzo
+nell'esecuzione di un programma aggregato.
 \end{abstract}

@@ -1,21 +1,74 @@
 \chapter{Conclusioni}
 \label{chap:conclusions}
 
+Questo capitolo conclude la tesi riprendendo gli obiettivi fissati nel
+\cref{chap:analysis} e valutandone il raggiungimento alla
+luce del lavoro di progettazione, implementazione e validazione svolto nei capitoli
+precedenti.
+Vengono inoltre proposti alcuni possibili sviluppi futuri del progetto, volti
+ad ampliarne le funzionalità o a colmare le limitazioni emerse durante lo
+sviluppo del contributo.
+
 \section{Riepilogo}
 \label{sec:recap}
 
-Ripresa degli obbiettivi \cref{sec:objectives} ed analisi
-del loro raggiungimento.
+In questo progetto è stata realizzata una rete di comunicazione decentralizzata
+basata su Zenoh, pensata per permettere a \ac{YAAIR} di funzionare su dispositivi
+eterogenei.
+L'obiettivo principale era capire a fondo come funziona Zenoh, renderlo
+utilizzabile anche sui dispositivi più limitati e costruire intorno ad esso
+una rete decentralizzata affidabile che possa fornire un sistema di comunicazione
+per i programmi aggregati.
+
+Per riuscire a far funzionare Zenoh anche sui microcontrollori, che dispongono
+solo di una versione della libreria limitata sviluppata in C, è
+stato necessario crearne un wrapper, in modo da poterci interagire tramite una
+\ac{API} moderna che segue i paradigmi di programmazione del linguaggio Rust.
+A partire da questo, è stata costruita la rete vera e propria, capace di scegliere
+autonomamente quale implementazione di Zenoh utilizzare in base alle caratteristiche
+del dispositivo per cui viene compilata, così da mantenere l'esecuzione del
+programma aggregato da parte di \ac{YAAIR} agnostica alla propria piattaforma e
+quella dei diversi nodi partecipanti.
+La rete si occupa anche di tenere traccia dei messaggi ricevuti e di capire quando
+uno di essi non è più raggiungibile, scartandone i risultati ormai obsoleti.
+
+Per verificare che tutto funzionasse come previsto sono stati effettuati dei test
+sperimentali. Per quanto non possano essere valutati in maniera automatica,
+quest'approccio ha ridotto drasticamente i tempi di sviluppo del progetto, soprattutto
+a causa sarebbe stato necessario integrare degli ambienti virtualizzati per simulare
+la presenza di nodi distinti e la comunicazione tra di essi.
+Come alternativa, è stata prestata molta attenzione nella creazione dei problemi
+risolti in questi programmi, imponendo dei vincoli che permettessero facilmente
+di definire i risultati attesi così da facilitarne il confornto manuale con quelli
+ottenuti.
 
 \section{Sviluppi futuri}
 \label{sec:future-work}
 
-Descrizione di possibili sviluppi futuri:
-\begin{itemize}
-    \item Test di performance e benchmark energetici su hardware reale.
-    \item Supporto a zenoh-nostd una volta che sarà stabile, per poter passare
-          ad una soluzione full-rust anche per i sistemi embedded.
-    \item Esplorazione di strategie alternative per la gestione della
-          perdita di nodi.
-    \item Integrazione con altre tipologie di piattaforme embedded oltre ad ESP.
-\end{itemize}
+Sebbene il contributo presentato soddisfi tutti gli obiettivi prefissati, il
+lavoro svolto apre la strada a diversi possibili sviluppi futuri.
+
+\paragraph{Test di performance e benchmark energetici su hardware reale.}
+I test condotti in questa tesi si sono concentrati sulla
+correttezza funzionale della rete; un'analisi più approfondita delle
+prestazioni e del consumo energetico su dispositivi embedded reali
+permetterebbe di valutare l'impatto della rete in scenari con vincoli
+energetici stringenti, tipici di molte applicazioni \ac{IoT}.
+
+\paragraph{Indipendenza completa dall'ambiente di esecuzione.} Il progetto
+\texttt{zenoh-\\nostd}, menzionato nella \cref{ssec:zenoh-for-embdedded-systems},
+propone un porting interamente in Rust di Zenoh senza dipendenze dalla libreria
+standard.
+Trovandosi attualmente in una fase sperimentale, non è stato possibile utilizzarlo
+per il contributo di questa tesi, ma una volta raggiunta una maggiore stabilità,
+la sua adozione permetterebbe di ottenere una soluzione Rust pura funzionante su
+qualsiasi tipo di dispositivo, in quanto completamente autosufficiente.
+
+\paragraph{Esplorazione di strategie alternative per la gestione della perdita
+di nodi.} Il requisito non funzionale \ref{requirement:alternative-offlinte-nodes-detection-strategies}
+prevede la possibilità di adottare strategie diverse per la rilevazione dell'uscita
+di un nodo dalla rete, a seconda del contesto applicativo.
+L'implementazione della rete attuale utilizza una strategia basata su una semplice
+scadenza configurabile, mentre sviluppi futuri potrebbero esplorare meccanismi
+più sofisticati, ad esempio per scenari con particolari esigenze di affidabilità
+o di risparmio di banda.
