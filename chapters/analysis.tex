@@ -48,16 +48,19 @@ contributo impone alcuni vincoli su alcune scelte progettuali e di architettura.
 	Nonostante supporti i dispositivi a risorse limitate, anche Zenoh pico richiede
 	l'accesso ad alcune primitive di sistema che non ne permettono l'utilizzo su
 	dispositivi puramente bare-metal.
-	Originariamente, la libreria utilizza PlatformIO\footnote{\url{https://platformio.org/}}
-	come strumento per la compilazione per diverse piattaforme, così da supportare
-	facilmente tutte le famiglie di dispositivi più popolari.
-	Nonostante una così vasta gamma di dispositivi supportati fosse l'obiettivo
+	La libreria utilizza PlatformIO\footnote{\url{https://platformio.org/}}
+	come strumento per la compilazione su diverse piattaforme, così da supportare
+	facilmente tutte le famiglie di dispositivi embedded più popolari.
+	Nonostante una così vasta gamma di sistemi supportati fosse l'obiettivo
 	originale anche per questo progetto, l'integrazione di questo strumento all'interno
 	del processo di compilazione Rust non è semplice, di conseguenza a causa di
 	mancanza di tempo si è optato per ridurre il vincolo di compatibilità ai
 	sistemi Espressif, che offrono nativamente un supporto eccellente per il
-	linguaggio scelto (\Cref{ssec:esp-idf}).
-	% In questo punto PlatformIO sembra un dettaglio storico non più utilizzato.
+	linguaggio scelto (\Cref{ssec:esp-idf}), adattando l'utilizzo di Zenoh pico
+	al processo di compilazione Rust per questi dispositivi senza passare per
+	PlatformIO.
+	% In questo punto PlatformIO sembra un dettaglio storico non più utilizzato. [RISOLTO:
+	% chiarito che PlatformIO è ancora attualmente usato dalla libreria]
 	% Nota: ancora adesso è usato, con originariamente intendevo
 	% "il progetto usa PlatformIO, ma noi dobbiamo adattarlo ad ESP su Rust"
 
