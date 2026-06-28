@@ -34,6 +34,7 @@
             bigfoot
             caption
             pdfcrop
+            xurl
           ]
         );
       in
