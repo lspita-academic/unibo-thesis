@@ -5,6 +5,7 @@ impl Network<ZenohNodeId> for ZenohNetwork {
     }
 
     fn prepare_outbound(&mut self, outbound_message: Vec<u8>) {
+        // The new result is simply published on the network on the dedicated topic.
         self.messages_publisher.put_message(outbound_message)
     }
 
@@ -16,8 +17,7 @@ impl Network<ZenohNodeId> for ZenohNetwork {
         let snapshot = match messages.clear_dead().and_then(|| {
             messages.create_snapshot()
         }) {
-            // If the snapshot creation fails, a default empty map is given
-            // to YAAIR.
+            // If something fails, a default empty map is given to YAAIR.
             Ok(s) => s,
             Err(_) => return Default::default(),
         };

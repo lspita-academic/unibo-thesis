@@ -1,5 +1,5 @@
-// A store entity associates with a value the metadata necessary for the expiration
-// calculations.
+// A store entity associates with a value the metadata necessary for the
+// expiration calculations.
 // The timestamp is set to the current system time upon initialization, and each
 // time the object is updated it is reset, making the check for the validity of
 // the result a simple comparison between the time passed since the timestamp

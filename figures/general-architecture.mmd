@@ -21,8 +21,8 @@ classDiagram
 
     class ZenohConfig { }
 
-    Engine *-- AggregateProgram : richiede
-    Engine *-- Network : richiede
-    Network <|.. ZenohNetwork : implementa
-    ZenohNetwork --> ZenohConfig : configurata da
-    ZenohConfigBuilder ..> ZenohConfig : crea
+    Engine *-- AggregateProgram : requires
+    Engine *-- Network : requires
+    Network <|.. ZenohNetwork : implements
+    ZenohNetwork --> ZenohConfig : configured by
+    ZenohConfigBuilder ..> ZenohConfig : creates

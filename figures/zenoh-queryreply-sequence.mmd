@@ -22,7 +22,7 @@ sequenceDiagram
 
     Querier1 ->> Network : query("sensor/temperature")
     Network ->> Queryable2 : deliver query
-    Queryable1 ->> Network : temp = 23°C
+    Queryable2 ->> Network : temp = 23°C
     Network ->> Querier1 : deliver response
 
     Querier1 ->> Network : query("sensor/temperature/history")
