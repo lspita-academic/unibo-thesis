@@ -131,8 +131,8 @@ più semplice e sicura (\Cref{lst:zenoh-pico-ownership}).
 \subsection{L'implementazione tramite macro}
 \label{ssec:implementation-via-macros}
 
-Unendo la struttura simil-Rust di Zenoh pico (\Cref{ssec:ownership-model-in-zenoh-pico})
-con i costrutti di metaprogrammazione offerti dal linguaggio (\Cref{ssec:macros-in-rust}),
+Unendo la struttura simil-Rust di Zenoh pico con i costrutti di
+metaprogrammazione offerti dal linguaggio,
 la creazione del wrapper per la libreria può essere quasi completamente
 automatizzata tramite generazione di codice.
 È stata quindi implementata una macro, chiamata \texttt{zwrap} per rimanere
@@ -207,9 +207,9 @@ Quest'interfaccia è definita da un trait \texttt{Network} composto da tre metod
 ]{listings/network-trait.rs}
 
 La \texttt{ZenohNetwork} implementata dovrà rispettare questo trait, sfruttando
-Zenoh e i suoi costrutti per la comunicazione con gli altri nodi. Come descritto
-nel \Cref{chap:design}, la rete mantiene un \texttt{MessagesStore} centrale per
-la memorizzazione dei messaggi, accessibile dai vari subscriber in background.
+Zenoh e i suoi costrutti per la comunicazione con gli altri nodi. La rete mantiene
+un \texttt{MessagesStore} centrale per la memorizzazione dei messaggi, accessibile
+dai vari subscriber in background.
 Per i nodi della rete viene definito un tipo \texttt{ZenohNodeId}, costituito da
 una sequenza di 16 byte, utilizzato da tutti i componenti come identificativo sia
 interno che nel framework, tramite il parametro generico \texttt{Id} del trait
@@ -254,14 +254,12 @@ nodi e publisher per comunicare nuovi risultati o aggiornamenti di stato sulla
 rete.
 
 Tutte le entità Zenoh vengono utilizzate attraverso dei trait definiti per rendere
-la logica applicativa indipendente dalla versione utilizzata, secondo la progettazione
-definita nella \cref{ssec:zenoh-and-pubsub-communication}.
+la logica applicativa indipendente dalla versione utilizzata.
 Vengono quindi definiti diversi trait per rappresentare la sessione, i publisher,
 i subscriber e le \emph{key expression}, implementati sia da Zenoh standard che da
 Zenoh pico in appositi moduli, poi importati in base alle caratteristiche del
 target di compilazione specificato tramite i costrutti di compilazione
-condizionale introdotti nella \cref{ssec:cross-compilation}
-(\Cref{lst:zenoh-comm-traits}).
+condizionale forniti dal linguaggio (\Cref{lst:zenoh-comm-traits}).
 
 \lstinputlisting[
     language=Rust,
@@ -274,8 +272,7 @@ condizionale introdotti nella \cref{ssec:cross-compilation}
 
 L'implementazione della \texttt{ZenohNetwork} è vincolata dal trait
 \texttt{Network} definito da \ac{YAAIR}, in modo da rendere la rete utilizzabile
-sia dal framework che dal programma aggregato, descritto all'inizio della
-\cref{sec:network-implementation}.
+sia dal framework che dal programma aggregato.
 Sfruttando le varie entità Zenoh e il \texttt{MessagesStore}, vengono implementati
 i metodi necessari per rendere la comunicazione tra i nodi semplice ed efficace.
 
@@ -321,8 +318,7 @@ Nel caso della \texttt{ZenohNetwork}, questa si divide in due categorie
 principali: le opzioni per la rete e per il suo comportamento nel contesto di
 \ac{YAAIR}, e la configurazione per la sessione Zenoh utilizzata internamente.
 
-Come descritto nella \cref{sec:general-architecture},
-la configurazione di Zenoh avviene secondo il \emph{builder pattern}, definendo
+La configurazione di Zenoh avviene secondo il \emph{builder pattern}, definendo
 un trait per tutte le opzioni comuni implementato da entrambe le versioni di Zenoh.
 Per tutte le opzioni specifiche di Zenoh standard o pico, invece, è possibile
 semplicemente continuare a modificare il valore di configurazione prodotto dal

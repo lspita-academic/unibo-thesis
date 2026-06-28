@@ -30,22 +30,20 @@ ricevere (\Cref{fig:ping-pong-sequence}).
 
 \paragraph{Obiettivi}
 Questo test non utilizza nè \ac{YAAIR} nè la rete per esso creata, bensì ha
-lo scopo di verificare il corretto funzionamento del wrapper per Zenoh pico implementato
-nella \cref{sec:zenoh-pico-wrapper} anche al di fuori
-del contesto di un programma aggregato.
+lo scopo di verificare il corretto funzionamento del wrapper per Zenoh pico anche
+al di fuori del contesto di un programma aggregato.
 
 \paragraph{Implementazione}
 Essendo un test per il wrapper di Zenoh pico, è stato pensato per i sistemi
 embedded che andranno poi ad utilizzare questa implementazione del protocollo
 all'interno della rete per \ac{YAAIR}.
 Sono quindi previsti programmi distinti, eseguibili su dispositivi separati,
-rappresentanti i due diversi nodi descritti nella \cref{sec:zenoh-pico-ping-pong-test}.
+rappresentanti i due diversi nodi descritti in precedenza.
 
 Dopo una fase di inizializzazione per avviare la sessione Zenoh e dichiarare i
 publisher e subscriber necessari, il nodo \texttt{ping} imposta
 un valore \texttt{x=0}, mentre il nodo \texttt{pong} si mette in ascolto per nuovi
-messaggi sul topic \texttt{ping/value} sfruttando la \ac{API} asincrona del wrapper
-definita nella \cref{sec:closure-system}.
+messaggi sul topic \texttt{ping/value} sfruttando la \ac{API} asincrona fornita dal wrapper.
 A questo punto inizia il ciclo infinito di scambio del valore:
 
 \begin{enumerate}
@@ -74,9 +72,7 @@ valore viene trasferito tra un nodo e l'altro, di conseguenza la comunicazione
 \label{sec:zenoh-network-gradient-test}
 
 Il test del gradiente consiste in un'implementazione del noto esempio di programma
-aggregato per il calcolo di un gradiente spaziale tra i nodi della rete, come definito
-nella \cref{sec:aggregate-computing}
-ed illustrato nella \cref{fig:ac-gradient-example}.
+aggregato per il calcolo di un gradiente spaziale tra i nodi della rete.
 Nel contesto di questo esempio, il calcolo delle distanze minime viene effettuato
 tra 3 nodi i cui collegamenti nel grafo della rete sono definiti in maniera statica,
 così da poter verificare facilmente la correttezza del risultato ottenuto.
@@ -99,7 +95,7 @@ repository originale di \ac{YAAIR}\footnote{\url{https://github.com/nicolasfara/
 modificata per implementare in maniera statica e prevedibile le distanze tra i
 vari nodi secondo il grafo rappresentato dalla \cref{fig:gradient-test-graph}.
 
-\begin{figure}[ht]
+\begin{figure}[H]
     \centering
     \begin{tikzpicture}[
         >=stealth,

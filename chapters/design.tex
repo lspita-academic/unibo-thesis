@@ -3,8 +3,8 @@
 
 Nel seguente capitolo vengono illustrate le scelte architetturali adottate nella
 realizzazione del sistema per soddisfare tutti i requisiti e raggiungere gli
-obiettivi imposti nel \Cref{chap:analysis}, rispettando al
-contempo i vincoli imposti (\Cref{sec:constraints}).
+obiettivi definiti nel \Cref{chap:analysis}, rispettando al
+contempo i vincoli imposti.
 
 \section{Architettura generale}
 \label{sec:general-architecture}
@@ -35,7 +35,7 @@ essere ulteriormente configurato utilizzando le funzioni specifiche della librer
 originale.
 
 Per ridurre ulteriormente l'interazione diretta con la libreria originale,
-il progetto è strutturato in maniera tale da scegliere tra Zenoh e Zenoh pico a
+il progetto è strutturato in maniera tale da scegliere tra Zenoh standard e pico a
 tempo di compilazione e riesporre eventuali tipi e funzioni specifici sotto lo
 stesso nome (\Cref{fig:general-architecture}).
 
@@ -52,10 +52,9 @@ stesso nome (\Cref{fig:general-architecture}).
 La rete Zenoh implementata è costituita internamente da diverse parti che
 interagiscono tra loro: al centro di tutto è presente una base di dati che si
 occupa dell'accesso ed il salvataggio dei messaggi ricevuti dal nodo, con la
-quale interagiscono due distinti subscriber (\cref{ssec:zenoh-actors-and-fundamental-concepts}),
-per i vari tipi di messaggi dei nodi, ovvero i risultati aggiornati
-(\ref{requirement:nodes-communication}) e le
-notifiche per segnalare la presenza del nodo stesso (\ref{requirement:offline-node-detection}).
+quale interagiscono dei subscriber in ascolto sulla rete per nuovi messaggi dei nodi.
+Questi messaggi possono essere di due tipi: i risultati aggiornati (\ref{requirement:nodes-communication})
+e le notifiche per segnalare la presenza del nodo stesso (\ref{requirement:offline-node-detection}).
 
 \subsection{Memorizzazione e ciclo di vita dei messaggi}
 \label{ssec:messages-life-cycle}
@@ -105,9 +104,8 @@ interagisce con l'implementazione effettiva solo tramite esse.
 Questa strategia permette di centralizzare la scelta della versione e di poter
 interagire con la tecnologia in maniera agnostica alle specifiche.
 
-Internamente, la \texttt{ZenohNetwork} mantiene una sessione Zenoh (\cref{ssec:zenoh-actors-and-fundamental-concepts}),
-la quale definisce la presenza e permette la scoperta automatica dei nodi nella rete
-(\ref{requirement:nodes-discovery}).
+Internamente, la rete mantiene una sessione Zenoh, la quale definisce la presenza
+e permette la scoperta automatica dei nodi nella rete (\ref{requirement:nodes-discovery}).
 Da quest'ultima si ha la possibilità di dichiarare publisher e subscriber
 su diversi topic, utilizzati per l'esportazione dei risultati e gli aggiornamenti
 sullo stato dei nodi.

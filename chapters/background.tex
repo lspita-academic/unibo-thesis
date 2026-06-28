@@ -65,7 +65,7 @@ separa da essi, e si propone come nuova distanza il valore minimo ottenuto,
 così da propagare progressivamente l'informazione a partire dalla sorgente
 verso il resto della rete (\Cref{fig:ac-gradient-example}).
 
-\begin{figure}[ht]
+\begin{figure}[H]
     \centering
     \begin{tikzpicture}[
         >=stealth,
@@ -270,8 +270,8 @@ Per colmare questa lacuna è stato introdotto Zenoh pico\footnote{\url{https://g
 un porting leggero della libreria in C appositamente concepito per sistemi embedded
 dotati di vincoli severi.
 Questa versione copre quasi completamente le funzionalità della libreria originale,
-omettendo la possibilità di utilizzare un nodo come \emph{router}
-(\Cref{ssec:zenoh-communication-model}).
+omettendo alcuni utilizzi incompatibili con le risorse limitate offerte dai dispositivi
+embedded come la possibilità di utilizzare un nodo come \emph{router}.
 
 Si menziona, a corredo dell'ecosistema, il nascente progetto \texttt{zenoh-nostd}
 \footnote{\url{https://github.com/ZettaScaleLabs/zenoh-nostd}}, un'iniziativa
@@ -298,11 +298,10 @@ linguaggi, dove l'esecuzione di codice asincrono richiede necessariamente un
 runtime specifico fornito, in Rust questi costrutti sono implementati tramite \emph{trait},
 mentre la scelta del runtime concreto che effettivamente esegue e pianifica i task
 è lasciata completamente allo sviluppatore.
-Questo permette di utilizzare runtime general-purpose come \texttt{tokio} su
-sistemi desktop o server, oppure alternative pensate specificamente per
-l'ambito embedded, come Embassy (\Cref{sec:embassy}),
-senza che il codice applicativo debba essere riscritto in base alla piattaforma
-di destinazione.
+Questo permette di utilizzare librerie specializzate adatte ai requisiti della
+piattaforma, come Tokio\footnote{\url{https://tokio.rs/}} per sistemi general-purpose
+o Embassy per dispositivi embedded, senza che il codice applicativo debba essere
+adattato manualmente.
 
 % Che tipo di architetture intendi? Cosa intendi con natura fortemente generalizzata?
 % Inoltre potevi parlare di progetti noti che sfruttano Rust [RISOLTO: chiarite le
@@ -360,9 +359,8 @@ da loro utilizzate, permettendo così l'utilizzo della libreria standard su tutt
 la loro gamma di prodotti.
 
 Tramite \ac{ESP-IDF}, viene fornita un'implementazione dell'astrazione dell'hardware
-fornita da embassy (\Cref{sec:embassy}) che permette
-l'interazione con le periferiche disponibili sul microcontrollore tramite un'unica
-\ac{API} compatibile con tutti i dispositivi da loro prodotti, sfruttando la natura
-\emph{memory-safe} e le funzionalità di gestione degli errori del linguaggio per
-garantire un accesso facile e sicuro a funzionalità come Wi-Fi e comunicazione
-seriale, spesso utilizzate nel campo dello \ac{IoT}.
+fornita da Embassy che permette l'interazione con le periferiche disponibili sul
+microcontrollore tramite un'unica \ac{API} compatibile con tutti i dispositivi da
+loro prodotti. Sfruttando la natura \emph{memory-safe} e le funzionalità
+di gestione degli errori del linguaggio, viene garantito un accesso facile e sicuro
+a funzionalità come Wi-Fi e comunicazione seriale, spesso utilizzate nel campo dello \ac{IoT}.

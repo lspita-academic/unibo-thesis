@@ -27,9 +27,9 @@ di processi di studio e sviluppo.
 	e framework oltre che un'attenzione particolare all'utilizzo delle risorse e
 	l'interazione con i componenti del dispositivo.
 	Inoltre, la scelta di Rust come linguaggio comporta la necessità di creare un
-	wrapper intorno alla libreria Zenoh pico (\Cref{ssec:zenoh-for-embdedded-systems})
-	per un accesso alle primitive della libreria da parte della rete tramite una
-	\ac{API} memory-safe e più simile alla versione originale di Zenoh.
+	wrapper intorno alla libreria Zenoh pico per un utilizzo da parte
+	della rete tramite una \ac{API} memory-safe e più simile alla versione
+	originale di Zenoh.
 
 	\titleditem{Implementazione della rete}~\label{objective:network-implementation}
 	Il contributo principale di questa tesi è la creazione della rete stessa, che
@@ -56,9 +56,8 @@ contributo impone alcuni vincoli su alcune scelte progettuali e di architettura.
 	del processo di compilazione Rust non è semplice, di conseguenza a causa di
 	mancanza di tempo si è optato per ridurre il vincolo di compatibilità ai
 	sistemi Espressif, che offrono nativamente un supporto eccellente per il
-	linguaggio scelto (\Cref{ssec:esp-idf}), adattando l'utilizzo di Zenoh pico
-	al processo di compilazione Rust per questi dispositivi senza passare per
-	PlatformIO.
+	linguaggio scelto tramite il framework \ac{ESP-IDF}, adattando l'integrazione
+	di Zenoh pico al processo di compilazione Rust senza passare per PlatformIO.
 	% In questo punto PlatformIO sembra un dettaglio storico non più utilizzato. [RISOLTO:
 	% chiarito che PlatformIO è ancora attualmente usato dalla libreria]
 	% Nota: ancora adesso è usato, con originariamente intendevo
