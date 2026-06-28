@@ -1,10 +1,9 @@
 \chapter{Conclusioni}
 \label{chap:conclusions}
 
-Questo capitolo conclude la tesi riprendendo gli obiettivi fissati nel
-\cref{chap:analysis} e valutandone il raggiungimento alla
-luce del lavoro di progettazione, implementazione e validazione svolto nei capitoli
-precedenti.
+Questo capitolo conclude la tesi riprendendo gli obiettivi fissati e valutandone
+il raggiungimento alla luce del lavoro di progettazione, implementazione e
+validazione svolto nei capitoli precedenti.
 Vengono inoltre proposti alcuni possibili sviluppi futuri del progetto, volti
 ad ampliarne le funzionalità o a colmare le limitazioni emerse durante lo
 sviluppo del contributo.
@@ -29,14 +28,15 @@ quella dei diversi nodi partecipanti.
 La rete si occupa anche di tenere traccia dei messaggi ricevuti e di capire quando
 uno di essi non è più raggiungibile, scartandone i risultati ormai obsoleti.
 
-Per verificare che tutto funzionasse come previsto sono stati effettuati dei test
-sperimentali. Per quanto non possano essere valutati in maniera automatica,
-quest'approccio ha ridotto drasticamente i tempi di sviluppo del progetto, a causa
-della necessità di integrare degli ambienti virtualizzati per simulare la presenza
-di nodi distinti e la comunicazione tra di loro.
+La verifica del corretto funzionamento del contributo è stata effettuata tramite
+dei test sperimentali. Per quanto non possano essere valutati in maniera automatica,
+quest'approccio ha ridotto drasticamente i tempi di sviluppo del progetto, in quanto
+l'automatizzazione della verifica dei risultati richiederebbe l'integrazione di
+ambienti virtualizzati per simulare la presenza di nodi distinti sulla rete e la
+comunicazione tra di loro.
 Come alternativa, è stata prestata molta attenzione nella creazione dei problemi
-risolti in questi programmi, imponendo dei vincoli che permettessero facilmente
-di definire i risultati attesi così da facilitarne il confornto manuale con quelli
+risolti in questi programmi, imponendo dei vincoli che permettessero di definire
+facilmente i risultati attesi e permetterne il confornto manuale con quelli
 ottenuti.
 
 \section{Sviluppi futuri}
@@ -54,8 +54,7 @@ energetici stringenti, tipici di molte applicazioni \ac{IoT}.
 
 \paragraph{Indipendenza completa dall'ambiente di esecuzione.} Il progetto
 \texttt{zenoh-\\nostd}, precedentemente menzionato nella \cref{ssec:zenoh-for-embdedded-systems},
-propone un porting interamente in Rust di Zenoh senza dipendenze dalla libreria
-standard.
+propone una versione interamente in Rust di Zenoh priva di dipendenze esterne.
 Trovandosi attualmente in una fase sperimentale, non è stato possibile utilizzarlo
 per il contributo di questa tesi, ma una volta raggiunta una maggiore stabilità,
 la sua adozione permetterebbe di ottenere una soluzione Rust pura funzionante su

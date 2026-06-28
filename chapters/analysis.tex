@@ -3,23 +3,22 @@
 
 In questo capitolo viene effettuata un'analisi degli obiettivi e requisiti del
 contributo di questa tesi, concentrandosi anche sui vincoli imposti a livello
-hardware e software dalle tecnologie e dispositivi utilizzati.
+hardware e software dalle tecnologie e piattaforme involte.
 
 \section{Obiettivi}
 \label{sec:objectives}
 
 L'obiettivo primario del progetto consiste nello sviluppo di una rete decentralizzata
 per il framework \ac{YAAIR} che utilizzi il protocollo Zenoh e che supporti sistemi
-eterogenei: la natura del problema necessita uno studio non banale delle tecnologie
-e dell'ecosistema utilizzato che rende il contributo finale il risultato di una serie
+eterogenei: la natura del problema necessita un'analisi non banale delle tecnologie
+e dell'ecosistema di lavoro che rende il contributo finale il risultato di una serie
 di processi di studio e sviluppo.
 
 \begin{objectives}
 	\titleditem{Studio di Zenoh}~\label{objective:zenoh-study}
 	Zenoh è la tecnologia che funge da base fondamentale per la comunicazione nella
-	rete implementata: è quindi necessario uno studio approfondito del suo
-	funzionamento, dei suoi costrutti ed elementi primari e delle funzionalità
-	che offre e relative limitazioni.
+	rete implementata: è quindi necessario conoscere a fondo il suo funzionamento,
+	i suoi costrutti, elementi primari e funzionalità che offre con relative limitazioni.
 
 	\titleditem{Integrazione dell'ecosistema embedded}~\label{objective:embedded-ecosystem-integration}
 	I sistemi embedded sono trattati come piattaforma di primaria importanza in
@@ -27,14 +26,13 @@ di processi di studio e sviluppo.
 	e framework oltre che un'attenzione particolare all'utilizzo delle risorse e
 	l'interazione con i componenti del dispositivo.
 	Inoltre, la scelta di Rust come linguaggio comporta la necessità di creare un
-	wrapper intorno alla libreria Zenoh pico per un utilizzo da parte
-	della rete tramite una \ac{API} memory-safe e più simile alla versione
-	originale di Zenoh.
+	wrapper intorno alla libreria C di Zenoh pico che definisca una \ac{API} memory-safe
+	e più simile alla versione standard di Zenoh.
 
 	\titleditem{Implementazione della rete}~\label{objective:network-implementation}
 	Il contributo principale di questa tesi è la creazione della rete stessa, che
-	deve fornire una comunicazione decentralizzata, affidabile e compatibile in
-	maniera trasparente con \ac{YAAIR}.
+	deve permettere una comunicazione decentralizzata e affidabile tra i nodi
+	partecipanti in maniera compatibile con \ac{YAAIR}.
 \end{objectives}
 
 \section{Vincoli}
@@ -58,17 +56,14 @@ contributo impone alcuni vincoli su alcune scelte progettuali e di architettura.
 	sistemi Espressif, che offrono nativamente un supporto eccellente per il
 	linguaggio scelto tramite il framework \ac{ESP-IDF}, adattando l'integrazione
 	di Zenoh pico al processo di compilazione Rust senza passare per PlatformIO.
-	% In questo punto PlatformIO sembra un dettaglio storico non più utilizzato. [RISOLTO:
-	% chiarito che PlatformIO è ancora attualmente usato dalla libreria]
-	% Nota: ancora adesso è usato, con originariamente intendevo
-	% "il progetto usa PlatformIO, ma noi dobbiamo adattarlo ad ESP su Rust"
 
 	\titleditem{Compatibilità con \ac{YAAIR}}~\label{constraint:yaair-compatibility}
 	Per sfruttare un'architettura a strati flessibile, \ac{YAAIR} impone che
-	l'implementazione della rete segua un'interfaccia molto semplice ma specifica.
-	L'implementazione create in questo contributo deve essere perfettamente compatibile
-	con essa e non deve richiedere trattamenti speciali che impediscano al resto
-	del framework di agire normalmente.
+	l'implementazione della rete utilizzata segua un'interfaccia molto semplice
+	ma specifica.
+	La realizzazione di questo componente da parte di questo contributo deve essere
+	perfettamente compatibile con essa e non deve richiedere trattamenti speciali
+	che impediscano al resto del framework di agire normalmente.
 \end{constraints}
 
 \section{Requisiti funzionali}

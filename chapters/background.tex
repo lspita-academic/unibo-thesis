@@ -11,10 +11,6 @@ di Rust per la programmazione embedded.
 \section{Aggregate computing}
 \label{sec:aggregate-computing}
 
-% Sei un po' "ermetico", prova ad espandere questa sezione [RISOLTO: espansa la
-% sezione qui sotto, spiegando meglio field calculus, campi computazionali e il
-% ciclo di esecuzione round-based]
-
 La proliferazione di dispositivi \ac{IoT} e sistemi pervasivi ha reso sempre più
 complessa la gestione di reti distribuite su larga scala, e gli approcci tradizionali
 faticano a garantire coordinamento trasparente e resiliente tra centinaia o migliaia
@@ -49,10 +45,11 @@ processarlo localmente (ad esempio, comandando un attuatore) sia per inviarlo ai
 dispositivi con cui è in relazione, così che possa essere utilizzato nel loro
 round successivo~\cite{amslaurea37138}.
 La nozione di \emph{vicinato} di un dispositivo, ovvero l'insieme dei nodi con
-cui scambia messaggi, è lasciata alla specifica applicazione: può essere
-definita ad esempio in base alla distanza fisica tra i dispositivi, oppure
-tramite una relazione di rete esplicita, e determina quindi quali altri nodi
-contribuiscono al calcolo del campo in un determinato punto della rete.
+cui scambia messaggi, determina quali altri nodi contribuiscono al calcolo del
+campo in un determinato punto della rete.
+Ogni applicazione può definire il vicinato di un nodo secondo strategie differenti,
+per esempio in base alla distanza fisica tra i dispositivi o tramite una relazione
+di rete esplicita.
 
 Un esempio classico di programma aggregato è la costruzione di un gradiente spaziale,
 utilizzato per misurare la distanza di ogni nodo da una sorgente, dove le relazioni
@@ -88,41 +85,40 @@ verso il resto della rete (\Cref{fig:ac-gradient-example}).
         \path[edge] (C) -- (E);
         \path[edge] (D) -- (E);
     \end{tikzpicture}
-    \caption[Esempio del gradiente spaziale per aggregate computing.]{
-    Esempio del gradiente spaziale per aggregate computing.
+    \caption[Rappresentazione di un gradiente spaziale tramite un grafo.]{
+    Rappresentazione di un gradiente spaziale tramite un grafo.
     Il nodo sorgente (in rosso) ha distanza 0, mentre i nodi adiacenti calcolano
-    la propria distanza propagando il valore attraverso il vicinato.}
+    la propria distanza propagando il risultato del programma aggregato attraverso
+    il vicinato.}
     \label{fig:ac-gradient-example}
 \end{figure}
 
 \subsection{Aggregate computing su sistemi embedded}
 \label{ssec:ac-on-embedded-devices}
 
-Il modello di computazione distribuita offerto da \ac{AC} si
-pone come soluzione naturale per reti di dispositivi \ac{IoT} e sciami robotici.
-I framework preesistenti, come ScaFi basato sul linguaggio Scala~\cite{amslaurea37138},
-sono stati concepiti per simulazioni o esecuzioni su dispositivi general-purpose.
-Questo li rende incompatibili con i microcontrollori a basso costo a causa
-dell'assenza di memoria sufficiente e della mancanza di garanzie di esecuzione \emph{real-time}.
-I dispositivi embedded pongono sfide significative: un programma aggregato deve operare
-in maniera asincrona e continua, richiedendo una gestione deterministica della memoria
-ed un accesso efficiente ai protocolli di rete, requisiti difficilmente soddisfacibili
-da linguaggi che si affidano a macchine virtuali o meccanismi di \emph{Garbage Collection} (\ac{GC}).
+Il modello di computazione distribuita offerto da \ac{AC} si pone come soluzione
+naturale per reti di dispositivi \ac{IoT} e sciami robotici, mentre i framework
+preesistenti sono stati concepiti per simulazioni o esecuzioni su dispositivi
+general-purpose.
+Questo li rende incompatibili con i microcontrollori a basso costo con risorse
+limitate e incompatibili con i sistemi operativi tradizionali, che spesso si
+affidano a macchine virtuali o meccanismi di gestione della memoria basati su \ac{GC}.
 
 Per colmare questa lacuna e portare lo \ac{AC} sui dispositivi embedded, il linguaggio
 Rust rappresenta una soluzione ideale.
 Rust è un linguaggio di programmazione compilato, nato nel 2006 e sviluppato
-inizialmente da Mozilla, pensato per offrire un livello di controllo sull'hardware
-e sulle prestazioni paragonabile a quello di linguaggi di basso livello come C e
-C++, senza però rinunciare alla sicurezza nella gestione delle risorse.
+inizialmente da Mozilla\footnote{\url{https://www.mozilla.org/it/}}, pensato per
+offrire un livello di controllo sull'hardware e sulle prestazioni paragonabili a
+quello di linguaggi di basso livello come C e C++, senza però rinunciare alla sicurezza
+nella gestione delle risorse.
 A differenza di questi ultimi, infatti, Rust non richiede una gestione manuale
 dell'allocazione e deallocazione della memoria, né si appoggia ad un \ac{GC}
 per farlo automaticamente: il compilatore verifica staticamente, tramite il suo
-rigoroso sistema di tipi e il modello di \emph{ownership}, che ogni porzione di
+rigoroso sistema di tipi ed il modello di \emph{ownership}, che ogni porzione di
 memoria abbia esattamente un proprietario responsabile della sua liberazione,
 eliminando così a tempo di compilazione intere classi di errori comuni nei
-linguaggi di basso livello, come accessi a memoria non più valida o perdite
-di memoria.
+linguaggi di basso livello, come accessi ad indirizzi non più validi o perdita
+di puntatori ad aree di memoria non precedentemente liberate.
 Questo controllo avviene interamente in fase di compilazione e non introduce
 alcun costo aggiuntivo a runtime, permettendo a Rust di fornire astrazioni di
 alto livello "a costo zero": costrutti comodi da usare in fase di sviluppo che,
@@ -132,15 +128,14 @@ Queste caratteristiche garantiscono prestazioni predicibili, latenze minime e
 un controllo sicuro e granulare sulle risorse hardware, aspetti fondamentali per
 la programmazione embedded, ambito in cui Rust ha guadagnato un'adozione crescente
 negli ultimi anni.
-% Potresti espandere la presentazione di Rust come linguaggio [RISOLTO: espansa la presentazione di Rust sopra]
 
 \section{YAAIR}
 \label{sec:yaair}
 
 \ac{YAAIR}\footnote{\url{https://github.com/nicolasfara/yaair}} è un framework Rust
 open-source per lo \ac{AC}, ideato per risolvere le limitazioni prestazionali
-delle alternative basati su linguaggi ad alto livello che non permettono l'esecuzione
-su sistemi embedded.
+delle alternative basate su linguaggi ad alto livello che non permettono l'esecuzione
+su determinate tipologie di sistemi.
 Sfruttando la natura flessibile di Rust data dal concetto di \emph{trait}, ovvero
 interfacce che definiscono un comportamento comune implementabile da diversi tipi
 di oggetti, \ac{YAAIR} propone un modello architetturale a strati che disaccoppia
@@ -155,22 +150,15 @@ Essendo \ac{YAAIR} relativamente giovane, la libreria si trova in una fase di sv
 la sua struttura interna può ancora evolvere in maniera sostanziale, e non è ancora
 disponibile una documentazione estesa.
 
-% Presenta meglio il framework [RISOLTO: espansa la presentazione sopra con le info fornite]
-% Nota: YAAIR è una libreria per aggregate computing la cui repo puoi trovarla qui
-% https://github.com/nicolasfara/yaair
-% è ancora fortemente in fase di sviluppo, quindi non c'è molta documentazione a
-% riguardo.
-
 \section{Zenoh}
 \label{sec:zenoh}
 
-Zenoh è un protocollo di comunicazione emergente e un'infrastruttura di rete decentralizzata
-di nuova generazione, progettata per superare i limiti dei protocolli tradizionali
-in scenari distribuiti, dall'\ac{IoT} all'edge computing fino alla robotica.
+Zenoh è un protocollo di comunicazione di nuova generazione per la realizzazione di infrastrutture
+di rete decentralizzate ad alte prestazioni.
 Ottimizzato per offrire un throughput elevato e latenze minime, Zenoh permette di
 unificare la comunicazione \emph{pub/sub} e \emph{query/reply} all'interno di un'unica
 astrazione.
-A differenza di protocolli tradizionali dell'ecosistema \ac{IoT} come \ac{MQTT},
+A differenza degli approcci tradizionali dell'ecosistema \ac{IoT} come \ac{MQTT},
 che si appoggiano obbligatoriamente ad un broker centrale, Zenoh è progettato per
 comunicazioni \emph{edge-to-cloud} senza vincoli topologici stretti~\cite{zenoh:what-is-zenoh},
 permettendo di creare reti versatili e efficienti.
@@ -179,14 +167,14 @@ permettendo di creare reti versatili e efficienti.
 \label{ssec:zenoh-communication-model}
 
 Per la comunicazione Zenoh adotta un approccio ibrido altamente flessibile in cui
-i nodi sulla rete possono assumere ruoli differenziati:
+i nodi sulla rete possono assumere ruoli differenti:
 
 \begin{itemize}
-    \item \textbf{Client}: dispositivi con risorse minime, che si connettono ai
-    router o ad altri peer per l'inoltro dei pacchetti senza occuparsi della
-    topologia di routing globale.
+    \item \textbf{Client}: dispositivi con risorse minime, che si connettono
+    direttamente ai router o ad altri peer per l'inoltro dei pacchetti senza
+    occuparsi della topologia globale.
     \item \textbf{Peer}: nodi in grado di comunicare in maniera diretta fra loro
-    e di gestire topologie P2P auto-organizzanti grazie a meccanismi integrati
+    e di gestire topologie \ac{P2P} auto-organizzanti grazie a meccanismi integrati
     di scoperta automatica dei nodi nella rete (\emph{scouting}).
     \item \textbf{Router}: elementi strutturali utilizzati per unire reti isolate
     o scalare la topologia su geografie estese.
@@ -195,87 +183,82 @@ i nodi sulla rete possono assumere ruoli differenziati:
 Indipendentemente dal ruolo di un nodo, Zenoh permette di astrarre la comunicazione sulla rete
 facendo sì che ognuno di essi possa agire in maniera indipendente. Questo lo rende una
 soluzione ideale per i programmi aggregati in quanto permette di comunicare in
-maniera diretta con altri nodi sulla rete astraendo i salti necessari per arrivarci.
+maniera diretta con altri nodi sulla rete in maniera agnostica rispetto alle connessioni
+e salti necessari per arrivarci.
 
 \subsection{Attori e concetti fondamentali}
 \label{ssec:zenoh-actors-and-fundamental-concepts}
 
-Sfruttando un approccio incentrato sui dati, l'indirizzamento è dettato tramite
+Sfruttando un approccio incentrato sui dati, il sistema di indirizzamento è dettato tramite
 \emph{topic}, stringhe che seguono una struttura ad albero simile a quella utilizzata dai
 sistemi operativi per i percorsi dei file, e \emph{key expressions}, che integrando
-dei costrutti simili alle espressioni regolari permettono di rappresentare insiemi
+dei costrutti ispirati alle espressioni regolari permettono di rappresentare insiemi
 di topic.
 
 Zenoh permette di utilizzare modelli di comunicazione \emph{pub/sub} e \emph{query/reply}
 in maniera ibrida all'interno della stessa sessione, così da poter sfruttare
-la soluzione più adatta per ogni problema. Ogni nodo della rete utilizza una sessione,
-la quale incapsula la connettività del nodo, dalla quale dichiara liberamente entità
-per i differenti modelli di comunicazione che entreranno a far parte della rete.
+la soluzione più adatta per ogni problema senza vincoli sulla strategia di interazione.
+Ogni nodo della rete mantiene una sessione, che rappresenta la connettività del nodo,
+dalla quale dichiara liberamente entità per i differenti modelli di comunicazione
+che entreranno a far parte della rete.
 
-Nel modello \emph{pub/sub}, un \texttt{publisher} pubblica dati su un topic
+Nel modello \emph{pub/sub}, un \emph{publisher} pubblica dati su un topic
 specifico senza conoscere né attendere la presenza di alcun destinatario,
-mentre uno o più \texttt{subscriber} possono iscriversi a molteplici topic tramite
-key expressions che coprono un insieme.
-ricevere automaticamente, in maniera asincrona, ogni nuovo messaggio pubblicato.
+mentre uno o più \emph{subscriber} possono iscriversi a molteplici topic tramite
+key expressions per reagire alla pubblicazione di nuovi valori.
 Questo modello è quindi adatto a scenari in cui un nodo deve notificare continuamente
-il proprio stato, senza necessità di una risposta esplicita da parte di chi riceve
-il dato (\Cref{fig:zenoh-pubsub-sequence}).
+un dato, senza necessità di una risposta esplicita da parte di chi è in ascolto
+(\Cref{fig:zenoh-pubsub-sequence}).
 
 \begin{figure}[H]
     \centering
     \includegraphics[height=0.5\dimexpr\textheight\relax]{figures/zenoh-pubsub-sequence}
-    \caption[Diagramma di sequenza del modello di comunicazione \emph{pub/sub} in Zenoh.]{
-    Diagramma di sequenza del modello di comunicazione \emph{pub/sub} in Zenoh.
-    In questo diagramma, l'entità \emph{Network} non rappresenta un'unità centrale,
-    bensì la rete \ac{P2P} su cui ogni nodo comunica le proprie azioni, senza
-    necessità di connesioni dirette con i partecipanti.}
+    \caption[Diagramma di sequenza del modello \emph{pub/sub} in Zenoh.]{
+    Diagramma di sequenza del modello \emph{pub/sub} in Zenoh.
+    L'entità \emph{Network} non rappresenta un'unità centrale, bensì la rete
+    \ac{P2P} su cui ogni nodo comunica le proprie azioni, senza necessità di connesioni
+    dirette tra i partecipanti.}
     \label{fig:zenoh-pubsub-sequence}
 \end{figure}
 
-Nel modello \emph{query/reply}, invece, un \texttt{querier} effettua attivamente
-una richiesta su un topic, alla quale uno o più \texttt{queryable} registrati
-sullo stesso topic possono rispondere, in una comunicazione più simile al modello
-\ac{RPC}.
-A differenza del modello \emph{pub/sub}, qui è il richiedente a guidare lo
-scambio, ottenendo una o più risposte solo in seguito a una richiesta esplicita,
-rendendo questo modello adatto a scenari in cui un nodo necessita di un dato
-specifico nel momento stesso in cui lo richiede (\Cref{fig:zenoh-queryreply-sequence}).
+Nel modello \emph{query/reply}, invece, un \emph{querier} effettua attivamente
+una richiesta su un topic, alla quale rispondono i \emph{queryable} registrati su
+key expression di competenza.
+A differenza della comunicazione \emph{pub/sub}, qui è il richiedente a guidare lo
+scambio, rendendo l'interazione tra le entità simile al modello \ac{RPC}.
+Questo modello è adatto a scenari in cui un nodo necessita di un dato specifico
+nel momento stesso in cui lo richiede (\Cref{fig:zenoh-queryreply-sequence}).
 
 \begin{figure}[H]
     \centering
     \includegraphics[height=0.65\dimexpr\textheight\relax]{figures/zenoh-queryreply-sequence}
-    \caption[Diagramma di sequenza del modello di comunicazione \emph{query/reply} in Zenoh.]{
-    Diagramma di sequenza del modello di comunicazione \emph{query/reply} in Zenoh.
-    Come nella \cref{fig:zenoh-pubsub-sequence}, i messaggi
-    verso l'entità \emph{Network} rappresentano la comunicazione decentralizzata con
-    i vari nodi presenti.}
+    \caption[Diagramma di sequenza del modello \emph{query/reply} in Zenoh.]{
+    Diagramma di sequenza del modello \emph{query/reply} in Zenoh.
+    Come nella \cref{fig:zenoh-pubsub-sequence}, i messaggi verso l'entità \emph{Network} rappresentano
+    la comunicazione decentralizzata con i vari nodi presenti.}
     \label{fig:zenoh-queryreply-sequence}
 \end{figure}
-
-% Anche qui, spiegare meglio i modelli (anche con diagrammi) avrebbe aiutato [RISOLTO: aggiunta spiegazione estesa sopra]
-% Nota: per i diagrammi UML uso mermaid [Ho preparato i sorgenti .mmd separatamente,
-% da esportare come immagine in figures/ seguendo lo stesso flusso usato per gli
-% altri diagrammi della tesi: zenoh-pubsub-sequence.mmd e zenoh-queryreply-sequence.mmd]
 
 \subsection{Zenoh per sistemi embedded}
 \label{ssec:zenoh-for-embdedded-systems}
 
 Nonostante la flessibilità di Rust come linguaggio che ne permette l'utilizzo
 anche per la programmazione di dispositivi \emph{bare-metal}, come diversi dispositivi
-utilizzati per la programmazione \ac{IoT}, Zenoh come libreria dipende da alcune
-funzionalità specifiche che richiedono la presenza di un sistema operativo completo
-sul dispositivo.
+utilizzati per la programmazione \ac{IoT}, la versione standard della libreria per
+Zenoh dipende da alcune funzionalità specifiche che richiedono la presenza di un
+sistema operativo completo sul dispositivo.
 
 Per colmare questa lacuna è stato introdotto Zenoh pico\footnote{\url{https://github.com/eclipse-zenoh/zenoh-pico}},
 un porting leggero della libreria in C appositamente concepito per sistemi embedded
 dotati di vincoli severi.
-Questa versione copre quasi completamente le funzionalità della libreria originale,
-omettendo alcuni utilizzi incompatibili con le risorse limitate offerte dai dispositivi
-embedded come la possibilità di utilizzare un nodo come \emph{router}.
+Questa versione copre quasi completamente lo standard definito dalla libreria originale,
+omettendo alcune funzionalità incompatibili con le risorse limitate offerte dai
+dispositivi embedded come la possibilità di utilizzare un nodo come \emph{router}.
 
-Si menziona, a corredo dell'ecosistema, il nascente progetto \texttt{zenoh-nostd}
-\footnote{\url{https://github.com/ZettaScaleLabs/zenoh-nostd}}, un'iniziativa
-volta a fornire un porting interamente in Rust senza dipendenze dalla libreria standard.
+Si menziona, a corredo dell'ecosistema, il nascente progetto
+\texttt{zenoh-nostd}\footnote{\url{https://github.com/ZettaScaleLabs/zenoh-nostd}},
+un'iniziativa volta a fornire un'implementazione del protocollo interamente in Rust
+indipendente dalla libreria standard e dalla piattaforma su cui viene utilizzata.
 Tuttavia, trovandosi ancora in una fase sperimentale, per la creazione del contributo
 di questa tesi è stato utilizzato Zenoh pico creando un wrapper Rust per la libreria.
 
@@ -283,50 +266,34 @@ di questa tesi è stato utilizzato Zenoh pico creando un wrapper Rust per la lib
 \label{ssec:embedded-rust}
 
 Rust offre un ecosistema robusto e maturo per la programmazione di sistemi embedded,
-con un supporto nativo del compilatore per diverse architetture di CPU e piattaforme
-accesso alla libreria standard completamente opzionale per i dispositivi
-che non ne offrono un'implementazione e la possibilità  di utilizzare funzioni
-provenienti da librerie esterne precompilate.
+con un supporto nativo del compilatore per diverse architetture di CPU e piattaforme,
+possibilità  di utilizzare funzioni provenienti da librerie esterne precompilate
+ed accesso alla libreria standard completamente opzionale per i dispositivi
+che non ne offrono un'implementazione.
 
-Un altro aspetto che rende Rust particolarmente versatile per la creazione di
-programmi che devono supportare sistemi molto diversi tra loro è la scelta di
+Un altro aspetto che rende questo linguaggio particolarmente versatile per la creazione di
+programmi che devono supportare sistemi eterogenei è la scelta di
 non imporre un'implementazione specifica per funzionalità che, su altri
-linguaggi, sono parte integrante della tecnologia.
+linguaggi, spesso sono parte integrante della tecnologia.
 Un esempio rappresentativo è il supporto per la programmazione
-asincrona tramite i costrutti \texttt{async/await}: a differenza di altri
-linguaggi, dove l'esecuzione di codice asincrono richiede necessariamente un
-runtime specifico fornito, in Rust questi costrutti sono implementati tramite \emph{trait},
-mentre la scelta del runtime concreto che effettivamente esegue e pianifica i task
-è lasciata completamente allo sviluppatore.
-Questo permette di utilizzare librerie specializzate adatte ai requisiti della
-piattaforma, come Tokio\footnote{\url{https://tokio.rs/}} per sistemi general-purpose
-o Embassy per dispositivi embedded, senza che il codice applicativo debba essere
-adattato manualmente.
-
-% Che tipo di architetture intendi? Cosa intendi con natura fortemente generalizzata?
-% Inoltre potevi parlare di progetti noti che sfruttano Rust [RISOLTO: chiarite le
-% architetture, riformulato il discorso su async/await come da nota sottostante,
-% e aggiunta menzione di TockOS e dell'integrazione nel kernel Linux nella sezione
-% sulla cross-compilation, dato che il discorso si lega naturalmente lì]
-% Nota: Per architetture (anche più avanti in questa sezione) intendo le diverse
-% architetture di CPU e target di compilazione in generale che rustc supporta.
-% Riguardo la "natura fortemente generalizzata", in poche parole mi stavo riferendo al caso
-% di async await che il linguaggio implementa tramite trait per non imporre nessuna
-% scelta sul runtime da usare. Tra l'altro, qui ripeto il discorso delle astrazioni
-% di alto livello che alla fine ho aggiunto prima, quindi andrebbe riformulato tutto.
-% Il mio obbiettivo questo paragrafo era quello di far capire che è un linguaggio
-% è molto versatile per la creazione di programmi che devono supportare diversi tipi
-% di sistemi particolari.
+asincrona tramite i costrutti \texttt{async/await}: generalmente l'esecuzione di
+codice asincrono richiede un runtime specifico fornito, mentre in Rust questi
+costrutti sono implementati tramite \emph{trait}, e la scelta del runtime concreto
+che effettivamente esegue e pianifica i task è lasciata completamente allo sviluppatore.
+Questo permette di utilizzare librerie specializzate
 
 \subsection{Cross-compilation}
 \label{ssec:cross-compilation}
 
-Il compilatore Rust \texttt{rustc} permette la creazione di artefatti binari
-autosufficienti ed eseguibili su qualsiasi dispositivo compatibile, senza necessità
-di runtime o dipendenze esterne non esplicitamente definite dal programmatore.
-L'ecosistema intorno a questo linguaggio permette inoltre di utilizzare versioni
-alternative della \emph{toolchain}, estendendo la compatibilità della libreria standard
-ad ulteriori piattaforme.
+Il compilatore \texttt{rustc} supporta nativamente la compilazione per piattaforme
+diverse da quella della macchina host su cui il programma viene sviluppato,
+permettendo la creazione di artefatti binari autosufficienti ed eseguibili su
+qualsiasi dispositivo compatibile, senza necessità di dipendenze esterne non
+esplicitamente definite dal programmatore.
+L'ecosistema intorno a questo linguaggio permette inoltre di scaricare ed utilizzare
+versioni alternative della \emph{toolchain}, ovvero l'insieme dei componenti che
+definiscono un'installazione di Rust, estendendo la compatibilità ad ulteriori
+piattaforme.
 
 Il linguaggio fornisce inoltre un sistema di compilazione condizionale che permette
 la definizione di moduli e porzioni di codice in base alle caratteristiche del
@@ -346,8 +313,8 @@ indipendente dalle specifiche del dispositivo.
 
 In particolare, per la creazione del contributo di questa tesi, è stato sfruttato
 il runtime per la programmazione di task concorrenti fornito dalla libreria,
-per permettere la creazione di una \ac{API} moderna tramite costrutti di
-\texttt{async/await}.
+che permette l'utilizzo di costrutti per la programmazione asincrona grazie ad
+un sistema di task concorrenti.
 
 \subsection{ESP-IDF}
 \label{ssec:esp-idf}
@@ -358,9 +325,9 @@ per i propri dispositivi fornendo implementazioni della toolchain per le archite
 da loro utilizzate, permettendo così l'utilizzo della libreria standard su tutta
 la loro gamma di prodotti.
 
-Tramite \ac{ESP-IDF}, viene fornita un'implementazione dell'astrazione dell'hardware
-fornita da Embassy che permette l'interazione con le periferiche disponibili sul
+Tramite il framework \ac{ESP-IDF}, viene fornita un'implementazione dell'astrazione dell'hardware
+definita da Embassy che permette l'interazione con le periferiche disponibili sul
 microcontrollore tramite un'unica \ac{API} compatibile con tutti i dispositivi da
-loro prodotti. Sfruttando la natura \emph{memory-safe} e le funzionalità
-di gestione degli errori del linguaggio, viene garantito un accesso facile e sicuro
+loro prodotti. Sfruttando poi la natura \emph{memory-safe} ed il sistema di gestione
+degli errori del linguaggio, viene garantito un accesso facile e sicuro
 a funzionalità come Wi-Fi e comunicazione seriale, spesso utilizzate nel campo dello \ac{IoT}.

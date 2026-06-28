@@ -27,19 +27,19 @@ Per semplificare l'integrazione della libreria e ridurre i tempi di sviluppo, il
 contributo di questa tesi limita i vincoli di compatibilità, nel contesto dei
 sistemi embedded, ai soli dispositivi della famiglia Espressif e compatibili
 (\ref{constraint:esp-compatibility}).
-
 Questa limitazione permette di sfruttare il framework \ac{ESP-IDF},
 che offre un sistema di componenti per integrare librerie esterne nel processo di
 compilazione: definendo semplicemente i file sorgenti da considerare, questi vengono
 compilati con le impostazioni necessarie per avere accesso alle funzioni della
 libreria standard C offerte dalla piattaforma, per poi essere esposti pubblicamente
 come modulo all'interno del framework.
+
 Nonostante Zenoh pico sia una libreria pensata per i sistemi embedded, la sua
 compatibilità è in realtà limitata a quelli che dispongono di un'implementazione,
 anche se parziale, della libreria standard C; risulta quindi necessario sfruttare
 questa funzionalità.
 
-Per rendere poi accessibili le funzioni e i tipi del framework originale C,
+Per rendere poi accessibili le funzioni e i tipi del framework originale,
 \ac{ESP-IDF} utilizza \emph{bindgen}\footnote{\url{https://rust-lang.github.io/rust-bindgen/}},
 uno strumento per la generazione automatica di binding Rust per le chiamate a
 funzioni di librerie esterne.
@@ -50,8 +50,8 @@ aggiuntivi esposti tramite moduli dedicati (\Cref{lst:esp-idf-ffi}).
 
 \lstinputlisting[
     language=Rust,
-    caption={[Esempio di utilizzo del framework \ac{ESP-IDF} in Rust.]
-    Esempio di utilizzo del framework \ac{ESP-IDF} in Rust: astrazioni di alto
+    caption={[Esempio di utilizzo del framework ESP-IDF in Rust.]
+    Esempio di utilizzo del framework ESP-IDF in Rust: astrazioni di alto
     livello, primitive C e utilizzo di componenti extra tramite i moduli generati
     automaticamente da bindgen.},
     label={lst:esp-idf-ffi}
@@ -60,15 +60,15 @@ aggiuntivi esposti tramite moduli dedicati (\Cref{lst:esp-idf-ffi}).
 \subsection{Le macro in Rust}
 \label{ssec:macros-in-rust}
 
-Rust fornisce costrutti di \emph{metaprogrammazione}~\cite{enwiki:1335302027} per
+Rust fornisce delle primitive di \emph{metaprogrammazione}~\cite{enwiki:1335302027} per
 la generazione di codice a tempo di compilazione. Alla base di questo sistema si
 trovano le \emph{macro}, un costrutto concettualmente simile a una funzione, che
 riceve in input e produce in output dei flussi di simboli (\emph{token stream})
 elaborati dal compilatore (\Cref{lst:vec-macro}).
 Poiché l'espansione delle macro da parte del compilatore avviene prima della fase
 di validazione delle espressioni, il codice generato viene automaticamente incluso
-nei controlli di validazione dei tipi e di correttezza del codice, garantendo così
-lo stesso livello di sicurezza e robustezza del codice scritto manualmente.
+nei controlli dei tipi e di correttezza del del programma, garantendo così lo stesso
+livello di sicurezza e robustezza di quello scritto manualmente.
 
 \lstinputlisting[
     language=Rust,
@@ -82,9 +82,8 @@ Le macro si dividono in due categorie principali: dichiarative e procedurali.
 Le prime permettono di definire il codice da generare in maniera statica rispetto
 all'input, fornendo solo qualche costrutto di \emph{pattern matching} sulla
 struttura delle espressioni in ingresso. Le macro procedurali, invece, sono
-effettive funzioni che operano su flussi di simboli, prendendo in input e
-fornendo in output delle \texttt{TokenStream} interpretabili dal compilatore
-\cite{rust-book}.
+effettive funzioni che operano su flussi di simboli, che operano su delle
+\texttt{TokenStream} interpretabili dal compilatore~\cite{rust-book}.
 Queste ultime vengono utilizzate come attributi da applicare a definizioni di
 simboli per modificarne la struttura o il comportamento. Un esempio sono le
 \emph{derive macro}, un caso particolare di macro procedurali che permette di
@@ -94,14 +93,14 @@ Poiché la struttura \texttt{TokenStream} è molto primitiva e priva di operazio
 di alto livello per la manipolazione e la generazione dei simboli, nel tempo sono
 nate diverse librerie per semplificarne l'utilizzo, come \emph{syn}\footnote{\url{https://docs.rs/syn/2.0.118/syn/}}
 e \emph{darling}\footnote{\url{https://docs.rs/darling/0.23.0/darling/}}, che
-permettono il parsing automatico e strutturato dell'input, oppure \emph{quote}
-\footnote{\url{https://docs.rs/quote/1.0.45/quote/}}, che consente di generare
-l'output a partire da codice standard (\Cref{lst:derive-macro-example}).
+permettono il parsing automatico e strutturato dell'input, oppure
+\emph{quote}\footnote{\url{https://docs.rs/quote/1.0.45/quote/}}, che consente di
+generare l'output a partire da codice standard (\Cref{lst:derive-macro-example}).
 
 \lstinputlisting[
     language=Rust,
-    caption={[Esempio di implementazione di una \emph{derive macro}.]
-    Esempio di implementazione di una \emph{derive macro}. Vengono sfruttate le
+    caption={[Esempio di implementazione di una derive macro.]
+    Esempio di implementazione di una derive macro. Vengono sfruttate le
     librerie syn, quote e darling per la manipolazione e la generazione dei simboli.},
     label={lst:derive-macro-example}
 ]{listings/derive-macro-example.rs}
@@ -112,9 +111,9 @@ l'output a partire da codice standard (\Cref{lst:derive-macro-example}).
 Nonostante Zenoh pico sia una libreria distinta e indipendente da Zenoh standard,
 oltre a essere compatibile a livello logico, la sua \ac{API} cerca di riprodurre
 la versione originale anche a livello strutturale nella maniera più fedele
-possibile, fornendo non solo tipi e operazioni equivalenti, ma anche funzioni per
-la gestione della memoria secondo lo stesso modello di ownership che
-distingue Rust dagli altri linguaggi di basso livello.
+possibile. Questo comportamento è ottenuto fornendo non solo tipi e operazioni
+equivalenti, ma anche funzioni per la gestione della memoria secondo lo stesso
+modello di ownership che distingue Rust dagli altri linguaggi di basso livello.
 Sebbene questi vincoli sull'utilizzo delle risorse siano in realtà raggirabili,
 non essendo imposti direttamente dal compilatore, la libreria mette a disposizione
 funzioni e macro per emulare i concetti di proprietario, riferimento, spostamento
@@ -131,15 +130,14 @@ più semplice e sicura (\Cref{lst:zenoh-pico-ownership}).
 \subsection{L'implementazione tramite macro}
 \label{ssec:implementation-via-macros}
 
-Unendo la struttura simil-Rust di Zenoh pico con i costrutti di
-metaprogrammazione offerti dal linguaggio,
-la creazione del wrapper per la libreria può essere quasi completamente
-automatizzata tramite generazione di codice.
+Unendo la struttura simil-Rust di Zenoh pico con i costrutti di metaprogrammazione
+offerti dal linguaggio, la creazione del wrapper per la libreria può essere quasi
+completamente automatizzata tramite generazione di codice.
 È stata quindi implementata una macro, chiamata \texttt{zwrap} per rimanere
 coerente con il prefisso utilizzato dalla libreria, che permette di generare
 automaticamente strutture Rust contenenti il corrispondente tipo C e che
 implementano i trait necessari per la gestione delle risorse, integrando così il
-tipo generato nel modello di ownership di Rust (\Cref{lst:wrapper-implementation}).
+tipo generato nel modello di ownership del linguaggio (\Cref{lst:wrapper-implementation}).
 
 \lstinputlisting[
     language=Rust,
@@ -155,8 +153,8 @@ Zenoh pico utilizza pervasivamente il concetto di chiusura per tutte quelle
 operazioni che forniscono un riscontro ritardato rispetto al momento dell'invocazione,
 ad esempio quando richiedono comunicazioni con gli altri nodi della rete,
 permettendo così di operare in maniera asincrona senza bloccare il thread chiamante.
-Queste closure sono implementate come strutture che contengono tutti gli elementi
-necessari per fornire alla funzione di callback un contesto mutabile a cui può
+Queste chiusure sono implementate come strutture che contengono tutti gli elementi
+necessari per fornire alla funzione associata un contesto mutabile a cui può
 accedere liberamente, rispettando sempre l'uso delle risorse e le regole di
 gestione della memoria utilizzate anche nel resto della libreria.
 
@@ -235,7 +233,7 @@ dalla mappa di tutte le coppie chiave-valore contenenti risultati ormai obsoleti
 Per un'architettura più versatile, il \texttt{MessagesStore} è implementato in
 maniera generica rispetto ai valori specifici utilizzati dalla rete, ed è configurabile
 tramite parametri di inizializzazione per definire opzioni come la durata di validità
-dei risultati se non specificata.
+dei risultati predefinita.
 
 \lstinputlisting[
     language=Rust,
@@ -253,13 +251,13 @@ interagiscono con esso in maniera diretta secondo i messaggi ricevuti dai vari
 nodi e publisher per comunicare nuovi risultati o aggiornamenti di stato sulla
 rete.
 
-Tutte le entità Zenoh vengono utilizzate attraverso dei trait definiti per rendere
+Tutte le entità Zenoh devono essere utilizzate attraverso delle interfacce per rendere
 la logica applicativa indipendente dalla versione utilizzata.
 Vengono quindi definiti diversi trait per rappresentare la sessione, i publisher,
-i subscriber e le \emph{key expression}, implementati sia da Zenoh standard che da
-Zenoh pico in appositi moduli, poi importati in base alle caratteristiche del
-target di compilazione specificato tramite i costrutti di compilazione
-condizionale forniti dal linguaggio (\Cref{lst:zenoh-comm-traits}).
+i subscriber e le key expressions, implementati sia da Zenoh standard che da
+Zenoh pico in appositi moduli. Questi vengono poi selezionati e utilizzati dal modulo
+principale della libreria in base alle caratteristiche del target di compilazione
+specificato tramite i costrutti di compilazione condizionale forniti dal linguaggio (\Cref{lst:zenoh-comm-traits}).
 
 \lstinputlisting[
     language=Rust,
@@ -272,7 +270,7 @@ condizionale forniti dal linguaggio (\Cref{lst:zenoh-comm-traits}).
 
 L'implementazione della \texttt{ZenohNetwork} è vincolata dal trait
 \texttt{Network} definito da \ac{YAAIR}, in modo da rendere la rete utilizzabile
-sia dal framework che dal programma aggregato.
+dal framework e quindi dal programma aggregato.
 Sfruttando le varie entità Zenoh e il \texttt{MessagesStore}, vengono implementati
 i metodi necessari per rendere la comunicazione tra i nodi semplice ed efficace.
 
@@ -280,7 +278,7 @@ Quando la rete viene inizializzata, viene creata la sessione Zenoh, che rapprese
 il nodo come peer per la comunicazione decentralizzata. Da questa sessione viene
 poi derivato l'identificativo del nodo all'interno della rete.
 Attraverso la sessione vengono poi dichiarate le entità per la comunicazione
-\emph{pub/sub} dei risultati: un subscriber sul topic \texttt{*/messages} che
+\emph{pub/sub} dei risultati: un subscriber sulla key expression \texttt{*/messages} che
 ascolta i nuovi messaggi contenenti i risultati aggiornati di tutti i nodi della
 rete, ed un publisher corrispondente che pubblica questi messaggi tramite il metodo
 \texttt{prepare\_outbound} sul topic \texttt{<nodeid>/messages/}, dove \texttt{<nodeid>}
@@ -290,8 +288,8 @@ Quando il subscriber riceve un messaggio da un altro nodo, ne deserializza il
 contenuto e aggiorna il \texttt{MessagesStore} con il nuovo risultato: nel momento
 in cui il metodo \texttt{prepare\_inbound} viene chiamato da \ac{YAAIR}, verrà
 fatta pulizia dei risultati obsoleti e creata un'istanza della mappa associativa
-richiesta dei nodi con il loro ultimo risultato a partire da una fotografia dello
-stato attuale (\Cref{lst:network-trait-implementation}).
+tra i nodi ed il loro ultimo risultato a partire da una fotografia dello stato attuale
+(\Cref{lst:network-trait-implementation}).
 
 \lstinputlisting[
     language=Rust,
@@ -302,12 +300,12 @@ stato attuale (\Cref{lst:network-trait-implementation}).
 I messaggi per la notifica manuale dell'esistenza del nodo e per l'aggiornamento
 della longevità dei risultati, invece, sono gestiti in maniera indipendente dal
 framework, tramite una comunicazione \emph{pub/sub} analoga a quella usata per i
-risultati, sul topic \texttt{heartbeat}. La rete offre la possibilità di
+risultati sul topic \texttt{heartbeat}. La rete offre la possibilità di
 dichiarare publisher appositi prima di passare l'istanza all'\texttt{Engine} del
-framework, così da lasciare libertà sulla strategia di utilizzo; tutti i tipi, le
-operazioni e la logica applicativa associati a questa categoria di messaggi
-vengono definiti dietro una \emph{feature} dedicata del crate, in modo da
-renderne l'integrazione completamente opzionale.
+framework, così da lasciare libertà sulla strategia di utilizzo.
+Tutti i tipi, le operazioni e la logica applicativa associati a questa categoria
+di messaggi vengono definiti dietro una \emph{feature} dedicata del crate, in modo
+da renderne l'integrazione completamente opzionale.
 
 \subsection{Configurazione ed utilizzo}
 \label{sec:configuration-and-usage}
@@ -327,8 +325,8 @@ sono presenti opzioni mandatorie per il corretto funzionamento di una determinat
 versione di Zenoh, l'implementazione del builder può definire eventuali argomenti
 necessari per la sua creazione.
 
-Per la configurazione della rete stessa, invece, viene usata una normale
-struttura che racchiude tutte le opzioni possibili.
+Per la configurazione della rete stessa viene usata una normale struttura che racchiude
+tutte le opzioni possibili.
 Nonostante sia buona norma fornire un'implementazione di default per le strutture
 che rappresentano collezioni di campi o opzioni di configurazione, in questo caso
 non è previsto, poiché è necessaria almeno la configurazione di Zenoh creata dal

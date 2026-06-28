@@ -2,7 +2,7 @@
 \label{chap:results-evaluation}
 
 La natura distribuita della rete e il coinvolgimento di dispositivi embedded
-rendono difficile automatizzare in modo efficace la validazione dei risultati.
+rendono difficile automatizzare in maniera efficace la validazione dei risultati.
 Per ridurre i tempi di sviluppo è stato quindi adottato un approccio più manuale:
 sono stati creati dei programmi specifici che utilizzano i vari componenti
 implementati coprendo diversi casi e piattaforme, per poi verificare manualmente
@@ -66,14 +66,14 @@ e \texttt{pong}, caricato via cavo dalla macchina host.
 
 Tramite i messaggi di log dei programmi in esecuzione è stato verificato che il
 valore viene trasferito tra un nodo e l'altro, di conseguenza la comunicazione
-\emph{pub/sub} tramite il wrapper Zenoh pico funziona correttamente.
+\emph{pub/sub} fornita dal wrapper Zenoh pico funziona correttamente.
 
 \section{La rete Zenoh: test del gradiente}
 \label{sec:zenoh-network-gradient-test}
 
 Il test del gradiente consiste in un'implementazione del noto esempio di programma
 aggregato per il calcolo di un gradiente spaziale tra i nodi della rete.
-Nel contesto di questo esempio, il calcolo delle distanze minime viene effettuato
+Nel contesto di questo test, il calcolo delle distanze minime viene effettuato
 tra 3 nodi i cui collegamenti nel grafo della rete sono definiti in maniera statica,
 così da poter verificare facilmente la correttezza del risultato ottenuto.
 
@@ -123,7 +123,7 @@ vari nodi secondo il grafo rappresentato dalla \cref{fig:gradient-test-graph}.
 
 \paragraph{Risultati}
 Il test è stato eseguito con un dispositivo diverso per ogni nodo, per verificare
-il supporto della rete per dispositivi eterogenei: il primo è
+il supporto della rete per la comunicazione tra sistemi eterogenei: il primo è
 rappresentato da un ESP32-C3 Mini 1, lo stesso utilizzato nella \cref{sec:zenoh-pico-ping-pong-test},
 il secondo è una Raspberry Pi Zero W, che rientra nella categoria di sistemi embedded
 che utilizzano la versione standard di Zenoh in quanto dotati di un sistema operativo
@@ -135,8 +135,7 @@ dispositivi si sono identificati nella rete autonomamente senza connesioni diret
 per poi correttamente condividere i risultati del gradiente ad ogni iterazione,
 ottenendo i valori finali previsti di 0 per il nodo 1 sorgente, 1 per il nodo 2
 e 2.5 per il nodo 3, dato dalla somma di tutti gli archi percorsi.
-
-Inoltre, si possono anche identificare tra i messaggi gli istanti in cui sono stati
+Inoltre, si possono anche identificare gli istanti in cui sono stati
 utilizzati dei messaggi di heartbeat per notificare la propria presenza nella rete.
-In particolare, dopo aver interrotto il nodo 2 manualmente i suoi risultati sono
+In particolare, dopo aver interrotto un nodo manualmente i suoi risultati sono
 diventati obsoleti e di conseguenza eliminati dalla rete.

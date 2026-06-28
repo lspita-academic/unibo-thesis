@@ -10,19 +10,14 @@ contempo i vincoli imposti.
 \label{sec:general-architecture}
 
 In \ac{YAAIR}, il cuore dell'esecuzione del programma aggregato è lo \texttt{Engine},
-che date le implementazioni dei vari componenti da utilizzare permette l'esecuizione
-di un programma aggregato.
-Tra queste implementazioni è richiesta anche una rete per la comunicazione, la quale
+che date le implementazioni dei vari componenti da utilizzare per il corretto
+funzionamento del framework permette l'esecuizione di un programma aggregato generico.
+Tra queste implementazioni è richiesta una rete per la comunicazione, la quale
 deve soddisfare un'interfaccia ben definita.
-
-La rete progettata deve quindi soddisfare questo livello di compatibilità (\ref{constraint:yaair-compatibility}),
-e mantenere tutta la configurazione invisibile allo \texttt{Engine}:
-l'implementazione specifica di Zenoh utilizzata (standard o pico) deve essere mantenuta
-internamente, esponendo delle \ac{API} alla rete che siano trasparenti rispetto
+La rete Zenoh deve quindi soddisfare questo livello di compatibilità (\ref{constraint:yaair-compatibility}),
+mantenendo internamente l'implementazione specifica di Zenoh utilizzata (standard
+o pico) ed esponendo delle \ac{API} alla rete che siano trasparenti rispetto
 alla tecnologia utilizzata.
-% Qui con ZenohNetwork già parli di implementazione, cerca di essere più generico [RISOLTO:
-% rimosso il riferimento al nome concreto ZenohNetwork, introdotto poi nel capitolo
-% di implementazione]
 
 Riguardo la configurazione di Zenoh stesso (\ref{requirement:zenoh-portability}),
 le due versioni offrono opzioni con requisiti differenti, rendendo quindi necessario
@@ -31,13 +26,12 @@ viene definita una \ac{API} comune che segue il \emph{builder pattern}~\cite{gam
 per la configurazione delle opzioni comuni e più importanti nel contesto di questo progetto.
 Entrambe le versioni di Zenoh offrono un'implementazione di questa interfaccia,
 producendo solo al momento della creazione finale un oggetto specifico che potrà
-essere ulteriormente configurato utilizzando le funzioni specifiche della libreria
+essere ulteriormente configurato utilizzando funzioni apposita della libreria
 originale.
-
-Per ridurre ulteriormente l'interazione diretta con la libreria originale,
-il progetto è strutturato in maniera tale da scegliere tra Zenoh standard e pico a
-tempo di compilazione e riesporre eventuali tipi e funzioni specifici sotto lo
-stesso nome (\Cref{fig:general-architecture}).
+Per ridurre ulteriormente l'interazione diretta con l'implementazione del protocollo
+utilizzata, il progetto è strutturato in maniera tale da scegliere tra Zenoh standard
+e pico a tempo di compilazione e riesporre eventuali tipi e funzioni necessari
+sotto lo stesso nome (\Cref{fig:general-architecture}).
 
 \begin{figure}[H]
     \centering
@@ -52,9 +46,10 @@ stesso nome (\Cref{fig:general-architecture}).
 La rete Zenoh implementata è costituita internamente da diverse parti che
 interagiscono tra loro: al centro di tutto è presente una base di dati che si
 occupa dell'accesso ed il salvataggio dei messaggi ricevuti dal nodo, con la
-quale interagiscono dei subscriber in ascolto sulla rete per nuovi messaggi dei nodi.
+quale interagiscono dei subscriber in ascolto sulla rete per nuovi messaggi da parte
+dei nodi partecipanti.
 Questi messaggi possono essere di due tipi: i risultati aggiornati (\ref{requirement:nodes-communication})
-e le notifiche per segnalare la presenza del nodo stesso (\ref{requirement:offline-node-detection}).
+o le notifiche per segnalare la presenza del nodo stesso (\ref{requirement:offline-node-detection}).
 
 \subsection{Memorizzazione e ciclo di vita dei messaggi}
 \label{ssec:messages-life-cycle}
@@ -64,19 +59,19 @@ temporale: i messaggi provenienti dagli altri nodi della rete arrivano in modo
 asincrono, guidati dalla rete e non dall'avanzamento del programma aggregato.
 \ac{YAAIR}, al contrario, interroga la rete in momenti precisi del proprio ciclo
 di esecuzione, aspettandosi di ricevere una visione coerente e aggiornata dello
-stato dell'intero sistema. Occorre quindi un componente che faccia da intermediario,
-assorbendo i messaggi non appena arrivano e rendendoli disponibili su richiesta.
+stato della rete. Occorre quindi un componente che faccia da intermediario,
+salvando i messaggi al loro arrivo e rendendoli disponibili su richiesta.
 
 Il \texttt{MessagesStore} è progettato per assolvere esattamente questo ruolo:
 si interpone tra le entità Zenoh interne, che scrivono i messaggi alla loro
 ricezione, e \ac{YAAIR}, che li legge ogni ciclo del programma, mantenendo una
-struttura dati che associ ogni nodo al suo ultimo messaggio. Poiché Zenoh mantiene
+struttura dati che associ ogni nodo al suo ultimo risultato. Poiché Zenoh mantiene
 i suoi subscriber su thread separati, l'accesso alla mappa è gestito in modo da
-garantire la correttezza in presenza di concorrenza.
+garantire la correttezza delle operazioni in presenza di concorrenza.
 
 Oltre al contenuto del messaggio, il \texttt{MessagesStore} associa ad ogni voce
 due metadati: la durata di vita attesa (\emph{lifespan}) e l'istante dell'ultimo
-aggiornamento (\emph{timestamp}). Questa informazione è necessaria per rispondere
+aggiornamento (\emph{timestamp}). Questr informazioni sono necessarie per rispondere
 al requisito di rilevamento dei nodi offline (\ref{requirement:offline-node-detection}):
 quando \ac{YAAIR} interroga la rete per eventuali nuovi risultati ricevuti, viene
 confrontato il tempo trascorso dall'ultimo aggiornamento con il lifespan dichiarato,
@@ -97,7 +92,7 @@ così da non fornire risultati obsoleti (\Cref{fig:messages-store-sequence}).
 \subsection{Zenoh e la comunicazione pub/sub}
 \label{ssec:zenoh-and-pubsub-communication}
 
-L'interoperabilità con la versione standard e pico di Zenoh all'interno della rete
+L'interoperabilità con le versioni standard e pico di Zenoh all'interno della rete
 è gestita secondo una scelta strutturale fondamentale: la rete definisce delle
 interfacce per l'interazione con i vari elementi offerti dal protocollo, ed
 interagisce con l'implementazione effettiva solo tramite esse.
