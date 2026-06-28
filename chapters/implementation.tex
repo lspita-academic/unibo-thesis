@@ -3,7 +3,7 @@
 
 In questo capitolo viene descritto come sono state implementate le varie parti
 del contributo di questa tesi, in maniera coerente con la progettazione svolta
-nel \cref{chap:design}.
+nel \Cref{chap:design}.
 
 \section{Il wrapper di Zenoh pico}
 \label{sec:zenoh-pico-wrapper}
@@ -28,20 +28,19 @@ contributo di questa tesi limita i vincoli di compatibilità, nel contesto dei
 sistemi embedded, ai soli dispositivi della famiglia Espressif e compatibili
 (\ref{constraint:esp-compatibility}).
 
-Questa limitazione permette di sfruttare il framework \ac{ESP-IDF}, introdotto
-nella \cref{ssec:esp-idf}, che offre un sistema di componenti per integrare
-librerie esterne nel processo di compilazione: definendo semplicemente i file
-sorgenti da considerare, questi vengono compilati con le impostazioni necessarie
-per avere accesso alle funzioni della libreria standard C offerte dalla
-piattaforma, per poi essere esposti pubblicamente come modulo all'interno del
-framework.
+Questa limitazione permette di sfruttare il framework \ac{ESP-IDF},
+che offre un sistema di componenti per integrare librerie esterne nel processo di
+compilazione: definendo semplicemente i file sorgenti da considerare, questi vengono
+compilati con le impostazioni necessarie per avere accesso alle funzioni della
+libreria standard C offerte dalla piattaforma, per poi essere esposti pubblicamente
+come modulo all'interno del framework.
 Nonostante Zenoh pico sia una libreria pensata per i sistemi embedded, la sua
 compatibilità è in realtà limitata a quelli che dispongono di un'implementazione,
 anche se parziale, della libreria standard C; risulta quindi necessario sfruttare
 questa funzionalità.
 
 Per rendere poi accessibili le funzioni e i tipi del framework originale C,
-\ac{ESP-IDF} utilizza \emph{bindgen} \footnote{\url{https://rust-lang.github.io/rust-bindgen/}},
+\ac{ESP-IDF} utilizza \emph{bindgen}\footnote{\url{https://rust-lang.github.io/rust-bindgen/}},
 uno strumento per la generazione automatica di binding Rust per le chiamate a
 funzioni di librerie esterne.
 In questo modo il programma può sfruttare un'unica libreria sia per interagire
@@ -75,7 +74,7 @@ lo stesso livello di sicurezza e robustezza del codice scritto manualmente.
     language=Rust,
     caption={[Implementazione semplificata della macro \texttt{vec}.]
     Implementazione semplificata della macro \texttt{vec}, che inizializza un
-    vettore con le espressioni fornite in input.~\cite[Listing 20-35]{rust-book}},
+    vettore con le espressioni fornite in input.~\cite{rust-book}},
     label={lst:vec-macro}
 ]{listings/vec-macro.rs}
 
@@ -85,7 +84,7 @@ all'input, fornendo solo qualche costrutto di \emph{pattern matching} sulla
 struttura delle espressioni in ingresso. Le macro procedurali, invece, sono
 effettive funzioni che operano su flussi di simboli, prendendo in input e
 fornendo in output delle \texttt{TokenStream} interpretabili dal compilatore
-\cite[20.5.3]{rust-book}.
+\cite{rust-book}.
 Queste ultime vengono utilizzate come attributi da applicare a definizioni di
 simboli per modificarne la struttura o il comportamento. Un esempio sono le
 \emph{derive macro}, un caso particolare di macro procedurali che permette di
@@ -93,8 +92,8 @@ implementare automaticamente un \emph{trait} per un tipo di dato.
 
 Poiché la struttura \texttt{TokenStream} è molto primitiva e priva di operazioni
 di alto livello per la manipolazione e la generazione dei simboli, nel tempo sono
-nate diverse librerie per semplificarne l'utilizzo, come \emph{syn} \footnote{\url{https://docs.rs/syn/2.0.118/syn/}}
-e \emph{darling} \footnote{\url{https://docs.rs/darling/0.23.0/darling/}}, che
+nate diverse librerie per semplificarne l'utilizzo, come \emph{syn}\footnote{\url{https://docs.rs/syn/2.0.118/syn/}}
+e \emph{darling}\footnote{\url{https://docs.rs/darling/0.23.0/darling/}}, che
 permettono il parsing automatico e strutturato dell'input, oppure \emph{quote}
 \footnote{\url{https://docs.rs/quote/1.0.45/quote/}}, che consente di generare
 l'output a partire da codice standard (\Cref{lst:derive-macro-example}).
@@ -132,8 +131,8 @@ più semplice e sicura (\Cref{lst:zenoh-pico-ownership}).
 \subsection{L'implementazione tramite macro}
 \label{ssec:implementation-via-macros}
 
-Unendo la struttura simil-Rust di Zenoh pico (\cref{ssec:ownership-model-in-zenoh-pico})
-con i costrutti di metaprogrammazione offerti dal linguaggio (\cref{ssec:macros-in-rust}),
+Unendo la struttura simil-Rust di Zenoh pico (\Cref{ssec:ownership-model-in-zenoh-pico})
+con i costrutti di metaprogrammazione offerti dal linguaggio (\Cref{ssec:macros-in-rust}),
 la creazione del wrapper per la libreria può essere quasi completamente
 automatizzata tramite generazione di codice.
 È stata quindi implementata una macro, chiamata \texttt{zwrap} per rimanere
@@ -209,7 +208,7 @@ Quest'interfaccia è definita da un trait \texttt{Network} composto da tre metod
 
 La \texttt{ZenohNetwork} implementata dovrà rispettare questo trait, sfruttando
 Zenoh e i suoi costrutti per la comunicazione con gli altri nodi. Come descritto
-nel \cref{chap:design}, la rete mantiene un \texttt{MessagesStore} centrale per
+nel \Cref{chap:design}, la rete mantiene un \texttt{MessagesStore} centrale per
 la memorizzazione dei messaggi, accessibile dai vari subscriber in background.
 Per i nodi della rete viene definito un tipo \texttt{ZenohNodeId}, costituito da
 una sequenza di 16 byte, utilizzato da tutti i componenti come identificativo sia

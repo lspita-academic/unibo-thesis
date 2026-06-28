@@ -28,17 +28,13 @@ ricevere (\Cref{fig:ping-pong-sequence}).
     \label{fig:ping-pong-sequence}
 \end{figure}
 
-\subsection{Obiettivi}
-\label{ssec:ping-pong-objectives}
-
+\paragraph{Obiettivi}
 Questo test non utilizza nè \ac{YAAIR} nè la rete per esso creata, bensì ha
 lo scopo di verificare il corretto funzionamento del wrapper per Zenoh pico implementato
 nella \cref{sec:zenoh-pico-wrapper} anche al di fuori
 del contesto di un programma aggregato.
 
-\subsection{Implementazione}
-\label{ssec:ping-pong-implementation}
-
+\paragraph{Implementazione}
 Essendo un test per il wrapper di Zenoh pico, è stato pensato per i sistemi
 embedded che andranno poi ad utilizzare questa implementazione del protocollo
 all'interno della rete per \ac{YAAIR}.
@@ -63,9 +59,7 @@ A questo punto inizia il ciclo infinito di scambio del valore:
     interrotto il programma manualmente.
 \end{enumerate}
 
-\subsection{Risultati}
-\label{ssec:ping-pong-results}
-
+\paragraph{Risultati}
 Il test è stato eseguito su due ESP32-C3 Mini 1, dispositivi della famiglia Espressif
 dotati di un processore con architettura RiscV a 32 bit e di moduli per la
 connettività tramite WiFi.
@@ -81,33 +75,29 @@ valore viene trasferito tra un nodo e l'altro, di conseguenza la comunicazione
 
 Il test del gradiente consiste in un'implementazione del noto esempio di programma
 aggregato per il calcolo di un gradiente spaziale tra i nodi della rete, come definito
-nella \cref{ssec:ac-computational-model}
+nella \cref{sec:aggregate-computing}
 ed illustrato nella \cref{fig:ac-gradient-example}.
 Nel contesto di questo esempio, il calcolo delle distanze minime viene effettuato
 tra 3 nodi i cui collegamenti nel grafo della rete sono definiti in maniera statica,
 così da poter verificare facilmente la correttezza del risultato ottenuto.
 
-\subsection{Obiettivi}
-\label{ssec:gradient-objectives}
-
+\paragraph{Obiettivi}
 L'obiettivo principale di questo test non è verificare la correttezza del programma
 aggregato stesso, il quale implementa un problema noto e facilmente risolvibile,
 bensì si tratta di valutare il corretto funzionamento della rete Zenoh quando
 utilizzata in un contesto reale da \ac{YAAIR}, facendo interagire nodi di diverso
 tipo e verificando la correttezza dei messaggi scambiati.
 
-\subsection{Implementazione}
-\label{ssec:gradient-implementation}
-
+\paragraph{Implementazione}
 Come per il test del wrapper di Zenoh pico discusso nella \cref{sec:zenoh-pico-ping-pong-test},
 anche per questo vengono definiti diversi programmi rappresentanti i vari nodi
 necessari per la comunicazione, così da poter verificare il supporto per l'interazione
 tra dispositivi eterogenei.
 
 L'implementazione del gradiente è basata su quella fornita dagli esempi nella
-repository originale di \ac{YAAIR} \footnote{\url{https://github.com/nicolasfara/yaair/blob/master/examples/gradient.rs}},
+repository originale di \ac{YAAIR}\footnote{\url{https://github.com/nicolasfara/yaair/blob/master/examples/gradient.rs}},
 modificata per implementare in maniera statica e prevedibile le distanze tra i
-vari nodi secondo il grafo rappresentato dalla \Cref{fig:gradient-test-graph}.
+vari nodi secondo il grafo rappresentato dalla \cref{fig:gradient-test-graph}.
 
 \begin{figure}[ht]
     \centering
@@ -135,12 +125,10 @@ vari nodi secondo il grafo rappresentato dalla \Cref{fig:gradient-test-graph}.
     \label{fig:gradient-test-graph}
 \end{figure}
 
-\subsection{Risultati}
-\label{ssec:gradient-results}
-
+\paragraph{Risultati}
 Il test è stato eseguito con un dispositivo diverso per ogni nodo, per verificare
 il supporto della rete per dispositivi eterogenei: il primo è
-rappresentato da un ESP32-C3 Mini 1, lo stesso utilizzato nella \cref{ssec:ping-pong-results},
+rappresentato da un ESP32-C3 Mini 1, lo stesso utilizzato nella \cref{sec:zenoh-pico-ping-pong-test},
 il secondo è una Raspberry Pi Zero W, che rientra nella categoria di sistemi embedded
 che utilizzano la versione standard di Zenoh in quanto dotati di un sistema operativo
 compatibile, ed infine il terzo è una macchina Linux standard, che rappresenta

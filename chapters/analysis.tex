@@ -8,12 +8,11 @@ hardware e software dalle tecnologie e dispositivi utilizzati.
 \section{Obiettivi}
 \label{sec:objectives}
 
-L'obiettivo primario del progetto, come menzionato in precedenza (\cref{sec:contribution}),
-consiste nello sviluppo di una rete decentralizzata per il framework \ac{YAAIR}
-che utilizzi il protocollo Zenoh e che supporti sistemi eterogenei: la natura
-del problema necessita uno studio non banale delle tecnologie e dell'ecosistema
-utilizzato che rende il contributo finale il risultato di una serie di processi
-di studio e sviluppo.
+L'obiettivo primario del progetto consiste nello sviluppo di una rete decentralizzata
+per il framework \ac{YAAIR} che utilizzi il protocollo Zenoh e che supporti sistemi
+eterogenei: la natura del problema necessita uno studio non banale delle tecnologie
+e dell'ecosistema utilizzato che rende il contributo finale il risultato di una serie
+di processi di studio e sviluppo.
 
 \begin{objectives}
 	\titleditem{Studio di Zenoh}~\label{objective:zenoh-study}
@@ -28,7 +27,7 @@ di studio e sviluppo.
 	e framework oltre che un'attenzione particolare all'utilizzo delle risorse e
 	l'interazione con i componenti del dispositivo.
 	Inoltre, la scelta di Rust come linguaggio comporta la necessità di creare un
-	wrapper intorno alla libreria Zenoh pico (\cref{ssec:zenoh-for-embdedded-systems})
+	wrapper intorno alla libreria Zenoh pico (\Cref{ssec:zenoh-for-embdedded-systems})
 	per un accesso alle primitive della libreria da parte della rete tramite una
 	\ac{API} memory-safe e più simile alla versione originale di Zenoh.
 
@@ -49,7 +48,7 @@ contributo impone alcuni vincoli su alcune scelte progettuali e di architettura.
 	Nonostante supporti i dispositivi a risorse limitate, anche Zenoh pico richiede
 	l'accesso ad alcune primitive di sistema che non ne permettono l'utilizzo su
 	dispositivi puramente bare-metal.
-	Originariamente, la libreria utilizza PlatformIO \footnote{\url{https://platformio.org/}}
+	Originariamente, la libreria utilizza PlatformIO\footnote{\url{https://platformio.org/}}
 	come strumento per la compilazione per diverse piattaforme, così da supportare
 	facilmente tutte le famiglie di dispositivi più popolari.
 	Nonostante una così vasta gamma di dispositivi supportati fosse l'obiettivo
@@ -57,7 +56,10 @@ contributo impone alcuni vincoli su alcune scelte progettuali e di architettura.
 	del processo di compilazione Rust non è semplice, di conseguenza a causa di
 	mancanza di tempo si è optato per ridurre il vincolo di compatibilità ai
 	sistemi Espressif, che offrono nativamente un supporto eccellente per il
-	linguaggio scelto (\cref{ssec:esp-idf}).
+	linguaggio scelto (\Cref{ssec:esp-idf}).
+	% In questo punto PlatformIO sembra un dettaglio storico non più utilizzato.
+	% Nota: ancora adesso è usato, con originariamente intendevo
+	% "il progetto usa PlatformIO, ma noi dobbiamo adattarlo ad ESP su Rust"
 
 	\titleditem{Compatibilità con \ac{YAAIR}}~\label{constraint:yaair-compatibility}
 	Per sfruttare un'architettura a strati flessibile, \ac{YAAIR} impone che
@@ -69,9 +71,6 @@ contributo impone alcuni vincoli su alcune scelte progettuali e di architettura.
 
 \section{Requisiti funzionali}
 \label{sec:functional-requirements}
-
-I requisiti funzionali derivano in parte dall'interfaccia imposta da \ac{YAAIR}
-e in parte dalle necessità intrinseche della rete.
 
 \begin{functionalrequirements}
 	\titleditem{Comunicazione tra nodi}~\label{requirement:nodes-communication}
@@ -95,9 +94,6 @@ e in parte dalle necessità intrinseche della rete.
 
 \section{Requisiti non funzionali}
 \label{sec:non-functional-requirements}
-
-I requisiti non funzionali corrispondono a funzionalità ritenute secondarie ai
-fini del funzionamento progetto ma che ne rendono l'utilizzo più robusto e versatile.
 
 \begin{nonfunctionalrequirements}
 	\titleditem{Portabilità tra Zenoh e Zenoh pico}~\label{requirement:zenoh-portability}

@@ -28,18 +28,18 @@ Grazie ad un sistema di compilazione progettato per la produzione di programmi
 eseguibili ottimizzati ed autosufficienti, questo linguaggio soddisfa i requisiti
 fondamentali per la programmazione di sistemi embedded.
 
-I protocolli \ac{IoT} tradizionali come \ac{MQTT} richiedono la presenza obbligatoria
-di un broker centrale, il quale costituisce un singolo punto di fallimento e un
-possibile collo di bottiglia per la rete, in contrasto con la natura decentralizzata
-che si vorrebbe garantire ai sistemi di \ac{AC}.
+I protocolli \ac{IoT} tradizionali come \ac{MQTT}\footnote{\url{https://mqtt.org/}}
+richiedono la presenza obbligatoria di un broker centrale, il quale costituisce
+un singolo punto di fallimento e un possibile collo di bottiglia per la rete,
+in contrasto con la natura decentralizzata che si vorrebbe garantire ai sistemi
+di \ac{AC}.
 Zenoh si pone come alternativa a questi protocolli, proponendo un'infrastruttura
 di rete decentralizzata orientata a basse latenze e alla scalabilità su dispositivi
 eterogenei, capace di supportare comunicazioni peer-to-peer senza vincoli topologici
 stretti.
 
-\section{Contributo della tesi}
+\paragraph{Contributo della tesi}
 \label{sec:contribution}
-
 \ac{YAAIR} adotta un'architettura a strati che disaccoppia la logica di calcolo
 del programma aggregato dalla serializzazione e dai protocolli di rete sottostanti,
 permettendo al sistema di operare in modo agnostico rispetto al trasporto fisico
@@ -50,35 +50,33 @@ in grado di supportare la comunicazione tra dispositivi eterogenei, da microcont
 che dispongono di risorse fortemente limitate fino a sistemi general-purpose
 dotati di un sistema operativo completo.
 
-
-\section{Struttura della tesi}
+\paragraph{Struttura dei capitoli}
 \label{sec:thesis-structure}
-
-Il \cref{chap:background} introduce i concetti di background
+Il \Cref{chap:background} introduce i concetti di background
 necessari alla comprensione del contributo: vengono presentati i principi di \ac{AC},
 con particolare attenzione alla loro applicazione su dispositivi a risorse
 limitate, il framework \ac{YAAIR}, il protocollo di rete Zenoh e l'ecosistema di
 Rust per la programmazione embedded.
 
-A seguire, il \cref{chap:analysis} analizza gli obiettivi e
+A seguire, il \Cref{chap:analysis} analizza gli obiettivi e
 i requisiti del contributo, evidenziando i vincoli imposti a livello hardware e
 software dalle tecnologie e dai dispositivi utilizzati.
 
-Con il \cref{chap:design} si descrivono le scelte
+Con il \Cref{chap:design} si descrivono le scelte
 architetturali adottate nella realizzazione del sistema, mostrando come la
 rete implementata e i suoi componenti principali soddisfino i requisiti e
 i vincoli definiti nel capitolo precedente.
 
-Nel \cref{chap:implementation} si illustra in dettaglio
+Nel \Cref{chap:implementation} si illustra in dettaglio
 l'implementazione dell'architettura progettata, dall'adattamento della libreria Zenoh
 a diverse architetture eterogenee alla creazione della rete e la sua integrazione
 con \ac{YAAIR}, motivando le scelte tecniche effettuate e le librerie utilizzate.
 
-All'interno del \cref{chap:results-evaluation}
+All'interno del \Cref{chap:results-evaluation}
 vengono presentati i test sperimentali condotti per validare i componenti
 principali del contributo di questa tesi, descrivendo gli obiettivi, l'implementazione
 e i risultati ottenuti per ciascuno di essi.
 
-Infine, il \cref{chap:conclusions} riassume il lavoro
-svolto rispetto agli obiettivi fissati nel \cref{chap:analysis}
+Infine, il \Cref{chap:conclusions} riassume il lavoro
+svolto rispetto agli obiettivi fissati nel \Cref{chap:analysis}
 e propone alcuni possibili sviluppi futuri del progetto.

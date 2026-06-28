@@ -2,14 +2,16 @@
 I sistemi embedded distribuiti, come gli sciami robotici e le reti \ac{IoT},
 richiedono un coordinamento autonomo e resiliente, senza un orchestratore
 centrale, operando spesso con risorse computazionali e di memoria limitate.
-\ac{AC} è un paradigma di macroprogrammazione adatto a questo scenario, ma molti
+\ac{AC} è un paradigma di macroprogrammazione adatto a questi scenari, ma molti
 framework esistenti, come ScaFi, sono pensati per dispositivi general-purpose e
 risultano incompatibili con i microcontrollori a basso costo.
-\ac{YAAIR} è un framework che nasce per superare questa limitazione, proponendo
+
+\ac{YAAIR} è un framework che nasce per superare questo limite, proponendo
 un'architettura a strati che disaccoppia la logica del programma aggregato dal
-livello di rete, sfruttando Rust per garantire prestazioni predicibili e prevenire
-errori dati da un uso improprio della memoria senza compromettere sulla disponibilità
-di astrazioni di alto livello e l'impatto sulle risorse disponibili.
+livello di rete. Sfruttando Rust, garantisce prestazioni predicibili e previene
+errori derivanti da un uso improprio della memoria. In questo modo, mantiene
+la disponibilità di astrazioni di alto livello minimizzando l'impatto sulle
+risorse disponibili.
 
 Il contributo principale di questa tesi consiste nella progettazione ed implementazione
 di un livello di rete decentralizzato per questo framework basato sul protocollo Zenoh,

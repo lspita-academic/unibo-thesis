@@ -5,7 +5,7 @@ Questo capitolo introduce le tecnologie, i paradigmi e i concetti fondamentali
 necessari per la comprensione del contributo della tesi.
 Vengono presentati i principi di \ac{AC}, con particolare attenzione all'implementazione
 nel contesto dei dispositivi con risorse limitate, seguiti dal framework \ac{YAAIR},
-dal protocollo di rete Zenoh \footnote{\url{https://zenoh.io/}} e dall'ecosistema
+dal protocollo di rete Zenoh\footnote{\url{https://zenoh.io/}} e dall'ecosistema
 di Rust per la programmazione embedded.
 
 \section{Aggregate computing}
@@ -14,30 +14,26 @@ di Rust per la programmazione embedded.
 La proliferazione di dispositivi \ac{IoT} e sistemi pervasivi ha reso sempre più
 complessa la gestione di reti distribuite su larga scala, e gli approcci tradizionali
 faticano a garantire coordinamento trasparente e resiliente tra centinaia o migliaia
-di nodi~\cite[12.1]{10.1007/978-3-031-95589-1_12}.
+di nodi~\cite{10.1007/978-3-031-95589-1_12}.
 
 \ac{AC} è un paradigma di \emph{macroprogrammazione} che astrae l'esecuzione di
-un singolo programma su una rete di dispositivi,
-trattandola come un'unica entità collettiva.
-
-\subsection{Modello computazionale}
-\label{ssec:ac-computational-model}
-
+un singolo programma su una rete di dispositivi, trattandola come un'unica entità
+collettiva.
 Al centro di questo modello vi sono il \emph{field calculus} ed i \emph{campi computazionali}, astrazioni che mappano punti nello spazio e nel tempo a valori
-che possono essere combinati funzionalmente~\cite[12.2.1]{10.1007/978-3-031-95589-1_12}.
+che possono essere combinati funzionalmente~\cite{10.1007/978-3-031-95589-1_12}.
 Ad esempio, in uno sciame robotico, si possono definire diversi campi computazionali
 che associano ad ogni robot un valore come la distanza minima da una sorgente o
-un vettore rappresentante il movimento desiderato~\cite[2.1.2, ACV25]{amslaurea37138}.
+un vettore rappresentante il movimento desiderato~\cite{amslaurea37138}.
 
 Ogni dispositivo nel sistema raccoglie dati dal proprio stato locale e dai vicini,
 calcola il programma aggregato costruendo un risultato da esportare, ed infine
 attua il risultato del calcolo ed invia il proprio risultato ai dispositivi con
-cui è in relazione~\cite[2.1.1]{amslaurea37138}.
+cui è in relazione~\cite{amslaurea37138}.
 
 Un esempio classico di programma aggregato è la costruzione di un gradiente spaziale,
 utilizzato per misurare la distanza di ogni nodo da una sorgente, dove le relazioni
 tra i nodi sono basate sul concetto di vicinato definito distanza cartesiana tra
-loro~\cite[12.2.2]{10.1007/978-3-031-95589-1_12}~(\Cref{fig:ac-gradient-example}).
+loro~\cite{10.1007/978-3-031-95589-1_12}~(\Cref{fig:ac-gradient-example}).
 
 \begin{figure}[h]
     \centering
@@ -69,29 +65,38 @@ loro~\cite[12.2.2]{10.1007/978-3-031-95589-1_12}~(\Cref{fig:ac-gradient-example}
     \label{fig:ac-gradient-example}
 \end{figure}
 
+% Sei un po' "ermetico", prova ad espandere questa sezione
+
 \subsection{Aggregate computing su sistemi embedded}
 \label{ssec:ac-on-embedded-devices}
 
 Il modello di computazione distribuita offerto da \ac{AC} si
 pone come soluzione naturale per reti di dispositivi \ac{IoT} e sciami robotici.
-Framework preesistenti, come ScaFi basato sul linguaggio Scala~\cite[2.3]{amslaurea37138},
-sono stati concepiti per simulazioni o esecuzioni su dispositivi general-purpose,
-il che li rende incompatibili con i microcontrollori a basso costo a causa
-dell'assenza di memoria sufficiente e garanzie di esecuzione \emph{real-time}.
-Un programma aggregato deve operare in maniera asincrona e continua, richiedendo
-una gestione deterministica della memoria ed un accesso efficiente ai protocolli
-di rete.
+I framework preesistenti, come ScaFi basato sul linguaggio Scala~\cite{amslaurea37138},
+sono stati concepiti per simulazioni o esecuzioni su dispositivi general-purpose.
+Questo li rende incompatibili con i microcontrollori a basso costo a causa
+dell'assenza di memoria sufficiente e della mancanza di garanzie di esecuzione \emph{real-time}.
+I dispositivi embedded pongono sfide significative: un programma aggregato deve operare
+in maniera asincrona e continua, richiedendo una gestione deterministica della memoria
+ed un accesso efficiente ai protocolli di rete, requisiti difficilmente soddisfacibili
+da linguaggi che si affidano a macchine virtuali o meccanismi di \emph{Garbage Collection} (\ac{GC}).
 
-In questo scenario, il linguaggio Rust rappresenta una soluzione architetturale
-ideale: grazie al suo modello di \emph{ownership} e all'assenza di \ac{GC},
-fornisce astrazioni di alto livello a costo zero garantendo prestazioni predicibili,
-latenze minime e un uso sicuro della memoria fondamentale per la programmazione
-embedded.
+Per colmare questa lacuna e portare lo \ac{AC} sui dispositivi embedded, il linguaggio
+Rust rappresenta una soluzione ideale: un linguaggio di programmazione di
+basso livello progettato per garantire sicurezza ed alte prestazioni.
+Grazie al suo rigoroso sistema di tipi e al modello di \emph{ownership}, previene
+a tempo di compilazione gli errori legati alla gestione della memoria, eliminando
+del tutto la necessità di un \ac{GC}.
+In questo modo, Rust riesce a fornire astrazioni di alto livello "a costo zero",
+garantendo prestazioni predicibili, latenze minime e un controllo sicuro e granulare sulle
+risorse hardware, aspetti fondamentali per la programmazione embedded.
+
+% Potresti espandere la presentazione di Rust come linguaggio
 
 \section{YAAIR}
 \label{sec:yaair}
 
-\ac{YAAIR} \footnote{\url{https://github.com/nicolasfara/yaair}} è un framework
+\ac{YAAIR}\footnote{\url{https://github.com/nicolasfara/yaair}} è un framework
 Rust open-source per lo \ac{AC}, ideato per risolvere le limitazioni prestazionali
 dei framework basati su linguaggi ad alto livello che non permettono l'esecuzione
 su sistemi embedded.
@@ -105,17 +110,25 @@ al trasporto fisico dei dati.
 Il contributo di questa tesi si concentra sull'implementazione di una alternativa
 decentralizzata per lo strato di rete basata sul protocollo Zenoh.
 
+% Presenta meglio il framework
+% Nota: YAAIR è una libreria per aggregate computing la cui repo puoi trovarla qui
+% https://github.com/nicolasfara/yaair
+% è ancora fortemente in fase di sviluppo, quindi non c'è molta documentazione a
+% riguardo.
+
 \section{Zenoh}
 \label{sec:zenoh}
 
-Zenoh è un protocollo emergente e un'infrastruttura di rete decentralizzata per
-la comunicazione \emph{pub/sub/query}, orientato a latenze minime e scalabilità
-su dispositivi eterogenei.
-A differenza di protocolli tradizionali dell'ecosistema \ac{IoT} come \ac{MQTT}
-\footnote{\url{https://mqtt.org/}}, che si appoggiano obbligatoriamente ad un
-broker centrale, Zenoh è progettato per unificazioni \emph{edge-to-cloud} senza
-vincoli topologici stretti~\cite{zenoh:what-is-zenoh}, permettendo di creare reti
-prive di colli di bottiglia o singoli punti di fallimento.
+Zenoh è un protocollo di comunicazione emergente e un'infrastruttura di rete decentralizzata
+di nuova generazione, progettata per superare i limiti dei protocolli tradizionali
+in scenari distribuiti, dall'\ac{IoT} all'edge computing fino alla robotica.
+Ottimizzato per offrire un throughput elevato e latenze minime, Zenoh permette di
+unificare la comunicazione \emph{pub/sub} e \emph{query/reply} all'interno di un'unica
+astrazione.
+A differenza di protocolli tradizionali dell'ecosistema \ac{IoT} come \ac{MQTT},
+che si appoggiano obbligatoriamente ad un broker centrale, Zenoh è progettato per
+comunicazioni \emph{edge-to-cloud} senza vincoli topologici stretti~\cite{zenoh:what-is-zenoh},
+permettendo di creare reti versatili e efficienti.
 
 \subsection{Modello di comunicazione}
 \label{ssec:zenoh-communication-model}
@@ -124,18 +137,18 @@ Per la comunicazione Zenoh adotta un approccio ibrido altamente flessibile in cu
 i nodi sulla rete possono assumere ruoli differenziati:
 
 \begin{itemize}
-    \item \textbf{Client}: Dispositivi con risorse minime, che si connettono ai
+    \item \textbf{Client}: dispositivi con risorse minime, che si connettono ai
     router o ad altri peer per l'inoltro dei pacchetti senza occuparsi della
     topologia di routing globale.
-    \item \textbf{Peer}: Nodi in grado di comunicare in maniera diretta fra loro
+    \item \textbf{Peer}: nodi in grado di comunicare in maniera diretta fra loro
     e di gestire topologie P2P auto-organizzanti grazie a meccanismi integrati
     di scoperta automatica dei nodi nella rete (\emph{scouting}).
-    \item \textbf{Router}: Elementi strutturali utilizzati per unire reti isolate
+    \item \textbf{Router}: elementi strutturali utilizzati per unire reti isolate
     o scalare la topologia su geografie estese.
 \end{itemize}
 
-Indipendentemente dal ruolo di un nodo, Zenoh astrare la comunicazione sulla rete
-permettendo ad ognuno di essi di agire in maniera indipendente, rendendolo una
+Indipendentemente dal ruolo di un nodo, Zenoh permette di astrarre la comunicazione sulla rete
+facendo sì che ognuno di essi possa agire in maniera indipendente. Questo lo rende una
 soluzione ideale per i programmi aggregati in quanto permette di comunicare in
 maniera diretta con altri nodi sulla rete astraendo i salti necessari per arrivarci.
 
@@ -153,6 +166,9 @@ in maniera ibrida all'interno della stessa sessione, definendo rispettivamente
 possono iscriversi o \texttt{queryable} che rispondono a richieste effettuate attivamente
 da \texttt{querier} in una comunicazione più simile al modello \ac{RPC}.
 
+% Anche qui, spiegare meglio i modelli (anche con diagrammi) avrebbe aiutato
+% Nota: per i diagrammi UML uso mermaid
+
 \section{Zenoh per sistemi embedded}
 \label{ssec:zenoh-for-embdedded-systems}
 
@@ -162,12 +178,12 @@ utilizzati per la programmazione \ac{IoT}, Zenoh come libreria dipende da alcune
 funzionalità specifiche che richiedono la presenza di un sistema operativo completo
 sul dispositivo.
 
-Per colmare questa lacuna è stato introdotto Zenoh pico \footnote{\url{https://github.com/eclipse-zenoh/zenoh-pico}},
+Per colmare questa lacuna è stato introdotto Zenoh pico\footnote{\url{https://github.com/eclipse-zenoh/zenoh-pico}},
 un porting leggero della libreria in C appositamente concepito per sistemi embedded
 dotati di vincoli severi.
 Questa versione copre quasi completamente le funzionalità della libreria originale,
 omettendo la possibilità di utilizzare un nodo come \emph{router}
-(\cref{ssec:zenoh-communication-model}).
+(\Cref{ssec:zenoh-communication-model}).
 
 Si menziona, a corredo dell'ecosistema, il nascente progetto \texttt{zenoh-nostd}
 \footnote{\url{https://github.com/ZettaScaleLabs/zenoh-nostd}}, un'iniziativa
@@ -189,15 +205,31 @@ le astrazioni di alto livello fornite dal linguaggio su qualsiasi piattaforma,
 delegando le implementazioni specifiche a librerie apposite lasciando libera scelta
 in base alle necessità del progetto.
 
+% Che tipo di architetture intendi? Cosa intendi con natura fortemente generalizzata?
+% Inoltre potevi parlare di progetti noti che sfruttano Rust
+% Nota: Per architetture (anche più avanti in questa sezione) intendo le diverse
+% architetture di CPU e target di compilazione in generale che rustc supporta.
+% Riguardo la "natura fortemente generalizzata", in poche parole mi stavo riferendo al caso
+% di async await che il linguaggio implementa tramite trait per non imporre nessuna
+% scelta sul runtime da usare. Tra l'altro, qui ripeto il discorso delle astrazioni
+% di alto livello che alla fine ho aggiunto prima, quindi andrebbe riformulato tutto.
+% Il mio obbiettivo questo paragrafo era quello di far capire che è un linguaggio
+% è molto versatile per la creazione di programmi che devono supportare diversi tipi
+% di sistemi particolari.
+
 \subsection{Cross-compilation}
 \label{ssec:cross-compilation}
 
-Il compilatore Rust \texttt{rustc} è nativamente un compilatore per diverse architetture,
+Il compilatore Rust \texttt{rustc} è nativamente un compilatore per diverse architetture
+(come ARM Cortex-M, RISC-V, e x86\_64),
 permettendo la creazione di artefatti binari autosufficienti ed eseguibili su qualsiasi
 dispositivo compatibile. L'ecosistema intorno a questo linguaggio permette inoltre
 di definire o scaricare da fonti esterne versioni alternative della \emph{toolchain},
-permettendo di esterndere la compatibilità della libreria standard ad ulteriori
-piattaforme.
+permettendo di estendere la compatibilità della libreria standard ad ulteriori
+piattaforme. L'affidabilità di Rust in questo ambito è dimostrata dalla sua crescente
+adozione nell'industria per lo sviluppo di sistemi critici e open-source, come il
+sistema operativo embedded sicuro \emph{TockOS} o la sua recente integrazione per la
+scrittura di moduli nel kernel Linux.
 
 Il linguaggio fornisce inoltre un sistema di compilazione condizionale che permette
 la definizione di moduli e porzioni di codice in base alle caratteristiche del
@@ -207,7 +239,7 @@ o la presenza di determinate funzionalità.
 \subsection{Embassy}
 \label{sec:embassy}
 
-Embassy \footnote{\url{https://embassy.dev/}} è un framework per lo sviluppo di
+Embassy\footnote{\url{https://embassy.dev/}} è un framework per lo sviluppo di
 programmi embedded che fornisce interfacce di astrazione verso l'hardware in maniera
 indipendente dalle specifiche del dispositivo.
 
@@ -219,14 +251,14 @@ per permettere la creazione di una \ac{API} moderna tramite costrutti di
 \subsection{ESP-IDF}
 \label{ssec:esp-idf}
 
-Espressif Systems \footnote{\url{https://www.espressif.com/}}, azienda produttrice
+Espressif Systems\footnote{\url{https://www.espressif.com/}}, azienda produttrice
 di microcontrollori della famiglia ESP, supporta lo sviluppo di programmi in Rust
 per i propri dispositivi fornendo implementazioni della toolchain per le architetture
 da loro utilizzate, permettendo così l'utilizzo della libreria standard su tutta
 la loro gamma di prodotti.
 
-Tramite \ac{ESP-IDF}, viene fornita un'implementazione dell'astrazione dell hardware
-fornita da embassy (\cref{sec:embassy}) che permette
+Tramite \ac{ESP-IDF}, viene fornita un'implementazione dell'astrazione dell'hardware
+fornita da embassy (\Cref{sec:embassy}) che permette
 l'interazione con le periferiche disponibili sul microcontrollore tramite un'unica
 \ac{API} compatibile con tutti i dispositivi da loro prodotti, sfruttando la natura
 \emph{memory-safe} e le funzionalità di gestione degli errori del linguaggio per

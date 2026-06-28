@@ -3,8 +3,8 @@
 
 Nel seguente capitolo vengono illustrate le scelte architetturali adottate nella
 realizzazione del sistema per soddisfare tutti i requisiti e raggiungere gli
-obiettivi imposti nel \cref{chap:analysis}, rispettando al
-contempo i vincoli imposti (\cref{sec:constraints})
+obiettivi imposti nel \Cref{chap:analysis}, rispettando al
+contempo i vincoli imposti (\Cref{sec:constraints})
 
 \section{Architettura generale}
 \label{sec:general-architecture}
@@ -21,6 +21,7 @@ tutte le configurazioni specifiche invisibili allo \texttt{Engine}: l'implementa
 specifica di Zenoh utilizzata (standard o pico) deve essere mantenuta internamente,
 esponendo delle \ac{API} alla rete che siano trasparenti rispetto alla tecnologia
 utilizzata.
+% Qui con ZenohNetwork già parli di implementazione, cerca di essere più generico
 
 Per la configurazione di Zenoh stesso (\ref{requirement:zenoh-portability}),
 le due versioni offrono opzioni con requisiti differenti, rendendo quindi necessario
@@ -130,7 +131,7 @@ come radice, e si iscrive a tutti topic equivalenti degli altri membri della ret
 \ac{YAAIR} richiede che la rete esponga due operazioni, una per la pubblicazione
 del risultato del programma aggregato, ed una che restituisca una mappa associativa
 con l'ultimo risultato ricevuto da ogni nodo con cui si è in relazione
-(\cref{ssec:ac-computational-model}).
+(\Cref{sec:aggregate-computing}).
 
 Mentre la pubblicazione del risultato si tratta di un'operazione banale tramite i
 costrutti di comunicazione \emph{pub/sub} utilizzati dalla \emph{ZenohNetwork}
