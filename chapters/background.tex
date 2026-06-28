@@ -11,6 +11,10 @@ di Rust per la programmazione embedded.
 \section{Aggregate computing}
 \label{sec:aggregate-computing}
 
+% Sei un po' "ermetico", prova ad espandere questa sezione [RISOLTO: espansa la
+% sezione qui sotto, spiegando meglio field calculus, campi computazionali e il
+% ciclo di esecuzione round-based]
+
 La proliferazione di dispositivi \ac{IoT} e sistemi pervasivi ha reso sempre più
 complessa la gestione di reti distribuite su larga scala, e gli approcci tradizionali
 faticano a garantire coordinamento trasparente e resiliente tra centinaia o migliaia
@@ -18,24 +22,50 @@ di nodi~\cite{10.1007/978-3-031-95589-1_12}.
 
 \ac{AC} è un paradigma di \emph{macroprogrammazione} che astrae l'esecuzione di
 un singolo programma su una rete di dispositivi, trattandola come un'unica entità
-collettiva.
-Al centro di questo modello vi sono il \emph{field calculus} ed i \emph{campi computazionali}, astrazioni che mappano punti nello spazio e nel tempo a valori
-che possono essere combinati funzionalmente~\cite{10.1007/978-3-031-95589-1_12}.
+collettiva: invece di programmare separatamente il comportamento di ogni singolo
+nodo, si descrive il comportamento collettivo, lasciando che sia il framework a
+occuparsi di tradurlo in azioni eseguite localmente da ciascun dispositivo.
+
+Al centro di questo modello vi sono il \emph{field calculus} ed i \emph{campi
+computazionali}~\cite{10.1007/978-3-031-95589-1_12}.
+Un campo computazionale è un'astrazione che associa un valore ad ogni dispositivo
+della rete in un determinato istante di tempo: concettualmente, è una funzione
+che mappa coppie spazio-temporali a valori di un certo tipo, come numeri, booleani
+o strutture dati più complesse.
+Il \emph{field calculus} è il linguaggio formale che definisce come questi
+campi possano essere costruiti e combinati tra loro tramite operatori
+funzionali, permettendo di esprimere computazioni globali sulla rete a
+partire da semplici operazioni locali.
 Ad esempio, in uno sciame robotico, si possono definire diversi campi computazionali
 che associano ad ogni robot un valore come la distanza minima da una sorgente o
 un vettore rappresentante il movimento desiderato~\cite{amslaurea37138}.
 
-Ogni dispositivo nel sistema raccoglie dati dal proprio stato locale e dai vicini,
-calcola il programma aggregato costruendo un risultato da esportare, ed infine
-attua il risultato del calcolo ed invia il proprio risultato ai dispositivi con
-cui è in relazione~\cite{amslaurea37138}.
+A livello operativo, ogni dispositivo esegue ripetutamente lo stesso programma
+aggregato secondo un ciclo, detto \emph{round}: ad ogni iterazione, il dispositivo
+raccoglie i messaggi ricevuti dai propri vicini durante il round precedente,
+calcola un nuovo valore del campo computazionale combinando questi messaggi con
+il proprio stato locale, ed infine esporta il risultato ottenuto, sia per
+processarlo localmente (ad esempio, comandando un attuatore) sia per inviarlo ai
+dispositivi con cui è in relazione, così che possa essere utilizzato nel loro
+round successivo~\cite{amslaurea37138}.
+La nozione di \emph{vicinato} di un dispositivo, ovvero l'insieme dei nodi con
+cui scambia messaggi, è lasciata alla specifica applicazione: può essere
+definita ad esempio in base alla distanza fisica tra i dispositivi, oppure
+tramite una relazione di rete esplicita, e determina quindi quali altri nodi
+contribuiscono al calcolo del campo in un determinato punto della rete.
 
 Un esempio classico di programma aggregato è la costruzione di un gradiente spaziale,
 utilizzato per misurare la distanza di ogni nodo da una sorgente, dove le relazioni
-tra i nodi sono basate sul concetto di vicinato definito distanza cartesiana tra
-loro~\cite{10.1007/978-3-031-95589-1_12}~(\Cref{fig:ac-gradient-example}).
+tra i nodi sono basate sul concetto di vicinato definito tramite distanza cartesiana tra
+loro~\cite{10.1007/978-3-031-95589-1_12}.
+In questo caso, il campo computazionale calcolato da ogni nodo è la propria
+distanza minima dalla sorgente: ad ogni round, ciascun dispositivo osserva i
+valori di distanza ricevuti dai propri vicini, vi somma la distanza che lo
+separa da essi, e si propone come nuova distanza il valore minimo ottenuto,
+così da propagare progressivamente l'informazione a partire dalla sorgente
+verso il resto della rete (\Cref{fig:ac-gradient-example}).
 
-\begin{figure}[h]
+\begin{figure}[ht]
     \centering
     \begin{tikzpicture}[
         >=stealth,
@@ -65,8 +95,6 @@ loro~\cite{10.1007/978-3-031-95589-1_12}~(\Cref{fig:ac-gradient-example}).
     \label{fig:ac-gradient-example}
 \end{figure}
 
-% Sei un po' "ermetico", prova ad espandere questa sezione
-
 \subsection{Aggregate computing su sistemi embedded}
 \label{ssec:ac-on-embedded-devices}
 
@@ -82,35 +110,52 @@ ed un accesso efficiente ai protocolli di rete, requisiti difficilmente soddisfa
 da linguaggi che si affidano a macchine virtuali o meccanismi di \emph{Garbage Collection} (\ac{GC}).
 
 Per colmare questa lacuna e portare lo \ac{AC} sui dispositivi embedded, il linguaggio
-Rust rappresenta una soluzione ideale: un linguaggio di programmazione di
-basso livello progettato per garantire sicurezza ed alte prestazioni.
-Grazie al suo rigoroso sistema di tipi e al modello di \emph{ownership}, previene
-a tempo di compilazione gli errori legati alla gestione della memoria, eliminando
-del tutto la necessità di un \ac{GC}.
-In questo modo, Rust riesce a fornire astrazioni di alto livello "a costo zero",
-garantendo prestazioni predicibili, latenze minime e un controllo sicuro e granulare sulle
-risorse hardware, aspetti fondamentali per la programmazione embedded.
-
-% Potresti espandere la presentazione di Rust come linguaggio
+Rust rappresenta una soluzione ideale.
+Rust è un linguaggio di programmazione compilato, nato nel 2006 e sviluppato
+inizialmente da Mozilla, pensato per offrire un livello di controllo sull'hardware
+e sulle prestazioni paragonabile a quello di linguaggi di basso livello come C e
+C++, senza però rinunciare alla sicurezza nella gestione delle risorse.
+A differenza di questi ultimi, infatti, Rust non richiede una gestione manuale
+dell'allocazione e deallocazione della memoria, né si appoggia ad un \ac{GC}
+per farlo automaticamente: il compilatore verifica staticamente, tramite il suo
+rigoroso sistema di tipi e il modello di \emph{ownership}, che ogni porzione di
+memoria abbia esattamente un proprietario responsabile della sua liberazione,
+eliminando così a tempo di compilazione intere classi di errori comuni nei
+linguaggi di basso livello, come accessi a memoria non più valida o perdite
+di memoria.
+Questo controllo avviene interamente in fase di compilazione e non introduce
+alcun costo aggiuntivo a runtime, permettendo a Rust di fornire astrazioni di
+alto livello "a costo zero": costrutti comodi da usare in fase di sviluppo che,
+una volta compilati, producono codice macchina con prestazioni equivalenti a
+quello scritto manualmente in un linguaggio di più basso livello.
+Queste caratteristiche garantiscono prestazioni predicibili, latenze minime e
+un controllo sicuro e granulare sulle risorse hardware, aspetti fondamentali per
+la programmazione embedded, ambito in cui Rust ha guadagnato un'adozione crescente
+negli ultimi anni.
+% Potresti espandere la presentazione di Rust come linguaggio [RISOLTO: espansa la presentazione di Rust sopra]
 
 \section{YAAIR}
 \label{sec:yaair}
 
-\ac{YAAIR}\footnote{\url{https://github.com/nicolasfara/yaair}} è un framework
-Rust open-source per lo \ac{AC}, ideato per risolvere le limitazioni prestazionali
-dei framework basati su linguaggi ad alto livello che non permettono l'esecuzione
+\ac{YAAIR}\footnote{\url{https://github.com/nicolasfara/yaair}} è un framework Rust
+open-source per lo \ac{AC}, ideato per risolvere le limitazioni prestazionali
+delle alternative basati su linguaggi ad alto livello che non permettono l'esecuzione
 su sistemi embedded.
-Sfruttando la natura flessibile di Rust data dal concetto di \emph{trait},
-\ac{YAAIR} propone un modello architetturale a strati che disaccoppia la logica
-di calcolo del programma aggregato dalla serializzazione e dai protocolli di rete
-sottostanti. Questo livello di isolamento consente al sistema di operare indipendentemente
+Sfruttando la natura flessibile di Rust data dal concetto di \emph{trait}, ovvero
+interfacce che definiscono un comportamento comune implementabile da diversi tipi
+di oggetti, \ac{YAAIR} propone un modello architetturale a strati che disaccoppia
+la logica di calcolo del programma aggregato dalla serializzazione e dai protocolli
+di rete sottostanti. Questo livello di isolamento consente al sistema di operare indipendentemente
 dall'hardware, eseguendo cicli di valutazione in modo totalmente agnostico rispetto
 al trasporto fisico dei dati.
 
 Il contributo di questa tesi si concentra sull'implementazione di una alternativa
 decentralizzata per lo strato di rete basata sul protocollo Zenoh.
+Essendo \ac{YAAIR} relativamente giovane, la libreria si trova in una fase di sviluppo attivo,
+la sua struttura interna può ancora evolvere in maniera sostanziale, e non è ancora
+disponibile una documentazione estesa.
 
-% Presenta meglio il framework
+% Presenta meglio il framework [RISOLTO: espansa la presentazione sopra con le info fornite]
 % Nota: YAAIR è una libreria per aggregate computing la cui repo puoi trovarla qui
 % https://github.com/nicolasfara/yaair
 % è ancora fortemente in fase di sviluppo, quindi non c'è molta documentazione a
@@ -155,21 +200,64 @@ maniera diretta con altri nodi sulla rete astraendo i salti necessari per arriva
 \subsection{Attori e concetti fondamentali}
 \label{ssec:zenoh-actors-and-fundamental-concepts}
 
-A livello applicativo, la comunicazione in Zenoh avviene all'interno di una
-sessione, la quale incapsula la connettività del nodo. Sfruttando un
-approccio incentrato sui dati, l'indirizzamento è dettato tramite \emph{key
-expressions}, permettendo a molteplici entità di registrarsi sugli stessi topic.
+Sfruttando un approccio incentrato sui dati, l'indirizzamento è dettato tramite
+\emph{topic}, stringhe che seguono una struttura ad albero simile a quella utilizzata dai
+sistemi operativi per i percorsi dei file, e \emph{key expressions}, che integrando
+dei costrutti simili alle espressioni regolari permettono di rappresentare insiemi
+di topic.
 
 Zenoh permette di utilizzare modelli di comunicazione \emph{pub/sub} e \emph{query/reply}
-in maniera ibrida all'interno della stessa sessione, definendo rispettivamente
-\texttt{publisher} che pubblicano dati su topic specifici a cui i \texttt{subscriber}
-possono iscriversi o \texttt{queryable} che rispondono a richieste effettuate attivamente
-da \texttt{querier} in una comunicazione più simile al modello \ac{RPC}.
+in maniera ibrida all'interno della stessa sessione, così da poter sfruttare
+la soluzione più adatta per ogni problema. Ogni nodo della rete utilizza una sessione,
+la quale incapsula la connettività del nodo, dalla quale dichiara liberamente entità
+per i differenti modelli di comunicazione che entreranno a far parte della rete.
 
-% Anche qui, spiegare meglio i modelli (anche con diagrammi) avrebbe aiutato
-% Nota: per i diagrammi UML uso mermaid
+Nel modello \emph{pub/sub}, un \texttt{publisher} pubblica dati su un topic
+specifico senza conoscere né attendere la presenza di alcun destinatario,
+mentre uno o più \texttt{subscriber} possono iscriversi a molteplici topic tramite
+key expressions che coprono un insieme.
+ricevere automaticamente, in maniera asincrona, ogni nuovo messaggio pubblicato.
+Questo modello è quindi adatto a scenari in cui un nodo deve notificare continuamente
+il proprio stato, senza necessità di una risposta esplicita da parte di chi riceve
+il dato (\Cref{fig:zenoh-pubsub-sequence}).
 
-\section{Zenoh per sistemi embedded}
+\begin{figure}[H]
+    \centering
+    \includegraphics[height=0.5\dimexpr\textheight\relax]{figures/zenoh-pubsub-sequence}
+    \caption[Diagramma di sequenza del modello di comunicazione \emph{pub/sub} in Zenoh.]{
+    Diagramma di sequenza del modello di comunicazione \emph{pub/sub} in Zenoh.
+    In questo diagramma, l'entità \emph{Network} non rappresenta un'unità centrale,
+    bensì la rete \ac{P2P} su cui ogni nodo comunica le proprie azioni, senza
+    necessità di connesioni dirette con i partecipanti.}
+    \label{fig:zenoh-pubsub-sequence}
+\end{figure}
+
+Nel modello \emph{query/reply}, invece, un \texttt{querier} effettua attivamente
+una richiesta su un topic, alla quale uno o più \texttt{queryable} registrati
+sullo stesso topic possono rispondere, in una comunicazione più simile al modello
+\ac{RPC}.
+A differenza del modello \emph{pub/sub}, qui è il richiedente a guidare lo
+scambio, ottenendo una o più risposte solo in seguito a una richiesta esplicita,
+rendendo questo modello adatto a scenari in cui un nodo necessita di un dato
+specifico nel momento stesso in cui lo richiede (\Cref{fig:zenoh-queryreply-sequence}).
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[height=0.65\dimexpr\textheight\relax]{figures/zenoh-queryreply-sequence}
+    \caption[Diagramma di sequenza del modello di comunicazione \emph{query/reply} in Zenoh.]{
+    Diagramma di sequenza del modello di comunicazione \emph{query/reply} in Zenoh.
+    Come nella \cref{fig:zenoh-pubsub-sequence}, i messaggi
+    verso l'entità \emph{Network} rappresentano la comunicazione decentralizzata con
+    i vari nodi presenti.}
+    \label{fig:zenoh-queryreply-sequence}
+\end{figure}
+
+% Anche qui, spiegare meglio i modelli (anche con diagrammi) avrebbe aiutato [RISOLTO: aggiunta spiegazione estesa sopra]
+% Nota: per i diagrammi UML uso mermaid [Ho preparato i sorgenti .mmd separatamente,
+% da esportare come immagine in figures/ seguendo lo stesso flusso usato per gli
+% altri diagrammi della tesi: zenoh-pubsub-sequence.mmd e zenoh-queryreply-sequence.mmd]
+
+\subsection{Zenoh per sistemi embedded}
 \label{ssec:zenoh-for-embdedded-systems}
 
 Nonostante la flessibilità di Rust come linguaggio che ne permette l'utilizzo
@@ -195,18 +283,32 @@ di questa tesi è stato utilizzato Zenoh pico creando un wrapper Rust per la lib
 \label{ssec:embedded-rust}
 
 Rust offre un ecosistema robusto e maturo per la programmazione di sistemi embedded,
-con un supporto nativo del compilatore per diverse architetture, per l'accesso
-alla libreria standard completamente opzionale per i dispositivi che non
-ne offrono un'implementazione e per l'utilizzo di funzioni provenienti da librerie
-esterne precompilate.
+con un supporto nativo del compilatore per diverse architetture di CPU e piattaforme
+accesso alla libreria standard completamente opzionale per i dispositivi
+che non ne offrono un'implementazione e la possibilità  di utilizzare funzioni
+provenienti da librerie esterne precompilate.
 
-La natura fortemente generalizzata del linguaggio permette inoltre di utilizzare
-le astrazioni di alto livello fornite dal linguaggio su qualsiasi piattaforma,
-delegando le implementazioni specifiche a librerie apposite lasciando libera scelta
-in base alle necessità del progetto.
+Un altro aspetto che rende Rust particolarmente versatile per la creazione di
+programmi che devono supportare sistemi molto diversi tra loro è la scelta di
+non imporre un'implementazione specifica per funzionalità che, su altri
+linguaggi, sono parte integrante della tecnologia.
+Un esempio rappresentativo è il supporto per la programmazione
+asincrona tramite i costrutti \texttt{async/await}: a differenza di altri
+linguaggi, dove l'esecuzione di codice asincrono richiede necessariamente un
+runtime specifico fornito, in Rust questi costrutti sono implementati tramite \emph{trait},
+mentre la scelta del runtime concreto che effettivamente esegue e pianifica i task
+è lasciata completamente allo sviluppatore.
+Questo permette di utilizzare runtime general-purpose come \texttt{tokio} su
+sistemi desktop o server, oppure alternative pensate specificamente per
+l'ambito embedded, come Embassy (\Cref{sec:embassy}),
+senza che il codice applicativo debba essere riscritto in base alla piattaforma
+di destinazione.
 
 % Che tipo di architetture intendi? Cosa intendi con natura fortemente generalizzata?
-% Inoltre potevi parlare di progetti noti che sfruttano Rust
+% Inoltre potevi parlare di progetti noti che sfruttano Rust [RISOLTO: chiarite le
+% architetture, riformulato il discorso su async/await come da nota sottostante,
+% e aggiunta menzione di TockOS e dell'integrazione nel kernel Linux nella sezione
+% sulla cross-compilation, dato che il discorso si lega naturalmente lì]
 % Nota: Per architetture (anche più avanti in questa sezione) intendo le diverse
 % architetture di CPU e target di compilazione in generale che rustc supporta.
 % Riguardo la "natura fortemente generalizzata", in poche parole mi stavo riferendo al caso
@@ -220,21 +322,21 @@ in base alle necessità del progetto.
 \subsection{Cross-compilation}
 \label{ssec:cross-compilation}
 
-Il compilatore Rust \texttt{rustc} è nativamente un compilatore per diverse architetture
-(come ARM Cortex-M, RISC-V, e x86\_64),
-permettendo la creazione di artefatti binari autosufficienti ed eseguibili su qualsiasi
-dispositivo compatibile. L'ecosistema intorno a questo linguaggio permette inoltre
-di definire o scaricare da fonti esterne versioni alternative della \emph{toolchain},
-permettendo di estendere la compatibilità della libreria standard ad ulteriori
-piattaforme. L'affidabilità di Rust in questo ambito è dimostrata dalla sua crescente
-adozione nell'industria per lo sviluppo di sistemi critici e open-source, come il
-sistema operativo embedded sicuro \emph{TockOS} o la sua recente integrazione per la
-scrittura di moduli nel kernel Linux.
+Il compilatore Rust \texttt{rustc} permette la creazione di artefatti binari
+autosufficienti ed eseguibili su qualsiasi dispositivo compatibile, senza necessità
+di runtime o dipendenze esterne non esplicitamente definite dal programmatore.
+L'ecosistema intorno a questo linguaggio permette inoltre di utilizzare versioni
+alternative della \emph{toolchain}, estendendo la compatibilità della libreria standard
+ad ulteriori piattaforme.
 
 Il linguaggio fornisce inoltre un sistema di compilazione condizionale che permette
 la definizione di moduli e porzioni di codice in base alle caratteristiche del
 target per cui viene compilato il programma, come l'architettura, il sistema operativo
 o la presenza di determinate funzionalità.
+L'affidabilità di Rust in questo ambito è dimostrata dalla sua crescente
+adozione nell'industria per lo sviluppo di sistemi critici e con standard di qualità
+elevatissimi, come il sistema operativo embedded \emph{TockOS}~\cite{10.1145/3731569.3764828}
+o la sua recente integrazione per la scrittura di moduli nel kernel Linux~\cite{10.1145/3674805.3690756}.
 
 \subsection{Embassy}
 \label{sec:embassy}

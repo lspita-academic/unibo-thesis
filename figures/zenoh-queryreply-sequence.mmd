@@ -1,0 +1,35 @@
+---
+  config:
+    layout: elk
+    theme: neutral
+    class:
+      hideEmptyMembersBox: true
+---
+
+sequenceDiagram
+    participant Querier1 as Querier
+    participant Network
+    participant Queryable1 as Queryable
+    participant Queryable2 as Queryable
+
+    Queryable1 ->> Network : declare("device/*")
+    Queryable2 ->> Network : declare("sensor/*")
+
+    Querier1 ->> Network : query("device/battery/status")
+    Network ->> Queryable1 : deliver query
+    Queryable1 ->> Network : status = 98%
+    Network ->> Querier1 : deliver response
+
+    Querier1 ->> Network : query("sensor/temperature")
+    Network ->> Queryable2 : deliver query
+    Queryable1 ->> Network : temp = 23°C
+    Network ->> Querier1 : deliver response
+
+    Querier1 ->> Network : query("sensor/temperature/history")
+    Network ->> Queryable2 : deliver query
+    Queryable2 ->> Network : temp1 = 21°C
+    Network ->> Querier1 : deliver response
+    Queryable2 ->> Network : temp2 = 25°C
+    Network ->> Querier1 : deliver response
+    Queryable2 ->> Network : temp3 = 23°C
+    Network ->> Querier1 : deliver response

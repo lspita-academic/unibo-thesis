@@ -1,0 +1,25 @@
+---
+  config:
+    layout: elk
+    theme: neutral
+    class:
+      hideEmptyMembersBox: true
+---
+
+sequenceDiagram
+    participant Subscriber1 as Subscriber
+    participant Subscriber2 as Subscriber
+    participant Network
+    participant Publisher1 as Publisher
+
+    Subscriber1 ->> Network : subscribe("sensor/temperature")
+    Subscriber2 ->> Network : subscribe("sensor/*")
+
+    Publisher1 ->> Network : put("sensor/temperature", 23°C)
+    par
+        Network ->> Subscriber1 : deliver value
+        Subscriber1 ->> Subscriber1 : callback(value)
+    and
+        Network ->> Subscriber2 : deliver value
+        Subscriber2 ->> Subscriber2 : callback(value)
+    end
