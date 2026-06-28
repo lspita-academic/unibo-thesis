@@ -4,26 +4,27 @@
 Nel seguente capitolo vengono illustrate le scelte architetturali adottate nella
 realizzazione del sistema per soddisfare tutti i requisiti e raggiungere gli
 obiettivi imposti nel \Cref{chap:analysis}, rispettando al
-contempo i vincoli imposti (\Cref{sec:constraints})
+contempo i vincoli imposti (\Cref{sec:constraints}).
 
 \section{Architettura generale}
 \label{sec:general-architecture}
 
 In \ac{YAAIR}, il cuore dell'esecuzione del programma aggregato è lo \texttt{Engine},
-che oltre al programma stesso prende in input per la sua costruzione le
-implementazioni dei vari componenti da utilizzare.
-Tra questi, è richiesta un'implementazione della rete per la comunicazione, che
-deve soddisfare il contratto imposto dal trait \texttt{Network}.
+che date le implementazioni dei vari componenti da utilizzare permette l'esecuizione
+di un programma aggregato.
+Tra queste implementazioni è richiesta anche una rete per la comunicazione, la quale
+deve soddisfare un'interfaccia ben definita.
 
-La \texttt{ZenohNetwork} implementata deve quindi soddisfare questo livello di
-compatibilità (\ref{constraint:yaair-compatibility}), e mantenere
-tutte le configurazioni specifiche invisibili allo \texttt{Engine}: l'implementazione
-specifica di Zenoh utilizzata (standard o pico) deve essere mantenuta internamente,
-esponendo delle \ac{API} alla rete che siano trasparenti rispetto alla tecnologia
-utilizzata.
-% Qui con ZenohNetwork già parli di implementazione, cerca di essere più generico
+La rete progettata deve quindi soddisfare questo livello di compatibilità (\ref{constraint:yaair-compatibility}),
+e mantenere tutta la configurazione invisibile allo \texttt{Engine}:
+l'implementazione specifica di Zenoh utilizzata (standard o pico) deve essere mantenuta
+internamente, esponendo delle \ac{API} alla rete che siano trasparenti rispetto
+alla tecnologia utilizzata.
+% Qui con ZenohNetwork già parli di implementazione, cerca di essere più generico [RISOLTO:
+% rimosso il riferimento al nome concreto ZenohNetwork, introdotto poi nel capitolo
+% di implementazione]
 
-Per la configurazione di Zenoh stesso (\ref{requirement:zenoh-portability}),
+Riguardo la configurazione di Zenoh stesso (\ref{requirement:zenoh-portability}),
 le due versioni offrono opzioni con requisiti differenti, rendendo quindi necessario
 esporre almeno in parte l'implementazione utilizzata. Per minimizzare questa necessità,
 viene definita una \ac{API} comune che segue il \emph{builder pattern}~\cite{gamma1994design}
@@ -134,10 +135,9 @@ con l'ultimo risultato ricevuto da ogni nodo con cui si è in relazione
 (\Cref{sec:aggregate-computing}).
 
 Mentre la pubblicazione del risultato si tratta di un'operazione banale tramite i
-costrutti di comunicazione \emph{pub/sub} utilizzati dalla \emph{ZenohNetwork}
-(\cref{ssec:zenoh-and-pubsub-communication}),
+costrutti di comunicazione \emph{pub/sub} utilizzati dalla \emph{ZenohNetwork},
 la creazione della mappa associativa richiede l'eliminazione dal \texttt{MessagesStore}
-di eventuali nodi offline per evitare di restituire dati ormai obsoleti \Cref{fig:yaair-network-interaction}
+di eventuali nodi offline per evitare di restituire dati ormai obsoleti (\Cref{fig:yaair-network-interaction}).
 
 \begin{figure}[H]
     \centering
