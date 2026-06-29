@@ -36,7 +36,7 @@ ambienti virtualizzati per simulare la presenza di nodi distinti sulla rete e la
 comunicazione tra di loro.
 Come alternativa, è stata prestata molta attenzione nella creazione dei problemi
 risolti in questi programmi, imponendo dei vincoli che permettessero di definire
-facilmente i risultati attesi e permetterne il confornto manuale con quelli
+facilmente i risultati attesi e permetterne il confronto manuale con quelli
 ottenuti.
 
 \section{Sviluppi futuri}
@@ -51,6 +51,22 @@ correttezza funzionale della rete; un'analisi più approfondita delle
 prestazioni e del consumo energetico su dispositivi embedded reali
 permetterebbe di valutare l'impatto della rete in scenari con vincoli
 energetici stringenti, tipici di molte applicazioni \ac{IoT}.
+Un benchmark di questo tipo avrebbe un duplice scopo: da un lato verificare
+che l'overhead introdotto dal wrapper e dal \texttt{MessagesStore} non
+comprometta le proprietà di basse latenze ed elevato throughput che motivano
+la scelta di Zenoh; dall'altro fornire dati concreti su consumo energetico
+e occupazione di memoria, dimensioni critiche per i microcontrollori utilizzati
+per l'esecuzione di programmi aggregati.
+Una strategia per determinare queste metriche potrebbe essere l'esecuzione
+dei programmi di test già implementati con carichi e frequenze crescenti.
+
+Ulteriori verifiche potrebbero essere effettuate variando la configurazione della
+rete stessa, introducendo dei router Zenoh o modificando parametri come il numero
+di nodi partecipanti e la dimensione e frequenza dei messaggi.
+Confrontando i risultati ottenuti con quelli di un protocollo di riferimento come
+\ac{MQTT}, si potrebberi quantificare concretamente i vantaggi, in termini di
+prestazioni e di assenza di un singolo punto di fallimento, dell'architettura
+decentralizzata proposta rispetto ad una tradizionale basata su broker.
 
 \paragraph{Indipendenza completa dall'ambiente di esecuzione.} Il progetto
 \texttt{zenoh-\\nostd}, precedentemente menzionato nella \cref{ssec:zenoh-for-embdedded-systems},
@@ -61,10 +77,34 @@ la sua adozione permetterebbe di ottenere una soluzione Rust pura funzionante su
 qualsiasi tipo di dispositivo, in quanto completamente autosufficiente.
 
 \paragraph{Esplorazione di strategie alternative per la gestione della perdita
-di nodi.} Il requisito non funzionale \ref{requirement:alternative-offlinte-nodes-detection-strategies}
+di nodi.}
+Il requisito non funzionale \ref{requirement:alternative-offlinte-nodes-detection-strategies}
 prevede la possibilità di adottare strategie diverse per la rilevazione dell'uscita
 di un nodo dalla rete, a seconda del contesto applicativo.
 L'implementazione della rete attuale utilizza una strategia basata su una semplice
 scadenza configurabile, mentre sviluppi futuri potrebbero esplorare meccanismi
 più sofisticati, ad esempio per scenari con particolari esigenze di affidabilità
 o di risparmio di banda.
+
+Una direzione concreta sarebbe l'adozione di un algoritmo di indentificazione del
+fallimento di un nodo di tipo cumulativo, come il \emph{$\varphi$-accrual failure
+detector} proposto da Hayashibara et al~\cite{1353004}: invece di classificare
+un nodo come irraggiungibile sulla base di una singola soglia fissa, questo
+tipo di meccanismo calcola un valore continuo di sospetto a partire dalla
+distribuzione storica degli intervalli tra gli heartbeat ricevuti da un nodo,
+adattandosi così automaticamente alla variabilità della rete e permettendo
+all'applicazione di scegliere la propria soglia di sensibilità in base al contesto.
+Questo algoritmo ha già avuto occasione di dimostrare la sua robustezza ed efficacia
+essendo utilizzato in sistemi distribuiti decentralizzati molto popolari come
+Cassandra\footnote{\url{https://cassandra.apache.org/}} e Akka\footnote{\url{https://akka.io/}}.
+
+Un'alternativa altrettanto valida riguarda l'uso di tecniche di tipo
+\emph{gossip} per la propagazione delle informazioni di stato: invece di
+basarsi solo su heartbeat diretti tra coppie di nodi, ogni nodo potrebbe
+scambiare periodicamente con i propri vicini anche le informazioni che ha
+raccolto sullo stato degli altri nodi della rete, riducendo i falsi positivi
+dovuti a perdita occasionale di singoli messaggi e migliorando la scalabilità
+del meccanismo di rilevazione al crescere del numero di nodi.
+Zenoh utilizza già dei messaggi di \emph{gossip} per la scoperta automatica dei
+nodi sulla rete, di conseguenza una strategia simile potrebbe essere facilmente
+integrata nel progetto utilizzando le funzionalità già offerte dal protocollo.
