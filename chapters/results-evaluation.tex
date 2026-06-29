@@ -13,7 +13,8 @@ corretto funzionamento delle componenti principali del contributo di questa tesi
 \section{Il wrapper Zenoh pico: test del ping-pong}
 \label{sec:zenoh-pico-ping-pong-test}
 
-Il test del ping-pong consiste nel far comunicare due nodi in un ciclo infinito:
+Il test del ping-pong\footnote{\url{https://github.com/lspita-academic/yaair-zenoh-network/tree/main/examples/ping-pong}}
+consiste nel far comunicare due nodi in un ciclo infinito:
 ad ogni iterazione il nodo attende di ricevere un nuovo valore sul topic opposto,
 lo modifica a piacere e lo pubblica sul suo topic dedicato, dove l'altro nodo sarà
 in attesa con una logica analoga.
@@ -71,7 +72,8 @@ valore viene trasferito tra un nodo e l'altro, di conseguenza la comunicazione
 \section{La rete Zenoh: test del gradiente}
 \label{sec:zenoh-network-gradient-test}
 
-Il test del gradiente consiste in un'implementazione del noto esempio di programma
+Il test del gradiente\footnote{\url{https://github.com/lspita-academic/yaair-zenoh-network/tree/main/examples/gradient}}
+consiste in un'implementazione del noto esempio di programma
 aggregato per il calcolo di un gradiente spaziale tra i nodi della rete.
 Nel contesto di questo test, il calcolo delle distanze minime viene effettuato
 tra 3 nodi i cui collegamenti nel grafo della rete sono definiti in maniera statica,
