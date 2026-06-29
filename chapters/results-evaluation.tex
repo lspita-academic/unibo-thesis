@@ -18,7 +18,7 @@ ad ogni iterazione il nodo attende di ricevere un nuovo valore sul topic opposto
 lo modifica a piacere e lo pubblica sul suo topic dedicato, dove l'altro nodo sarà
 in attesa con una logica analoga.
 Per evitare situazioni di \emph{deadlock} nella comunicazione, la partenza sarà
-assimmetrica, con un nodo che inizia inviando il valore e l'altro in attesa di
+asimmetrica, con un nodo che inizia inviando il valore e l'altro in attesa di
 ricevere (\Cref{fig:ping-pong-sequence}).
 
 \begin{figure}[H]
@@ -29,7 +29,7 @@ ricevere (\Cref{fig:ping-pong-sequence}).
 \end{figure}
 
 \paragraph{Obiettivi}
-Questo test non utilizza nè \ac{YAAIR} nè la rete per esso creata, bensì ha
+Questo test non utilizza né \ac{YAAIR} né la rete per esso creata, bensì ha
 lo scopo di verificare il corretto funzionamento del wrapper per Zenoh pico anche
 al di fuori del contesto di un programma aggregato.
 

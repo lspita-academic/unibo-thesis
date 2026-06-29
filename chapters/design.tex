@@ -11,7 +11,7 @@ contempo i vincoli imposti.
 
 In \ac{YAAIR}, il cuore dell'esecuzione del programma aggregato è lo \texttt{Engine},
 che date le implementazioni dei vari componenti da utilizzare per il corretto
-funzionamento del framework permette l'esecuizione di un programma aggregato generico.
+funzionamento del framework permette l'esecuzione di un programma aggregato generico.
 Tra queste implementazioni è richiesta una rete per la comunicazione, la quale
 deve soddisfare un'interfaccia ben definita.
 La rete Zenoh deve quindi soddisfare questo livello di compatibilità (\ref{constraint:yaair-compatibility}),
@@ -26,7 +26,7 @@ viene definita una \ac{API} comune che segue il \emph{builder pattern}~\cite{gam
 per la configurazione delle opzioni comuni e più importanti nel contesto di questo progetto.
 Entrambe le versioni di Zenoh offrono un'implementazione di questa interfaccia,
 producendo solo al momento della creazione finale un oggetto specifico che potrà
-essere ulteriormente configurato utilizzando funzioni apposita della libreria
+essere ulteriormente configurato utilizzando funzioni apposite della libreria
 originale.
 Per ridurre ulteriormente l'interazione diretta con l'implementazione del protocollo
 utilizzata, il progetto è strutturato in maniera tale da scegliere tra Zenoh standard
@@ -71,7 +71,7 @@ garantire la correttezza delle operazioni in presenza di concorrenza.
 
 Oltre al contenuto del messaggio, il \texttt{MessagesStore} associa ad ogni voce
 due metadati: la durata di vita attesa (\emph{lifespan}) e l'istante dell'ultimo
-aggiornamento (\emph{timestamp}). Questr informazioni sono necessarie per rispondere
+aggiornamento (\emph{timestamp}). Queste informazioni sono necessarie per rispondere
 al requisito di rilevamento dei nodi offline (\ref{requirement:offline-node-detection}):
 quando \ac{YAAIR} interroga la rete per eventuali nuovi risultati ricevuti, viene
 confrontato il tempo trascorso dall'ultimo aggiornamento con il lifespan dichiarato,
@@ -105,7 +105,7 @@ Da quest'ultima si ha la possibilità di dichiarare publisher e subscriber
 su diversi topic, utilizzati per l'esportazione dei risultati e gli aggiornamenti
 sullo stato dei nodi.
 Ogni nodo della rete pubblica informazioni su topic che condividono il proprio id
-come radice, e si iscrive a tutti topic equivalenti degli altri membri della rete.
+come radice, e si iscrive a tutti i topic equivalenti degli altri membri della rete.
 
 \begin{figure}[H]
     \centering
@@ -140,7 +140,7 @@ di eventuali nodi offline per evitare di restituire dati ormai obsoleti (\Cref{f
     \ac{YAAIR} richiede due operazioni alla rete: la pubblicazione di un nuovo
     risultato del programma, delegata direttamente al publisher apposito,
     e la lettura dei risultati degli altri nodi, che passa per il
-    \texttt{MessagesStore}. Prima di restituire fotografia dei risultati attuali,
+    \texttt{MessagesStore}. Prima di restituire una fotografia dei risultati attuali,
     la rete elimina le voci scadute, garantendo che \ac{YAAIR} riceva solo dati
     ancora validi.}
     \label{fig:yaair-network-interaction}

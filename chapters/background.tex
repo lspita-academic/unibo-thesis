@@ -216,7 +216,7 @@ un dato, senza necessità di una risposta esplicita da parte di chi è in ascolt
     \caption[Diagramma di sequenza del modello \emph{pub/sub} in Zenoh.]{
     Diagramma di sequenza del modello \emph{pub/sub} in Zenoh.
     L'entità \emph{Network} non rappresenta un'unità centrale, bensì la rete
-    \ac{P2P} su cui ogni nodo comunica le proprie azioni, senza necessità di connesioni
+    \ac{P2P} su cui ogni nodo comunica le proprie azioni, senza necessità di connessioni
     dirette tra i partecipanti.}
     \label{fig:zenoh-pubsub-sequence}
 \end{figure}
@@ -240,7 +240,7 @@ nel momento stesso in cui lo richiede (\Cref{fig:zenoh-queryreply-sequence}).
 \end{figure}
 
 \subsection{Zenoh per sistemi embedded}
-\label{ssec:zenoh-for-embdedded-systems}
+\label{ssec:zenoh-for-embedded-systems}
 
 Nonostante la flessibilità di Rust come linguaggio che ne permette l'utilizzo
 anche per la programmazione di dispositivi \emph{bare-metal}, come diversi dispositivi
@@ -267,7 +267,7 @@ di questa tesi è stato utilizzato Zenoh pico creando un wrapper Rust per la lib
 
 Rust offre un ecosistema robusto e maturo per la programmazione di sistemi embedded,
 con un supporto nativo del compilatore per diverse architetture di CPU e piattaforme,
-possibilità  di utilizzare funzioni provenienti da librerie esterne precompilate
+possibilità di utilizzare funzioni provenienti da librerie esterne precompilate
 ed accesso alla libreria standard completamente opzionale per i dispositivi
 che non ne offrono un'implementazione.
 
@@ -277,10 +277,11 @@ non imporre un'implementazione specifica per funzionalità che, su altri
 linguaggi, spesso sono parte integrante della tecnologia.
 Un esempio rappresentativo è il supporto per la programmazione
 asincrona tramite i costrutti \texttt{async/await}: generalmente l'esecuzione di
-codice asincrono richiede un runtime specifico fornito, mentre in Rust questi
-costrutti sono implementati tramite \emph{trait}, e la scelta del runtime concreto
-che effettivamente esegue e pianifica i task è lasciata completamente allo sviluppatore.
-Questo permette di utilizzare librerie specializzate
+funzioni concorrenti richiede un runtime specifico fornito dal linguaggio, mentre
+in Rust questi costrutti sono implementati tramite \emph{trait}, e la scelta
+dell'implementazione concreta che effettivamente esegue e pianifica i task è
+lasciata completamente allo sviluppatore, permettendo di scegliere la libreria
+più adatta alle esigenze specifiche del progetto.
 
 \subsection{Cross-compilation}
 \label{ssec:cross-compilation}

@@ -64,12 +64,12 @@ Ulteriori verifiche potrebbero essere effettuate variando la configurazione dell
 rete stessa, introducendo dei router Zenoh o modificando parametri come il numero
 di nodi partecipanti e la dimensione e frequenza dei messaggi.
 Confrontando i risultati ottenuti con quelli di un protocollo di riferimento come
-\ac{MQTT}, si potrebberi quantificare concretamente i vantaggi, in termini di
+\ac{MQTT}, si potrebbe quantificare concretamente i vantaggi, in termini di
 prestazioni e di assenza di un singolo punto di fallimento, dell'architettura
 decentralizzata proposta rispetto ad una tradizionale basata su broker.
 
 \paragraph{Indipendenza completa dall'ambiente di esecuzione.} Il progetto
-\texttt{zenoh-\\nostd}, precedentemente menzionato nella \cref{ssec:zenoh-for-embdedded-systems},
+\texttt{zenoh-\\nostd}, precedentemente menzionato nella \cref{ssec:zenoh-for-embedded-systems},
 propone una versione interamente in Rust di Zenoh priva di dipendenze esterne.
 Trovandosi attualmente in una fase sperimentale, non è stato possibile utilizzarlo
 per il contributo di questa tesi, ma una volta raggiunta una maggiore stabilità,
@@ -78,7 +78,7 @@ qualsiasi tipo di dispositivo, in quanto completamente autosufficiente.
 
 \paragraph{Esplorazione di strategie alternative per la gestione della perdita
 di nodi.}
-Il requisito non funzionale \ref{requirement:alternative-offlinte-nodes-detection-strategies}
+Il requisito non funzionale \ref{requirement:alternative-offline-nodes-detection-strategies}
 prevede la possibilità di adottare strategie diverse per la rilevazione dell'uscita
 di un nodo dalla rete, a seconda del contesto applicativo.
 L'implementazione della rete attuale utilizza una strategia basata su una semplice
@@ -86,9 +86,9 @@ scadenza configurabile, mentre sviluppi futuri potrebbero esplorare meccanismi
 più sofisticati, ad esempio per scenari con particolari esigenze di affidabilità
 o di risparmio di banda.
 
-Una direzione concreta sarebbe l'adozione di un algoritmo di indentificazione del
+Una direzione concreta sarebbe l'adozione di un algoritmo di identificazione del
 fallimento di un nodo di tipo cumulativo, come il \emph{$\varphi$-accrual failure
-detector} proposto da Hayashibara et al~\cite{1353004}: invece di classificare
+detector} proposto da Hayashibara et al.~\cite{1353004}: invece di classificare
 un nodo come irraggiungibile sulla base di una singola soglia fissa, questo
 tipo di meccanismo calcola un valore continuo di sospetto a partire dalla
 distribuzione storica degli intervalli tra gli heartbeat ricevuti da un nodo,
