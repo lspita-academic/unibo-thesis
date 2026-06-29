@@ -68,13 +68,30 @@ Confrontando i risultati ottenuti con quelli di un protocollo di riferimento com
 prestazioni e di assenza di un singolo punto di fallimento, dell'architettura
 decentralizzata proposta rispetto ad una tradizionale basata su broker.
 
-\paragraph{Indipendenza completa dall'ambiente di esecuzione.} Il progetto
-\texttt{zenoh-\\nostd}, precedentemente menzionato nella \cref{ssec:zenoh-for-embedded-systems},
-propone una versione interamente in Rust di Zenoh priva di dipendenze esterne.
+\paragraph{Indipendenza completa dall'ambiente di esecuzione.}
+Il progetto \texttt{zenoh-\\nostd}, precedentemente menzionato nella \cref{ssec:zenoh-for-embedded-systems},
+propone una versione di Zenoh priva di dipendenze esterne.
+A differenza di Zenoh pico, che è scritto in C e richiede quindi il
+wrapper sviluppato in questa tesi per essere integrato, \texttt{zenoh-nostd}
+è implementato completamente in Rust e pensato per ambienti \emph{bare-metal}
+vincolati da risorse limitatissime, in quanto non utilizza né la libreria
+standard né l'allocazione dinamica della memoria.
+Una soluzione di questo tipo permetterebbe di eliminare interamente la necessità
+di un livello di interoperabilità tra Rust e C, rimuovendo così sia l'overhead
+introdotto dal wrapper sia l'intera superficie di codice non sicuro richiesta
+per garantire la compatibilità fra i due modelli di ownership.
+
 Trovandosi attualmente in una fase sperimentale, non è stato possibile utilizzarlo
 per il contributo di questa tesi, ma una volta raggiunta una maggiore stabilità,
 la sua adozione permetterebbe di ottenere una soluzione Rust pura funzionante su
 qualsiasi tipo di dispositivo, in quanto completamente autosufficiente.
+Un possibile sviluppo futuro consisterebbe quindi nel monitorare la maturazione
+di questa libreria e, una volta raggiunto un livello di stabilità e copertura
+del protocollo sufficiente, nello sviluppare un nuovo strato di interfacciamento
+con la rete che utilizzi questa implementazione.
+Le caratteristiche di questa versione di Zenoh permetterebbero di scegliere
+liberamente se mantenere questa implementazione come unica base per la comunicazione
+nella rete o se utilizzarla come terza alternativa insieme a Zenoh standard e pico.
 
 \paragraph{Esplorazione di strategie alternative per la gestione della perdita
 di nodi.}
