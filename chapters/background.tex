@@ -100,11 +100,11 @@ Il modello di computazione distribuita offerto da \ac{AC} si pone come soluzione
 naturale per reti di dispositivi \ac{IoT} e sciami robotici, mentre i framework
 preesistenti sono stati concepiti per simulazioni o esecuzioni su dispositivi
 general-purpose.
-Questo li rende incompatibili con i microcontrollori a basso costo con risorse
-limitate e incompatibili con i sistemi operativi tradizionali, che spesso si
+Questo li rende incompatibili con i microcontrollori a basso costo che non dispongono
+di risorse sufficienti e sistemi operativi tradizionali, in quanto spesso si
 affidano a macchine virtuali o meccanismi di gestione della memoria basati su \ac{GC}.
 
-Per colmare questa lacuna e portare lo \ac{AC} sui dispositivi embedded, il linguaggio
+Per colmare questa lacuna e portare l'\ac{AC} sui dispositivi embedded, il linguaggio
 Rust rappresenta una soluzione ideale.
 Rust è un linguaggio di programmazione compilato, nato nel 2006 e sviluppato
 inizialmente da Mozilla\footnote{\url{https://www.mozilla.org/it/}}, pensato per
@@ -121,7 +121,7 @@ linguaggi di basso livello, come accessi ad indirizzi non più validi o perdita
 di puntatori ad aree di memoria non precedentemente liberate.
 Questo controllo avviene interamente in fase di compilazione e non introduce
 alcun costo aggiuntivo a runtime, permettendo a Rust di fornire astrazioni di
-alto livello "a costo zero": costrutti comodi da usare in fase di sviluppo che,
+alto livello a costo zero: costrutti comodi da usare in fase di sviluppo che,
 una volta compilati, producono codice macchina con prestazioni equivalenti a
 quello scritto manualmente in un linguaggio di più basso livello.
 Queste caratteristiche garantiscono prestazioni predicibili, latenze minime e
@@ -133,7 +133,7 @@ negli ultimi anni.
 \label{sec:yaair}
 
 \ac{YAAIR}\footnote{\url{https://github.com/nicolasfara/yaair}} è un framework Rust
-open-source per lo \ac{AC}, ideato per risolvere le limitazioni prestazionali
+open-source per l'\ac{AC}, ideato per risolvere le limitazioni prestazionali
 delle alternative basate su linguaggi ad alto livello che non permettono l'esecuzione
 su determinate tipologie di sistemi.
 Sfruttando la natura flessibile di Rust data dal concetto di \emph{trait}, ovvero
@@ -331,4 +331,4 @@ definita da Embassy che permette l'interazione con le periferiche disponibili su
 microcontrollore tramite un'unica \ac{API} compatibile con tutti i dispositivi da
 loro prodotti. Sfruttando poi la natura \emph{memory-safe} ed il sistema di gestione
 degli errori del linguaggio, viene garantito un accesso facile e sicuro
-a funzionalità come Wi-Fi e comunicazione seriale, spesso utilizzate nel campo dello \ac{IoT}.
+a funzionalità come Wi-Fi e comunicazione seriale, spesso utilizzate nel campo dell'\ac{IoT}.

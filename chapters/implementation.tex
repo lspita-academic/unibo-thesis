@@ -161,7 +161,7 @@ gestione della memoria utilizzate anche nel resto della libreria.
 Nel wrapper Rust, oltre alla possibilità di utilizzare normalmente queste
 strutture, sono implementate funzioni che ne permettono l'uso anche tramite i
 costrutti per la programmazione concorrente \texttt{async/await}, offrendo così
-un'\ac{API} alternativa, moderna e versatile (\Cref{lst:async-closure}).
+una \ac{API} alternativa, moderna e versatile (\Cref{lst:async-closure}).
 
 \lstinputlisting[
     language=Rust,
@@ -183,12 +183,12 @@ operazioni, in modo da poter adeguare la rete di conseguenza.
 Quest'interfaccia è definita da un trait \texttt{Network} composto da tre metodi (\Cref{lst:network-trait}):
 
 \begin{itemize}
-    \item \texttt{get\_local\_id}: ritorna il valore identificativo del nodo
+    \item \texttt{get\_local\_id}: restituisce il valore identificativo del nodo
     corrente nella rete.
     \item \texttt{prepare\_outbound}: prende in input l'ultimo risultato del
     programma aggregato, già serializzato sotto forma di sequenza di byte, e lo
     pubblica sulla rete per renderlo disponibile agli altri nodi presenti.
-    \item \texttt{prepare\_inbound}: ritorna un'istanza di una struttura dati
+    \item \texttt{prepare\_inbound}: restituisce un'istanza di una struttura dati
     di \ac{YAAIR}, \\
     \texttt{InboundMessage}, che associa ogni nodo raggiungibile
     con l'ultimo messaggio da esso ricevuto.
@@ -321,7 +321,7 @@ un trait per tutte le opzioni comuni implementato da entrambe le versioni di Zen
 Per tutte le opzioni specifiche di Zenoh standard o pico, invece, è possibile
 semplicemente continuare a modificare il valore di configurazione prodotto dal
 builder prima di fornirlo in input alla rete per l'inizializzazione. Inoltre, se
-sono presenti opzioni mandatorie per il corretto funzionamento di una determinata
+sono presenti parametri obbligatori per il corretto funzionamento di una determinata
 versione di Zenoh, l'implementazione del builder può definire eventuali argomenti
 necessari per la sua creazione.
 
